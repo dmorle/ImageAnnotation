@@ -3,16 +3,11 @@
 
 
 // Recalculate drawing layout when the size of the window changes.
-
 void MainWindow::CalculateLayout()
 {
 	if (pRenderTarget != NULL)
 	{
 		D2D1_SIZE_F size = pRenderTarget->GetSize();
-		const float x = size.width / 2;
-		const float y = size.height / 2;
-		const float radius = min(x, y);
-		ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
 	}
 }
 
@@ -41,6 +36,10 @@ HRESULT MainWindow::CreateGraphicsResources()
 				CalculateLayout();
 			}
 		}
+
+		if (SUCCEEDED(hr)) {
+
+		}
 	}
 	return hr;
 }
@@ -61,8 +60,7 @@ void MainWindow::Paint()
 
 		pRenderTarget->BeginDraw();
 
-		pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
-		pRenderTarget->FillEllipse(ellipse, pBrush);
+		pRenderTarget->Clear(palette.background);
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -138,8 +136,6 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
-
-
 
 		return 0;
 
