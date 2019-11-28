@@ -2,31 +2,25 @@
 
 
 
-Widget::Widget(double xLoc, double yLoc, double xSize, double ySize, stdBrushes& brushes) : 
+Widget::Widget(double left, double right, double top, double bottom, stdBrushes& brushes) : 
 	brushes(stdBrushes::none)
 {
-	this->pBlock = new widgetBlock();
-	this->pBlock->xLoc = xLoc;
-	this->pBlock->yLoc = yLoc;
-	this->pBlock->xSize = xSize;
-	this->pBlock->ySize = ySize;
-
+	this->rect = D2D1_RECT_F { left, right, top, bottom };
 	this->brushes = brushes;
 }
 
-Widget::Widget(widgetBlock* pBlock, stdBrushes& brushes) :
+Widget::Widget(D2D1_RECT_F rect, stdBrushes& brushes) :
 	brushes(stdBrushes::none)
 {
-	this->pBlock = pBlock;
-
+	this->rect = rect;
 	this->brushes = brushes;
 }
 
 Widget::~Widget()
 {
-	delete this->pBlock;
 }
 
-Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
+void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 {
+	pRenderTarget->DrawRectangle(this->rect, brushes.widgetBack);
 }
