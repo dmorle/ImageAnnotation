@@ -72,6 +72,7 @@ class Widget
 {
 	D2D1_RECT_F rect;
 	stdBrushes& brushes;
+	FLOAT edgeSpace = 2;
 
 public:
 

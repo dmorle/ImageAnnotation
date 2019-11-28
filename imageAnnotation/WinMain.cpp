@@ -113,19 +113,19 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 		}
 }
 
-void MainWindow::LUp()
+void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 {
 }
 
-void MainWindow::LDown()
+void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
 }
 
-void MainWindow::RUp()
+void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
 {
 }
 
-void MainWindow::RDown()
+void MainWindow::RDown(WPARAM wparam, LPARAM lparam)
 {
 }
 
@@ -157,7 +157,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
 	return 0;
 }
 
-LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 {
 	switch (uMsg)
 	{
@@ -182,7 +182,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return 0;
 
 	case WM_MOUSEMOVE:
-		MouseMove();
+		MouseMove(wparam, lparam);
 		return 0;
 
 	case WM_LBUTTONUP:
@@ -197,5 +197,5 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONDOWN:
 		return 0;
 	}
-	return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
+	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
 }
