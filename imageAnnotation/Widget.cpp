@@ -2,7 +2,7 @@
 
 
 
-Widget::Widget(double left, double right, double top, double bottom, stdBrushes& brushes) : 
+Widget::Widget(FLOAT left, FLOAT right, FLOAT top, FLOAT bottom, stdBrushes& brushes) : 
 	brushes(stdBrushes::none)
 {
 	this->rect = D2D1_RECT_F { left, right, top, bottom };

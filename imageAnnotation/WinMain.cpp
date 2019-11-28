@@ -46,6 +46,9 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette.background);
 
+		for (Widget e : widgets)
+			e.render(pRenderTarget);
+
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
 		{
