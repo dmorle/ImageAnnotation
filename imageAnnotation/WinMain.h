@@ -25,12 +25,14 @@ struct appPalette
 
 	*/
 	D2D1::ColorF background;
+	D2D1::ColorF widgetBack;
 	D2D1::ColorF passive;
 	D2D1::ColorF active;
 	D2D1::ColorF text;
 
 	appPalette() :
 		background(0.0f, 0.8f, 0.0f),
+		widgetBack(0.1f, 0.1f, 0.1f),
 		passive(0.2f, 0.2f, 0.2f),
 		active(0.4f, 0.4f, 0.4f),
 		text(1.0f, 1.0f, 1.0f)
@@ -41,12 +43,14 @@ typedef struct stdBrushes basicBrushes;
 struct stdBrushes
 {
 	ID2D1SolidColorBrush* background;
+	ID2D1SolidColorBrush* widgetBack;
 	ID2D1SolidColorBrush* passive;
 	ID2D1SolidColorBrush* active;
 	ID2D1SolidColorBrush* text;
 
 	stdBrushes() :
 		background(NULL),
+		widgetBack(NULL),
 		passive(NULL),
 		active(NULL),
 		text(NULL)
@@ -67,7 +71,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	ID2D1Factory			*pFactory;
 	ID2D1HwndRenderTarget	*pRenderTarget;
 	
-	appPalette		palette;
+	appPalette	palette;
 	stdBrushes	brushes;
 
 	void    CalculateLayout();
