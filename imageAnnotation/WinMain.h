@@ -30,19 +30,43 @@ struct appPalette
 		active(0.4f, 0.4f, 0.4f),
 		text(1.0f, 1.0f, 1.0f)
 	{}
+
+	~appPalette() {
+		delete& background;
+		delete& passive;
+		delete& active;
+		delete& text;
+	}
+};
+
+typedef struct basicBrushes basicBrushes;
+struct basicBrushes
+{
+	ID2D1SolidColorBrush* background;
+	ID2D1SolidColorBrush* passive;
+	ID2D1SolidColorBrush* active;
+	ID2D1SolidColorBrush* text;
+
+	basicBrushes() :
+		background(NULL),
+		passive(NULL),
+		active(NULL),
+		text(NULL)
+	{}
 };
 
 class MainWindow : public BaseWindow<MainWindow>
 {
 	ID2D1Factory			*pFactory;
 	ID2D1HwndRenderTarget	*pRenderTarget;
-	ID2D1SolidColorBrush	*pBrush;
-
-	appPalette	palette;
+	
+	appPalette		palette;
+	basicBrushes	brushes;
 
 	void    CalculateLayout();
 	HRESULT CreateGraphicsResources();
 	void    DiscardGraphicsResources();
+
 	void    Paint();
 	void    Resize();
 	void	MouseMove();
@@ -53,9 +77,9 @@ class MainWindow : public BaseWindow<MainWindow>
 
 public:
 
-	MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) {}
+	MainWindow() : pFactory(NULL), pRenderTarget(NULL) {}
 
-	PCWSTR  ClassName() const { return L"Circle Window Class"; }
+	PCWSTR  ClassName() const { return L"MainWindow Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 

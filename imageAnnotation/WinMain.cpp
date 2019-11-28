@@ -25,21 +25,6 @@ HRESULT MainWindow::CreateGraphicsResources()
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(m_hwnd, size),
 			&pRenderTarget);
-
-		if (SUCCEEDED(hr))
-		{
-			const D2D1_COLOR_F color = D2D1::ColorF(1.0f, 1.0f, 0);
-			hr = pRenderTarget->CreateSolidColorBrush(color, &pBrush);
-
-			if (SUCCEEDED(hr))
-			{
-				CalculateLayout();
-			}
-		}
-
-		if (SUCCEEDED(hr)) {
-
-		}
 	}
 	return hr;
 }
@@ -47,7 +32,6 @@ HRESULT MainWindow::CreateGraphicsResources()
 void MainWindow::DiscardGraphicsResources()
 {
 	SafeRelease(&pRenderTarget);
-	SafeRelease(&pBrush);
 }
 
 void MainWindow::Paint()
