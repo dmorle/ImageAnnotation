@@ -123,11 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Layout.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
+    <ClInclude Include="Layout.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
