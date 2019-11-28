@@ -26,6 +26,8 @@ class MainWindow : public BaseWindow<MainWindow>
 	void	RUp();
 	void	RDown();
 
+	void	createDefaultLayout();
+
 public:
 
 	MainWindow() : pFactory(NULL), pRenderTarget(NULL) {}

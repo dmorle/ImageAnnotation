@@ -56,15 +56,16 @@ struct stdBrushes
 		text(NULL)
 	{}
 
-	~stdBrushes() {
+	void release() {
 		SafeRelease(&background);
+		SafeRelease(&widgetBack);
 		SafeRelease(&passive);
 		SafeRelease(&active);
 		SafeRelease(&text);
 	}
-
-	static stdBrushes none;
 };
+
+static stdBrushes noBrushes;
 
 class Widget
 {
@@ -78,6 +79,7 @@ public:
 
 	~Widget();
 
+	void resize(FLOAT left, FLOAT top, FLOAT right, FLOAT bottom);
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
 };
 

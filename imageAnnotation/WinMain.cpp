@@ -5,9 +5,21 @@
 // Recalculate drawing layout when the size of the window changes.
 void MainWindow::CalculateLayout()
 {
+	FLOAT spacing = 2;
+
 	if (pRenderTarget != NULL)
 	{
 		D2D1_SIZE_F size = pRenderTarget->GetSize();
+
+		if (!widgets.size()) {
+			// create default layout
+			widgets.push_back(Widget(spacing, spacing, size.width - spacing, size.height - spacing, brushes));
+		}
+
+		else {
+			// resize current layout
+			widgets[0].resize(spacing, spacing, size.width - spacing, size.height - spacing);
+		}
 	}
 }
 
@@ -16,7 +28,7 @@ HRESULT MainWindow::CreateGraphicsResources()
 	HRESULT hr = S_OK;
 	if (pRenderTarget == NULL)
 	{
-		RECT rc;
+		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
@@ -26,17 +38,35 @@ HRESULT MainWindow::CreateGraphicsResources()
 			D2D1::HwndRenderTargetProperties(m_hwnd, size),
 			&pRenderTarget);
 	}
+
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(palette.background, &brushes.background);
+
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(palette.widgetBack, &brushes.widgetBack);
+
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(palette.passive, &brushes.passive);
+
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(palette.active, &brushes.active);
+
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(palette.text, &brushes.text);
 	return hr;
 }
 
 void MainWindow::DiscardGraphicsResources()
 {
 	SafeRelease(&pRenderTarget);
+	brushes.release();
 }
 
 void MainWindow::Paint()
 {
 	HRESULT hr = CreateGraphicsResources();
+	if (SUCCEEDED(hr) && widgets.size() == 0)
+		Resize();
 	if (SUCCEEDED(hr))
 	{
 		PAINTSTRUCT ps;
@@ -46,7 +76,7 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette.background);
 
-		for (Widget e : widgets)
+		for (Widget& e : widgets)
 			e.render(pRenderTarget);
 
 		hr = pRenderTarget->EndDraw();
@@ -62,7 +92,7 @@ void MainWindow::Resize()
 {
 	if (pRenderTarget != NULL)
 	{
-		RECT rc;
+		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
@@ -73,7 +103,8 @@ void MainWindow::Resize()
 	}
 }
 
-void MainWindow::MouseMove() {
+void MainWindow::MouseMove()
+{
 
 }
 
@@ -91,6 +122,11 @@ void MainWindow::RUp()
 
 void MainWindow::RDown()
 {
+}
+
+void MainWindow::createDefaultLayout()
+{
+	
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
@@ -123,7 +159,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
-
+		
 		return 0;
 
 	case WM_DESTROY:
