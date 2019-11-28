@@ -1,32 +1,59 @@
-#include <windows.h>
-#include <d2d1.h>
-#pragma comment(lib, "d2d1")
+#include "WinMain.h"
 
-struct widgetBlock {
-	double xloc;
-	double yloc;
-	double xSize;
-	double ySize;
+namespace {
+	enum SIDE {
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM
+	};
 
-	bool contains(POINT p) {
-		if (
-			p.x < xloc + xSize && p.x > xloc - xSize &&
-			p.y < yloc + ySize && p.y > yloc - ySize
-			)
-			return true;
-		return false;
-	}
+	typedef struct widgetBlock widgetBlock;
+	struct widgetBlock {
+		double xLoc;
+		double yLoc;
+		double xSize;
+		double ySize;
 
-};
+		bool contains(POINT p) {
+			if (
+				p.x < xLoc + xSize && p.x > xLoc - xSize &&
+				p.y < yLoc + ySize && p.y > yLoc - ySize
+				)
+				return true;
+			return false;
+		}
+
+		void moveSide(SIDE s, double val) {
+			val /= 2;
+			double dsize = val * (2 * (s % 2) - 1);
+			if (s < 2) {
+				xLoc += val;
+				xSize += dsize;
+			}
+			else {
+				yLoc += val;
+				ySize += val;
+			}
+		}
+
+		widgetBlock() {}
+
+	};
+}
 
 class Widget
 {
-	double xLoc;
-	double yLoc;
-	double xSize;
-	double ySize;
+	widgetBlock* pBlock;
+	stdBrushes& brushes;
 
-	Widget(double xLoc, double yLoc, double xSize, double ySize);
+public:
 
+	Widget(double xLoc, double yLoc, double xSize, double ySize, stdBrushes& brushes);
+	Widget(widgetBlock* pBlock, stdBrushes& brushes);
+
+	~Widget();
+
+	render(ID2D1HwndRenderTarget* pRenderTarget);
 };
 
