@@ -76,7 +76,7 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette.background);
 
-		for (Widget& e : widgets)
+		for (auto& e : widgets)
 			e.render(pRenderTarget);
 
 		hr = pRenderTarget->EndDraw();
@@ -103,9 +103,14 @@ void MainWindow::Resize()
 	}
 }
 
-void MainWindow::MouseMove()
+void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 {
-
+	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+	for (auto& e : widgets)
+		if (e.contains(p)) {
+			e.MouseMove(wparam, p);
+			break;
+		}
 }
 
 void MainWindow::LUp()

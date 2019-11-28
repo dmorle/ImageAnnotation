@@ -2,6 +2,7 @@
 #define WIDGET_H
 
 #include <windows.h>
+#include <windowsx.h>
 #include <d2d1.h>
 #pragma comment(lib, "d2d1")
 
@@ -81,6 +82,10 @@ public:
 
 	void resize(FLOAT left, FLOAT top, FLOAT right, FLOAT bottom);
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
+
+	void MouseMove(WPARAM wparam, POINT p);
+
+	BOOL contains(POINT p);
 };
 
 #endif

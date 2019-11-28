@@ -20,11 +20,11 @@ class MainWindow : public BaseWindow<MainWindow>
 
 	void    Paint();
 	void    Resize();
-	void	MouseMove();
-	void	LUp();
-	void	LDown();
-	void	RUp();
-	void	RDown();
+	void	MouseMove(WPARAM, LPARAM);
+	void	LUp(WPARAM, LPARAM);
+	void	LDown(WPARAM, LPARAM);
+	void	RUp(WPARAM, LPARAM);
+	void	RDown(WPARAM, LPARAM);
 
 	void	createDefaultLayout();
 

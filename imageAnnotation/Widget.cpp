@@ -32,3 +32,21 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 {
 	pRenderTarget->FillRectangle(this->rect, brushes.widgetBack);
 }
+
+void Widget::MouseMove(WPARAM wparam, POINT p)
+{
+}
+
+void Widget::MouseMove()
+{
+}
+
+BOOL Widget::contains(POINT p)
+{
+	if (
+		p.x > rect.left && p.x < rect.right &&
+		p.y > rect.top && p.y < rect.bottom
+		)
+		return TRUE;
+	return FALSE;
+}
