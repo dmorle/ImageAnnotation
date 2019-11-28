@@ -37,29 +37,29 @@ struct appPalette
 	{}
 };
 
-typedef struct basicBrushes basicBrushes;
-struct basicBrushes
+typedef struct stdBrushes basicBrushes;
+struct stdBrushes
 {
 	ID2D1SolidColorBrush* background;
 	ID2D1SolidColorBrush* passive;
 	ID2D1SolidColorBrush* active;
 	ID2D1SolidColorBrush* text;
 
-	basicBrushes() :
+	stdBrushes() :
 		background(NULL),
 		passive(NULL),
 		active(NULL),
 		text(NULL)
 	{}
 
-	~basicBrushes() {
+	~stdBrushes() {
 		SafeRelease(&background);
 		SafeRelease(&passive);
 		SafeRelease(&active);
 		SafeRelease(&text);
 	}
 
-	static basicBrushes none;
+	static stdBrushes none;
 };
 
 class MainWindow : public BaseWindow<MainWindow>
@@ -68,7 +68,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	ID2D1HwndRenderTarget	*pRenderTarget;
 	
 	appPalette		palette;
-	basicBrushes	brushes;
+	stdBrushes	brushes;
 
 	void    CalculateLayout();
 	HRESULT CreateGraphicsResources();
