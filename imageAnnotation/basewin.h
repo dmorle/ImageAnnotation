@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BASEWIN_H
+#define BASEWIN_H
 
 #include <windows.h>
 
@@ -71,3 +72,5 @@ protected:
 
 	HWND m_hwnd;
 };
+
+#endif
