@@ -8,6 +8,8 @@
 
 #include <vector>
 
+class MainWindow;
+
 template <class T> void SafeRelease(T** ppT)
 {
 	if (*ppT)
@@ -70,23 +72,33 @@ static stdBrushes noBrushes;
 
 class Widget
 {
-	D2D1_RECT_F rect;
+	HWND hwnd;
+
+	RECT rect;
 	stdBrushes& brushes;
 	FLOAT edgeSpace = 2;
 
-public:
+	POINT *dupStart = NULL;
+	FLOAT minSize = edgeSpace * 12;
+	Widget* npWidget = NULL;
 
-	Widget(FLOAT left, FLOAT right, FLOAT top, FLOAT bottom, stdBrushes& brushes);
-	Widget(D2D1_RECT_F rect, stdBrushes& brushes);
+public:
+	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes);
+	Widget(HWND hwnd, RECT rect, stdBrushes& brushes);
 
 	~Widget();
 
-	void resize(FLOAT left, FLOAT top, FLOAT right, FLOAT bottom);
+	void resize(LONG left, LONG top, LONG right, LONG bottom);
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
 
-	void MouseMove(WPARAM wparam, POINT p);
+	Widget* MouseMove(WPARAM& wparam, POINT& p);
+	Widget* LUp(WPARAM& wparam, POINT& p, MainWindow *mw);
+	Widget* LDown(WPARAM& wparam, POINT& p);
 
 	BOOL contains(POINT p);
 };
+
+#include "basewin.h"
+#include "WinMain.h"
 
 #endif

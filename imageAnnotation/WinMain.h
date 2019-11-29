@@ -1,18 +1,20 @@
 #ifndef WINMAIN_H
 #define WINMAIN_H
 
-#include "basewin.h"
 #include "Widget.h"
 
 class MainWindow : public BaseWindow<MainWindow>
 {
+	friend class Widget;
+
 	ID2D1Factory			*pFactory;
 	ID2D1HwndRenderTarget	*pRenderTarget;
 	
 	appPalette	palette;
 	stdBrushes	brushes;
 
-	std::vector<Widget> widgets;
+	std::vector<Widget*> widgets;
+	Widget* activeWidget = NULL;
 
 	void    CalculateLayout();
 	HRESULT CreateGraphicsResources();
@@ -21,6 +23,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	void    Paint();
 	void    Resize();
 	void	MouseMove(WPARAM, LPARAM);
+	void	MouseLeave(WPARAM, LPARAM);
 	void	LUp(WPARAM, LPARAM);
 	void	LDown(WPARAM, LPARAM);
 	void	RUp(WPARAM, LPARAM);

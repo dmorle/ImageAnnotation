@@ -5,20 +5,18 @@
 // Recalculate drawing layout when the size of the window changes.
 void MainWindow::CalculateLayout()
 {
-	FLOAT spacing = 2;
-
 	if (pRenderTarget != NULL)
 	{
 		D2D1_SIZE_F size = pRenderTarget->GetSize();
 
 		if (!widgets.size()) {
 			// create default layout
-			widgets.push_back(Widget(spacing, spacing, size.width - spacing, size.height - spacing, brushes));
+			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, brushes));
 		}
 
 		else {
 			// resize current layout
-			widgets[0].resize(spacing, spacing, size.width - spacing, size.height - spacing);
+			widgets[0]->resize(0, 0, size.width, size.height);
 		}
 	}
 }
@@ -76,8 +74,8 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette.background);
 
-		for (auto& e : widgets)
-			e.render(pRenderTarget);
+		for (auto e : widgets)
+			e->render(pRenderTarget);
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -106,19 +104,67 @@ void MainWindow::Resize()
 void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 {
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-	for (auto& e : widgets)
-		if (e.contains(p)) {
-			e.MouseMove(wparam, p);
-			break;
-		}
+
+	if (activeWidget)
+		activeWidget = activeWidget->MouseMove(wparam, p);
+	else
+		for (auto e : widgets)
+			if (e->contains(p)) {
+				activeWidget = e->MouseMove(wparam, p);
+				break;
+			}
+}
+
+void MainWindow::MouseLeave(WPARAM wparam, LPARAM lparam)
+{
+	if (activeWidget) {
+		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+		activeWidget = activeWidget->MouseMove(wparam, p);
+	}
 }
 
 void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 {
+	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+	
+	if (activeWidget)
+		activeWidget = activeWidget->LUp(wparam, p, this);
+	else
+		for (auto e : widgets)
+			if (e->contains(p)) {
+				activeWidget = e->LUp(wparam, p, this);
+				break;
+			}
+}
+
+void MainWindow::NCLUp(WPARAM wparam, LPARAM lparam)
+{
+	if (activeWidget) {
+		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+		activeWidget = activeWidget->LUp(wparam, p, this);
+	}
 }
 
 void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
+	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+	
+	if (activeWidget)
+		activeWidget = activeWidget->LDown(wparam, p);
+	else
+		for (auto e : widgets)
+			if (e->contains(p)) {
+				activeWidget = e->LDown(wparam, p);
+				break;
+			}
+}
+
+void MainWindow::NCLDown(WPARAM wparam, LPARAM lparam)
+{
+	if (activeWidget) {
+		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+		activeWidget = activeWidget->LDown(wparam, p);
+	}
 }
 
 void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
@@ -185,10 +231,16 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		MouseMove(wparam, lparam);
 		return 0;
 
+	case WM_MOUSELEAVE:
+		MouseLeave(wparam, lparam);
+		return 0;
+
 	case WM_LBUTTONUP:
+		LUp(wparam, lparam);
 		return 0;
 
 	case WM_LBUTTONDOWN:
+		LDown(wparam, lparam);
 		return 0;
 
 	case WM_RBUTTONUP:
