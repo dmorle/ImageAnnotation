@@ -131,6 +131,7 @@ class Widget
 	BOOL dupStart = FALSE;
 	FLOAT minSize = edgeSpace * 12;
 	Widget* npWidget = NULL;
+	Widget* delWidget = NULL;
 
 public:
 	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes, MainWindow* mw);
@@ -142,7 +143,7 @@ public:
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
 
 	Widget* MouseMove(WPARAM& wparam, POINT& p);
-	Widget* LUp(WPARAM& wparam, POINT& p, MainWindow *mw);
+	Widget* LUp(WPARAM& wparam, POINT& p);
 	Widget* LDown(WPARAM& wparam, POINT& p);
 
 	BOOL contains(POINT p);

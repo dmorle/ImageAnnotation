@@ -138,11 +138,11 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 	
 	if (activeWidget)
-		activeWidget = activeWidget->LUp(wparam, p, this);
+		activeWidget = activeWidget->LUp(wparam, p);
 	else
 		for (auto e : widgets)
 			if (e->contains(p)) {
-				activeWidget = e->LUp(wparam, p, this);
+				activeWidget = e->LUp(wparam, p);
 				break;
 			}
 }

@@ -144,13 +144,31 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			// either merging widgets, or has just started
 			if (minSize < rect.right - p.x)
 				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
+
 			else if (minSize < p.x - rect.right) {
-				// not sure yet.  Some type of merge
+				for (Widget* e : mw->widgets)
+					if (
+						e->rect.right == rect.left &&
+						e->rect.top == rect.top &&
+						e->rect.bottom == rect.bottom
+						) {
+						delWidget = e;
+						break;
+					}
 			}
 			else if (minSize < rect.bottom - p.y)
 				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
+
 			else if (minSize < p.y - rect.bottom) {
-				// not sure yet.  Some type of merge
+				for (Widget* e : mw->widgets)
+					if (
+						e->rect.top == rect.bottom &&
+						e->rect.left == rect.left &&
+						e->rect.right == rect.right
+						) {
+						delWidget = e;
+						break;
+					}
 			}
 		}
 
