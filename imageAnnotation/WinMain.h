@@ -16,6 +16,9 @@ class MainWindow : public BaseWindow<MainWindow>
 	std::vector<Widget*> widgets;
 	Widget* activeWidget = NULL;
 
+	void	savePalette(std::string);
+	void	loadPalette(std::string);
+
 	void    CalculateLayout();
 	HRESULT CreateGraphicsResources();
 	void    DiscardGraphicsResources();
