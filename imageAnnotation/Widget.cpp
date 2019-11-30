@@ -211,7 +211,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 					delWidget = NULL;
 				}
 			}
-		} 
+		}
 		else {
 			// Center Region of Widget Managment
 			if (minSize < rect.right - p.x)
@@ -254,10 +254,20 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			}
 		}
 
-		
-
 		InvalidateRect(hwnd, const_cast<RECT*>(&updateRect), TRUE);
 		return this;
+	}
+	else if (edgeSpace > p.x - rect.left && rect.left != 0) {
+		// left resize
+	}
+	else if (edgeSpace > p.y - rect.top && rect.top != 0) {
+		// top resize
+	}
+	else if (edgeSpace > rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
+		// right resize
+	}
+	else if (edgeSpace > rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
+		// bottom resize
 	}
 
 	return NULL;
@@ -310,6 +320,18 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 	if (p.y - rect.bottom < p.x - rect.right + 12 * edgeSpace) {
 		widgetEdit = TRUE;
 		return this;
+	}
+	else if (edgeSpace > p.x - rect.left && rect.left != 0) {
+		// left resize
+	}
+	else if (edgeSpace > p.y - rect.top && rect.top != 0) {
+		// top resize
+	}
+	else if (edgeSpace > rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
+		// right resize
+	}
+	else if (edgeSpace > rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
+		// bottom resize
 	}
 
 	return NULL;
