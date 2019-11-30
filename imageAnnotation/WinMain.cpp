@@ -2,6 +2,16 @@
 
 
 
+void MainWindow::savePalette(std::string path)
+{
+
+}
+
+void MainWindow::loadPalette(std::string path)
+{
+
+}
+
 // Recalculate drawing layout when the size of the window changes.
 void MainWindow::CalculateLayout()
 {
