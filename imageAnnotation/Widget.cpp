@@ -2,17 +2,19 @@
 
 
 
-Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, stdBrushes& brushes) : 
+Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, stdBrushes& brushe, MainWindow* mw) : 
 	brushes(noBrushes)
 {
+	this->mw = mw;
 	this->hwnd = hwnd;
 	this->rect = RECT { left, top, right, bottom };
 	this->brushes = brushes;
 }
 
-Widget::Widget(HWND hwnd, RECT rect, stdBrushes& brushes) :
+Widget::Widget(HWND hwnd, RECT rect, stdBrushes& brushes, MainWindow* mw) :
 	brushes(noBrushes)
 {
+	this->mw = mw;
 	this->hwnd = hwnd;
 	this->rect = rect;
 	this->brushes = brushes;
@@ -141,12 +143,12 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		else {
 			// either merging widgets, or has just started
 			if (minSize < rect.right - p.x)
-				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes);
+				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
 			else if (minSize < p.x - rect.right) {
 				// not sure yet.  Some type of merge
 			}
 			else if (minSize < rect.bottom - p.y)
-				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes);
+				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
 			else if (minSize < p.y - rect.bottom) {
 				// not sure yet.  Some type of merge
 			}
@@ -159,7 +161,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 	return NULL;
 }
 
-Widget* Widget::LUp(WPARAM& wparam, POINT& p, MainWindow* mw)
+Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 {
 	if (dupStart) {
 		if (npWidget) {

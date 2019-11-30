@@ -21,7 +21,7 @@ void MainWindow::CalculateLayout()
 
 		if (!widgets.size()) {
 			// create default layout
-			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, brushes));
+			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, brushes, this));
 		}
 
 		else {

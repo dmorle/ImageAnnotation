@@ -122,6 +122,7 @@ static stdBrushes noBrushes;
 class Widget
 {
 	HWND hwnd;
+	MainWindow* mw;
 
 	RECT rect;
 	stdBrushes& brushes;
@@ -132,8 +133,8 @@ class Widget
 	Widget* npWidget = NULL;
 
 public:
-	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes);
-	Widget(HWND hwnd, RECT rect, stdBrushes& brushes);
+	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes, MainWindow* mw);
+	Widget(HWND hwnd, RECT rect, stdBrushes& brushes, MainWindow* mw);
 
 	~Widget();
 
