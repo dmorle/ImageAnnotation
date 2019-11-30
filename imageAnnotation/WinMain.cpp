@@ -137,14 +137,6 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 			}
 }
 
-void MainWindow::NCLUp(WPARAM wparam, LPARAM lparam)
-{
-	if (activeWidget) {
-		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-		activeWidget = activeWidget->LUp(wparam, p, this);
-	}
-}
-
 void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
@@ -157,14 +149,6 @@ void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 				activeWidget = e->LDown(wparam, p);
 				break;
 			}
-}
-
-void MainWindow::NCLDown(WPARAM wparam, LPARAM lparam)
-{
-	if (activeWidget) {
-		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-		activeWidget = activeWidget->LDown(wparam, p);
-	}
 }
 
 void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
