@@ -78,7 +78,7 @@ class Widget
 	stdBrushes& brushes;
 	FLOAT edgeSpace = 2;
 
-	POINT *dupStart = NULL;
+	BOOL dupStart = FALSE;
 	FLOAT minSize = edgeSpace * 12;
 	Widget* npWidget = NULL;
 

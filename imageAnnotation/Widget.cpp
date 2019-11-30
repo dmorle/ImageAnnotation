@@ -20,11 +20,8 @@ Widget::Widget(HWND hwnd, RECT rect, stdBrushes& brushes) :
 
 Widget::~Widget()
 {
-	if (dupStart) {
-		delete dupStart;
-		if (npWidget)
-			delete npWidget;
-	}
+	if (npWidget)
+		delete npWidget;
 }
 
 void Widget::resize(LONG left, LONG top, LONG right, LONG bottom)
@@ -41,7 +38,7 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 		D2D1_RECT_F r1;
 		D2D1_RECT_F r2;
 
-		if (npWidget->rect.bottom == rect.bottom) {
+		if (npWidget->rect.top == rect.top) {
 			// horizontal division
 			r1 = {
 				rect.left + edgeSpace,
@@ -110,13 +107,13 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		if (npWidget) {
 			// a widget is being created
 			if (
-				minSize > dupStart->x - p.x &&
-				minSize > dupStart->y - p.y
+				minSize > rect.right - p.x &&
+				minSize > rect.right - p.y
 				) {
 				delete npWidget;
 				npWidget = NULL;
 			}
-			else if (npWidget->rect.bottom == rect.bottom) {
+			else if (npWidget->rect.top == rect.top) {
 				// horizontal division
 				if (
 					minSize < rect.right - p.x &&
@@ -143,14 +140,14 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		}
 		else {
 			// either merging widgets, or has just started
-			if (minSize < dupStart->x - p.x)
+			if (minSize < rect.right - p.x)
 				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes);
-			else if (minSize < p.x - dupStart->x) {
+			else if (minSize < p.x - rect.right) {
 				// not sure yet.  Some type of merge
 			}
-			else if (minSize < dupStart->y - p.y)
+			else if (minSize < rect.bottom - p.y)
 				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes);
-			else if (minSize < p.y - dupStart->y) {
+			else if (minSize < p.y - rect.bottom) {
 				// not sure yet.  Some type of merge
 			}
 		}
@@ -168,7 +165,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p, MainWindow* mw)
 		if (npWidget) {
 			InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
 
-			if (npWidget->rect.bottom == rect.bottom)
+			if (npWidget->rect.top == rect.top)
 				rect.right = npWidget->rect.left;
 			else
 				rect.bottom = npWidget->rect.top;
@@ -176,8 +173,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p, MainWindow* mw)
 			mw->widgets.push_back(npWidget);
 			npWidget = NULL;
 		}
-		delete dupStart;
-		dupStart = NULL;
+		dupStart = FALSE;
 
 		return NULL;
 	}
@@ -188,7 +184,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p, MainWindow* mw)
 Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 {
 	if (p.y - rect.bottom < p.x - rect.right + 12 * edgeSpace) {
-		dupStart = new POINT(p);
+		dupStart = TRUE;
 		return this;
 	}
 
