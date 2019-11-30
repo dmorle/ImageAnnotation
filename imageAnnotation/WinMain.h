@@ -12,6 +12,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	
 	appPalette	palette;
 	stdBrushes	brushes;
+	stdCursors	cursors;
 
 	std::vector<Widget*> widgets;
 	Widget* activeWidget = NULL;
@@ -19,7 +20,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	void	savePalette(std::string);
 	void	loadPalette(std::string);
 
-	void    CalculateLayout();
+	void    CalculateLayout(D2D1_SIZE_F prev);
 	HRESULT CreateGraphicsResources();
 	void    DiscardGraphicsResources();
 

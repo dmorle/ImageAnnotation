@@ -2,22 +2,18 @@
 
 
 
-Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, stdBrushes& brushes, MainWindow* mw) : 
-	brushes(noBrushes)
+Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, MainWindow* mw)
 {
 	this->mw = mw;
 	this->hwnd = hwnd;
 	this->rect = RECT { left, top, right, bottom };
-	this->brushes = brushes;
 }
 
-Widget::Widget(HWND hwnd, RECT rect, stdBrushes& brushes, MainWindow* mw) :
-	brushes(noBrushes)
+Widget::Widget(HWND hwnd, RECT rect, MainWindow* mw)
 {
 	this->mw = mw;
 	this->hwnd = hwnd;
 	this->rect = rect;
-	this->brushes = brushes;
 }
 
 Widget::~Widget()
@@ -72,15 +68,15 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 			
 		}
 
-		pRenderTarget->FillRectangle(r1, brushes.widgetBack);
-		pRenderTarget->FillRectangle(r2, brushes.widgetBack);
+		pRenderTarget->FillRectangle(r1, mw->brushes.widgetBack);
+		pRenderTarget->FillRectangle(r2, mw->brushes.widgetBack);
 
 		for (D2D1_RECT_F r : {r1, r2})
 			for (int i = 0; i < 3; i++)
 				pRenderTarget->DrawLine(
 					{ r.right - 2 * edgeSpace * (i + 2), r.bottom - 2 * edgeSpace },
 					{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
-					brushes.active
+					mw->brushes.active
 				);
 
 		return;
@@ -93,7 +89,7 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 			delWidget->rect.right - edgeSpace,
 			delWidget->rect.bottom - edgeSpace
 		};
-		pRenderTarget->FillRectangle(rDel, brushes.preDeletion);
+		pRenderTarget->FillRectangle(rDel, mw->brushes.preDeletion);
 
 		D2D1_RECT_F r
 		{
@@ -102,13 +98,13 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 			rect.right - edgeSpace,
 			rect.bottom - edgeSpace
 		};
-		pRenderTarget->FillRectangle(r, brushes.widgetBack);
+		pRenderTarget->FillRectangle(r, mw->brushes.widgetBack);
 
 		for (int i = 0; i < 3; i++)
 			pRenderTarget->DrawLine(
 				{ r.right - 2 * edgeSpace * (i + 2), r.bottom - 2 * edgeSpace },
 				{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
-				brushes.active
+				mw->brushes.active
 			);
 	}
 
@@ -119,13 +115,13 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 		rect.right - edgeSpace,
 		rect.bottom - edgeSpace
 	};
-	pRenderTarget->FillRectangle(r, brushes.widgetBack);
+	pRenderTarget->FillRectangle(r, mw->brushes.widgetBack);
 
 	for (int i = 0; i < 3; i++)
 		pRenderTarget->DrawLine(
 			{ r.right - 2 * edgeSpace * (i + 2), r.bottom - 2 * edgeSpace },
 			{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
-			brushes.active
+			mw->brushes.active
 		);
 }
 
@@ -135,7 +131,109 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 
 	if (widgetEdit) {
 		// the widget split was triggered
-		if (npWidget) {
+		if (neighbors.size() != 0) {
+			// resizing widgets
+			LONG base;
+			switch (side) {
+			case LEFT:
+				base = rect.left;
+				for (auto e : neighbors) {
+					if (base == e->rect.left) {
+						if (updateRect.right < e->rect.right)
+							updateRect.right = e->rect.right;
+
+						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
+							e->rect.left = p.x;
+					}
+					else {
+						if (updateRect.left > e->rect.left)
+							updateRect.left = e->rect.left;
+
+						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
+							e->rect.right = p.x;
+					}
+					if (updateRect.top > e->rect.top)
+						updateRect.top = e->rect.top;
+
+					if (updateRect.bottom < e->rect.bottom)
+						updateRect.bottom = e->rect.bottom;
+				}
+				break;
+			case TOP:
+				base = rect.top;
+				for (auto e : neighbors) {
+					if (base == e->rect.top) {
+						if (updateRect.bottom < e->rect.bottom)
+							updateRect.bottom = e->rect.bottom;
+
+						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
+							e->rect.top = p.y;
+					}
+					else {
+						if (updateRect.top > e->rect.top)
+							updateRect.top = e->rect.top;
+
+						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
+							e->rect.bottom = p.y;
+					}
+					if (updateRect.left > e->rect.left)
+						updateRect.left = e->rect.left;
+
+					if (updateRect.right < e->rect.right)
+						updateRect.right = e->rect.right;
+				}
+				break;
+			case RIGHT:
+				base = rect.right;
+				for (auto e : neighbors) {
+					if (base == e->rect.right) {
+						if (updateRect.left > e->rect.left)
+							updateRect.left = e->rect.left;
+
+						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
+							e->rect.right = p.x;
+					}
+					else {
+						if (updateRect.right < e->rect.right)
+							updateRect.right = e->rect.right;
+
+						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
+							e->rect.left = p.x;
+					}
+					if (updateRect.top > e->rect.top)
+						updateRect.top = e->rect.top;
+
+					if (updateRect.bottom < e->rect.bottom)
+						updateRect.bottom = e->rect.bottom;
+				}
+				break;
+			case BOTTOM:
+				base = rect.bottom;
+				for (auto e : neighbors) {
+					if (base == e->rect.bottom) {
+						if (updateRect.top > e->rect.top)
+							updateRect.top = e->rect.top;
+
+						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
+							e->rect.bottom = p.y;
+					}
+					else {
+						if (updateRect.bottom < e->rect.bottom)
+							updateRect.bottom = e->rect.bottom;
+
+						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
+							e->rect.top = p.y;
+					}
+					if (updateRect.left > e->rect.left)
+						updateRect.left = e->rect.left;
+
+					if (updateRect.right < e->rect.right)
+						updateRect.right = e->rect.right;
+				}
+				break;
+			}
+		}
+		else if (npWidget) {
 			// Splitting widgets
 			if (
 				minSize > rect.right - p.x &&
@@ -175,7 +273,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				// horizontal widget merge
 				if (rect.right > p.x) {
 					if (minSize < rect.bottom - p.y)
-						npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
+						npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, mw);
 
 					else if (rect.bottom < p.y)
 						for (Widget* e : mw->widgets)
@@ -195,7 +293,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				// vertical widget merge
 				if (rect.bottom > p.y) {
 					if (minSize < rect.right - p.x)
-						npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
+						npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, mw);
 
 					else if (rect.right < p.x)
 						for (Widget* e : mw->widgets)
@@ -216,7 +314,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			// Center Region of Widget Managment
 			if (minSize < rect.right - p.x)
 				// splitting horizontally
-				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
+				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, mw);
 
 			else if (rect.right < p.x) {
 				// merging horizontally
@@ -235,7 +333,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			}
 			else if (minSize < rect.bottom - p.y)
 				// splitting vertically
-				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
+				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, mw);
 
 			else if (rect.bottom < p.y) {
 				// merging vertically
@@ -257,17 +355,21 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		InvalidateRect(hwnd, const_cast<RECT*>(&updateRect), TRUE);
 		return this;
 	}
-	else if (edgeSpace > p.x - rect.left && rect.left != 0) {
+	if (edgeSpace >= p.x - rect.left && rect.left != 0) {
 		// left resize
+		SetCursor(mw->cursors.sizewe);
 	}
-	else if (edgeSpace > p.y - rect.top && rect.top != 0) {
+	else if (edgeSpace >= p.y - rect.top && rect.top != 0) {
 		// top resize
+		SetCursor(mw->cursors.sizens);
 	}
-	else if (edgeSpace > rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
+	else if (edgeSpace >= rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
 		// right resize
+		SetCursor(mw->cursors.sizewe);
 	}
-	else if (edgeSpace > rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
+	else if (edgeSpace >= rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
 		// bottom resize
+		SetCursor(mw->cursors.sizens);
 	}
 
 	return NULL;
@@ -276,7 +378,10 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 {
 	if (widgetEdit) {
-		if (npWidget) {
+		if (neighbors.size() != 0)
+			neighbors.clear();
+
+		else if (npWidget) {
 			InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
 
 			if (npWidget->rect.top == rect.top)
@@ -287,7 +392,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 			mw->widgets.push_back(npWidget);
 			npWidget = NULL;
 		}
-		if (delWidget) {
+		else if (delWidget) {
 			if (rect.bottom == delWidget->rect.bottom)
 				// horizontal widget merge
 				rect.right = delWidget->rect.right;
@@ -317,21 +422,58 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 
 Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 {
-	if (p.y - rect.bottom < p.x - rect.right + 12 * edgeSpace) {
+	if (edgeSpace >= p.x - rect.left && rect.left != 0) {
+		// left resize
 		widgetEdit = TRUE;
+		side = LEFT;
+		for (auto e : mw->widgets)
+			if (
+				rect.left == e->rect.left ||
+				rect.left == e->rect.right
+				)
+				neighbors.push_back(e);
 		return this;
 	}
-	else if (edgeSpace > p.x - rect.left && rect.left != 0) {
-		// left resize
-	}
-	else if (edgeSpace > p.y - rect.top && rect.top != 0) {
+	else if (edgeSpace >= p.y - rect.top && rect.top != 0) {
 		// top resize
+		widgetEdit = TRUE;
+		side = TOP;
+		for (auto e : mw->widgets)
+			if (
+				rect.top == e->rect.top ||
+				rect.top == e->rect.bottom
+				)
+				neighbors.push_back(e);
+		return this;
 	}
-	else if (edgeSpace > rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
+	else if (edgeSpace >= rect.right - p.x && rect.right != mw->pRenderTarget->GetSize().width) {
 		// right resize
+		widgetEdit = TRUE;
+		side = RIGHT;
+		for (auto e : mw->widgets)
+			if (
+				rect.right == e->rect.right ||
+				rect.right == e->rect.left
+				)
+				neighbors.push_back(e);
+		return this;
 	}
-	else if (edgeSpace > rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
+	else if (edgeSpace >= rect.bottom - p.y && rect.right != mw->pRenderTarget->GetSize().height) {
 		// bottom resize
+		widgetEdit = TRUE;
+		side = BOTTOM;
+		for (auto e : mw->widgets)
+			if (
+				rect.bottom == e->rect.bottom ||
+				rect.bottom == e->rect.top
+				)
+				neighbors.push_back(e);
+		return this;
+	}
+	if (p.y - rect.bottom < p.x - rect.right + 12 * edgeSpace) {
+		// merging or splitting widgets
+		widgetEdit = TRUE;
+		return this;
 	}
 
 	return NULL;
@@ -340,10 +482,30 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 BOOL Widget::contains(POINT p)
 {
 	if (
-		p.x > rect.left && p.x < rect.right &&
-		p.y > rect.top && p.y < rect.bottom
+		p.x >= rect.left && p.x < rect.right &&
+		p.y >= rect.top && p.y < rect.bottom
 		)
 		return TRUE;
 
 	return FALSE;
+}
+
+FLOAT Widget::getLeft()
+{
+	return this->rect.left;
+}
+
+FLOAT Widget::getTop()
+{
+	return this->rect.top;
+}
+
+FLOAT Widget::getRight()
+{
+	return this->rect.right;
+}
+
+FLOAT Widget::getBottom()
+{
+	return this->rect.bottom;
 }

@@ -13,7 +13,7 @@ void MainWindow::loadPalette(std::string path)
 }
 
 // Recalculate drawing layout when the size of the window changes.
-void MainWindow::CalculateLayout()
+void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 {
 	if (pRenderTarget != NULL)
 	{
@@ -21,7 +21,7 @@ void MainWindow::CalculateLayout()
 
 		if (!widgets.size()) {
 			// create default layout
-			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, brushes, this));
+			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, this));
 		}
 
 		else {
@@ -33,6 +33,15 @@ void MainWindow::CalculateLayout()
 
 HRESULT MainWindow::CreateGraphicsResources()
 {
+	if (!cursors.arrow)
+		cursors.arrow = LoadCursor(NULL, IDC_ARROW);
+
+	if (!cursors.sizens)
+		cursors.sizens = LoadCursor(NULL, IDC_SIZENS);
+
+	if (!cursors.sizewe)
+		cursors.sizewe = LoadCursor(NULL, IDC_SIZEWE);
+
 	HRESULT hr = S_OK;
 	if (pRenderTarget == NULL)
 	{
@@ -109,19 +118,23 @@ void MainWindow::Resize()
 {
 	if (pRenderTarget != NULL)
 	{
+		D2D1_SIZE_F prev = pRenderTarget->GetSize();
+
 		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
 
 		pRenderTarget->Resize(size);
-		CalculateLayout();
+		CalculateLayout(prev);
 		InvalidateRect(m_hwnd, NULL, FALSE);
 	}
 }
 
 void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 {
+	SetCursor(cursors.arrow);
+
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
 	if (activeWidget)

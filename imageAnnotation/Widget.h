@@ -10,13 +10,11 @@
 #include <string>
 #include <string.h>
 
-const static std::vector<std::string> appColors
-{
-	"background",
-	"widgetBack",
-	"passive",
-	"active",
-	"text"
+enum RECT_SIDE {
+	LEFT,
+	TOP,
+	RIGHT,
+	BOTTOM
 };
 
 class MainWindow;
@@ -30,6 +28,16 @@ template <class T> void SafeRelease(T** ppT)
 	}
 }
 
+const static std::vector<std::string> appColors
+{
+	"background",
+	"widgetBack",
+	"passive",
+	"active",
+	"text"
+};
+
+// contains all the colors which will be used by the program
 typedef struct appPalette appPalette;
 struct appPalette
 {
@@ -91,6 +99,7 @@ private:
 
 };
 
+// Contains all the brushes which will be used by the program
 typedef struct stdBrushes basicBrushes;
 struct stdBrushes
 {
@@ -118,37 +127,66 @@ struct stdBrushes
 		SafeRelease(&text);
 	}
 };
-
+// NULL brush
 static stdBrushes noBrushes;
+
+// contains all cursors which will be used by the program
+typedef struct stdCursors stdCursors;
+struct stdCursors
+{
+	HCURSOR arrow;
+	HCURSOR sizens;
+	HCURSOR sizewe;
+};
 
 class Widget
 {
+	// basic widget stuff : parents of the widget
 	HWND hwnd;
 	MainWindow* mw;
 
+	// defines the region which the widget occupies
 	RECT rect;
-	stdBrushes& brushes;
-	FLOAT edgeSpace = 2;
 
-	BOOL widgetEdit = FALSE;
+	// basic widget dimensions
+	FLOAT edgeSpace = 2;
 	FLOAT minSize = edgeSpace * 12;
+
+	// TRUE when modifying widgets in any way
+	BOOL widgetEdit = FALSE;
+
+	// used when splitting widgets
 	Widget* npWidget = NULL;
+
+	// used when merging widgets
 	Widget* delWidget;
 
+	// used when resizing widgets
+	std::vector<Widget*> neighbors;
+	RECT_SIDE side;
+
 public:
-	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes, MainWindow* mw);
-	Widget(HWND hwnd, RECT rect, stdBrushes& brushes, MainWindow* mw);
+	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);
+	Widget(HWND hwnd, RECT rect, MainWindow* mw);
 
 	~Widget();
 
 	void resize(LONG left, LONG top, LONG right, LONG bottom);
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
 
+	// actions the user can do
 	Widget* MouseMove(WPARAM& wparam, POINT& p);
 	Widget* LUp(WPARAM& wparam, POINT& p);
 	Widget* LDown(WPARAM& wparam, POINT& p);
 
+	// determines if p is in this->rect
 	BOOL contains(POINT p);
+
+	// getters for the location of each of the widgets bounding sides
+	FLOAT getLeft();
+	FLOAT getTop();
+	FLOAT getRight();
+	FLOAT getBottom();
 };
 
 #include "basewin.h"
