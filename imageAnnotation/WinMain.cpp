@@ -48,19 +48,19 @@ HRESULT MainWindow::CreateGraphicsResources()
 	}
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette.background, &brushes.background);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::BACKGROUND], &brushes.background);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette.widgetBack, &brushes.widgetBack);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::WIDGET_BACK], &brushes.widgetBack);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette.passive, &brushes.passive);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::PASSIVE], &brushes.passive);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette.active, &brushes.active);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::ACTIVE], &brushes.active);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette.text, &brushes.text);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT], &brushes.text);
 	return hr;
 }
 
@@ -82,7 +82,7 @@ void MainWindow::Paint()
 
 		pRenderTarget->BeginDraw();
 
-		pRenderTarget->Clear(palette.background);
+		pRenderTarget->Clear(palette[appPalette::BACKGROUND]);
 
 		for (auto e : widgets)
 			e->render(pRenderTarget);
