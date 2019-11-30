@@ -2,7 +2,7 @@
 
 
 
-Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, stdBrushes& brushe, MainWindow* mw) : 
+Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, stdBrushes& brushes, MainWindow* mw) : 
 	brushes(noBrushes)
 {
 	this->mw = mw;
@@ -82,8 +82,19 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 					{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
 					brushes.active
 				);
+
+		return;
 	}
-	else {
+	if (delWidget) {
+		D2D1_RECT_F rDel
+		{
+			delWidget->rect.left + edgeSpace,
+			delWidget->rect.top + edgeSpace,
+			delWidget->rect.right - edgeSpace,
+			delWidget->rect.bottom - edgeSpace
+		};
+		pRenderTarget->FillRectangle(rDel, brushes.preDeletion);
+
 		D2D1_RECT_F r
 		{
 			rect.left + edgeSpace,
@@ -100,17 +111,35 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 				brushes.active
 			);
 	}
+
+	D2D1_RECT_F r
+	{
+		rect.left + edgeSpace,
+		rect.top + edgeSpace,
+		rect.right - edgeSpace,
+		rect.bottom - edgeSpace
+	};
+	pRenderTarget->FillRectangle(r, brushes.widgetBack);
+
+	for (int i = 0; i < 3; i++)
+		pRenderTarget->DrawLine(
+			{ r.right - 2 * edgeSpace * (i + 2), r.bottom - 2 * edgeSpace },
+			{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
+			brushes.active
+		);
 }
 
 Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 {
-	if (dupStart) {
+	RECT updateRect = rect;
+
+	if (widgetEdit) {
 		// the widget split was triggered
 		if (npWidget) {
-			// a widget is being created
+			// Splitting widgets
 			if (
 				minSize > rect.right - p.x &&
-				minSize > rect.right - p.y
+				minSize > rect.bottom - p.y
 				) {
 				delete npWidget;
 				npWidget = NULL;
@@ -140,26 +169,76 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 					npWidget->rect.top = rect.bottom - minSize;
 			}
 		}
+		else if (delWidget) {
+			// Merging widgets
+			if (rect.bottom == delWidget->rect.bottom) {
+				// horizontal widget merge
+				if (rect.right > p.x) {
+					if (minSize < rect.bottom - p.y)
+						npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
+
+					else if (rect.bottom < p.y)
+						for (Widget* e : mw->widgets)
+							if (
+								e->rect.top == rect.bottom &&
+								e->rect.left == rect.left &&
+								e->rect.right == rect.right
+								) {
+								delWidget = e;
+								break;
+							}
+
+					delWidget = NULL;
+				}
+			}
+			else {
+				// vertical widget merge
+				if (rect.bottom > p.y) {
+					if (minSize < rect.right - p.x)
+						npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
+
+					else if (rect.right < p.x)
+						for (Widget* e : mw->widgets)
+							if (
+								e->rect.right == rect.left &&
+								e->rect.top == rect.top &&
+								e->rect.bottom == rect.bottom
+								) {
+								delWidget = e;
+								break;
+							}
+
+					delWidget = NULL;
+				}
+			}
+		} 
 		else {
-			// either merging widgets, or has just started
+			// Center Region of Widget Managment
 			if (minSize < rect.right - p.x)
+				// splitting horizontally
 				npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, brushes, mw);
 
-			else if (minSize < p.x - rect.right) {
-				for (Widget* e : mw->widgets)
+			else if (rect.right < p.x) {
+				// merging horizontally
+				for (auto& e : mw->widgets)
 					if (
-						e->rect.right == rect.left &&
+						e->rect.left == rect.right &&
 						e->rect.top == rect.top &&
 						e->rect.bottom == rect.bottom
 						) {
 						delWidget = e;
 						break;
 					}
+
+				if (delWidget)
+					updateRect.right = delWidget->rect.right;
 			}
 			else if (minSize < rect.bottom - p.y)
+				// splitting vertically
 				npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, brushes, mw);
 
-			else if (minSize < p.y - rect.bottom) {
+			else if (rect.bottom < p.y) {
+				// merging vertically
 				for (Widget* e : mw->widgets)
 					if (
 						e->rect.top == rect.bottom &&
@@ -169,10 +248,15 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 						delWidget = e;
 						break;
 					}
+
+				if (delWidget)
+					updateRect.bottom = delWidget->rect.bottom;
 			}
 		}
 
-		InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
+		
+
+		InvalidateRect(hwnd, const_cast<RECT*>(&updateRect), TRUE);
 		return this;
 	}
 
@@ -181,7 +265,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 
 Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 {
-	if (dupStart) {
+	if (widgetEdit) {
 		if (npWidget) {
 			InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
 
@@ -193,8 +277,28 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 			mw->widgets.push_back(npWidget);
 			npWidget = NULL;
 		}
-		dupStart = FALSE;
+		if (delWidget) {
+			if (rect.bottom == delWidget->rect.bottom)
+				// horizontal widget merge
+				rect.right = delWidget->rect.right;
 
+			else
+				// vertical widget merge
+				rect.bottom = delWidget->rect.bottom;
+			
+			int i = 0;
+			for (; i < mw->widgets.size(); i++)
+				if (mw->widgets[i] == delWidget)
+					break;
+
+			delete delWidget;
+			delWidget = NULL;
+
+			mw->widgets.erase(mw->widgets.begin() + i);
+		}
+
+		widgetEdit = FALSE;
+		InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
 		return NULL;
 	}
 
@@ -204,7 +308,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 {
 	if (p.y - rect.bottom < p.x - rect.right + 12 * edgeSpace) {
-		dupStart = TRUE;
+		widgetEdit = TRUE;
 		return this;
 	}
 

@@ -95,6 +95,7 @@ typedef struct stdBrushes basicBrushes;
 struct stdBrushes
 {
 	ID2D1SolidColorBrush* background;
+	ID2D1SolidColorBrush* preDeletion;
 	ID2D1SolidColorBrush* widgetBack;
 	ID2D1SolidColorBrush* passive;
 	ID2D1SolidColorBrush* active;
@@ -102,6 +103,7 @@ struct stdBrushes
 
 	stdBrushes() :
 		background(NULL),
+		preDeletion(NULL),
 		widgetBack(NULL),
 		passive(NULL),
 		active(NULL),
@@ -128,10 +130,10 @@ class Widget
 	stdBrushes& brushes;
 	FLOAT edgeSpace = 2;
 
-	BOOL dupStart = FALSE;
+	BOOL widgetEdit = FALSE;
 	FLOAT minSize = edgeSpace * 12;
 	Widget* npWidget = NULL;
-	Widget* delWidget = NULL;
+	Widget* delWidget;
 
 public:
 	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, stdBrushes& brushes, MainWindow* mw);

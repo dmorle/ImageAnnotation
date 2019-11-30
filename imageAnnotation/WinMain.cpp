@@ -50,6 +50,12 @@ HRESULT MainWindow::CreateGraphicsResources()
 	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::BACKGROUND], &brushes.background);
 
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = palette[appPalette::BACKGROUND];
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &brushes.preDeletion);
+	}
+
 	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::WIDGET_BACK], &brushes.widgetBack);
 
@@ -84,8 +90,11 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette[appPalette::BACKGROUND]);
 
-		for (auto e : widgets)
+		for (auto& e : widgets)
 			e->render(pRenderTarget);
+
+		if (activeWidget)
+			activeWidget->render(pRenderTarget);
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -118,7 +127,7 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 	if (activeWidget)
 		activeWidget = activeWidget->MouseMove(wparam, p);
 	else
-		for (auto e : widgets)
+		for (auto& e : widgets)
 			if (e->contains(p)) {
 				activeWidget = e->MouseMove(wparam, p);
 				break;
@@ -140,7 +149,7 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 	if (activeWidget)
 		activeWidget = activeWidget->LUp(wparam, p);
 	else
-		for (auto e : widgets)
+		for (auto& e : widgets)
 			if (e->contains(p)) {
 				activeWidget = e->LUp(wparam, p);
 				break;
@@ -154,7 +163,7 @@ void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 	if (activeWidget)
 		activeWidget = activeWidget->LDown(wparam, p);
 	else
-		for (auto e : widgets)
+		for (auto& e : widgets)
 			if (e->contains(p)) {
 				activeWidget = e->LDown(wparam, p);
 				break;
