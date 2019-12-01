@@ -134,23 +134,36 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		if (neighbors.size() != 0) {
 			// resizing widgets
 			LONG base;
+			BOOL validSize = TRUE;
 			switch (side) {
 			case LEFT:
 				base = rect.left;
+				SetCursor(mw->cursors.sizewe);
+
+				for (auto e : neighbors)
+					if (
+						(base == e->rect.left && minSize > e->rect.right - p.x) ||
+						(base == e->rect.right && minSize > p.x - e->rect.left)
+						) {
+						validSize = FALSE;
+						break;
+					}
+
+				if (!validSize)
+					break;
+
 				for (auto e : neighbors) {
 					if (base == e->rect.left) {
 						if (updateRect.right < e->rect.right)
 							updateRect.right = e->rect.right;
 
-						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
-							e->rect.left = p.x;
+						e->rect.left = p.x;
 					}
 					else {
 						if (updateRect.left > e->rect.left)
 							updateRect.left = e->rect.left;
 
-						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
-							e->rect.right = p.x;
+						e->rect.right = p.x;
 					}
 					if (updateRect.top > e->rect.top)
 						updateRect.top = e->rect.top;
@@ -161,20 +174,32 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				break;
 			case TOP:
 				base = rect.top;
+				SetCursor(mw->cursors.sizens);
+
+				for (auto e : neighbors)
+					if (
+						(base == e->rect.top && minSize > e->rect.bottom - p.y) ||
+						(base == e->rect.bottom && minSize > p.y - e->rect.top)
+						) {
+						validSize = FALSE;
+						break;
+					}
+
+				if (!validSize)
+					break;
+
 				for (auto e : neighbors) {
 					if (base == e->rect.top) {
 						if (updateRect.bottom < e->rect.bottom)
 							updateRect.bottom = e->rect.bottom;
 
-						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
-							e->rect.top = p.y;
+						e->rect.top = p.y;
 					}
 					else {
 						if (updateRect.top > e->rect.top)
 							updateRect.top = e->rect.top;
 
-						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
-							e->rect.bottom = p.y;
+						e->rect.bottom = p.y;
 					}
 					if (updateRect.left > e->rect.left)
 						updateRect.left = e->rect.left;
@@ -185,20 +210,32 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				break;
 			case RIGHT:
 				base = rect.right;
+				SetCursor(mw->cursors.sizewe);
+
+				for (auto e : neighbors)
+					if (
+						(base == e->rect.left && minSize > e->rect.right - p.x) ||
+						(base == e->rect.right && minSize > p.x - e->rect.left)
+						) {
+						validSize = FALSE;
+						break;
+					}
+
+				if (!validSize)
+					break;
+
 				for (auto e : neighbors) {
 					if (base == e->rect.right) {
 						if (updateRect.left > e->rect.left)
 							updateRect.left = e->rect.left;
 
-						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
-							e->rect.right = p.x;
+						e->rect.right = p.x;
 					}
 					else {
 						if (updateRect.right < e->rect.right)
 							updateRect.right = e->rect.right;
 
-						if (rect.left + minSize < p.x && rect.right - minSize > p.x)
-							e->rect.left = p.x;
+						e->rect.left = p.x;
 					}
 					if (updateRect.top > e->rect.top)
 						updateRect.top = e->rect.top;
@@ -209,20 +246,32 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				break;
 			case BOTTOM:
 				base = rect.bottom;
+				SetCursor(mw->cursors.sizens);
+
+				for (auto e : neighbors)
+					if (
+						(base == e->rect.top && minSize > e->rect.bottom - p.y) ||
+						(base == e->rect.bottom && minSize > p.y - e->rect.top)
+						) {
+						validSize = FALSE;
+						break;
+					}
+
+				if (!validSize)
+					break;
+
 				for (auto e : neighbors) {
 					if (base == e->rect.bottom) {
 						if (updateRect.top > e->rect.top)
 							updateRect.top = e->rect.top;
 
-						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
-							e->rect.bottom = p.y;
+						e->rect.bottom = p.y;
 					}
 					else {
 						if (updateRect.bottom < e->rect.bottom)
 							updateRect.bottom = e->rect.bottom;
 
-						if (rect.top + minSize < p.y && rect.bottom - minSize > p.y)
-							e->rect.top = p.y;
+						e->rect.top = p.y;
 					}
 					if (updateRect.left > e->rect.left)
 						updateRect.left = e->rect.left;
