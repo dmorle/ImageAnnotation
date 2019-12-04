@@ -2,6 +2,9 @@
 
 
 
+#define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
+#define TOD2D1RECTF(rc) D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom)
+
 void MainWindow::savePalette(std::string path)
 {
 
@@ -99,11 +102,11 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette[appPalette::BACKGROUND]);
 
-		for (auto& e : widgets)
+		/*for (auto& e : widgets)
 			e->render(pRenderTarget);
 
 		if (activeWidget)
-			activeWidget->render(pRenderTarget);
+			activeWidget->render(pRenderTarget);*/
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -116,6 +119,13 @@ void MainWindow::Paint()
 
 void MainWindow::Resize()
 {
+	RECT rect;
+	HRGN rgn;
+	GetWindowRect(m_hwnd, &rect);
+	rgn = CreateRectRgn(0, 0, rect.right, rect.bottom);
+	SetWindowRgn(m_hwnd, rgn, TRUE);
+	DeleteObject(rgn);
+
 	if (pRenderTarget != NULL)
 	{
 		D2D1_SIZE_F prev = pRenderTarget->GetSize();
@@ -191,6 +201,30 @@ void MainWindow::RDown(WPARAM wparam, LPARAM lparam)
 {
 }
 
+void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+	RECT rc{
+		0,
+		0,
+		rcWin.right - rcWin.left,
+		rcWin.bottom - rcWin.top
+	};
+
+	HDC hdc;
+	if (wparam == 0 || wparam == 1)
+		hdc = GetWindowDC(m_hwnd);
+	else
+		hdc = GetDCEx(m_hwnd, (HRGN)wparam, DCX_WINDOW | DCX_CACHE | DCX_LOCKWINDOWUPDATE | DCX_INTERSECTRGN);
+
+	HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::WIDGET_BACK]));
+	FillRect(hdc, &rc, hbr);
+	DeleteObject(hbr);
+
+	ReleaseDC(m_hwnd, hdc);
+}
+
 void MainWindow::createDefaultLayout()
 {
 	
@@ -264,6 +298,40 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 
 	case WM_RBUTTONDOWN:
 		return 0;
+
+	case WM_NCPAINT:
+		ncPaint(wparam, lparam);
+		return 0;
+
+	case WM_NCACTIVATE:
+		SetWindowPos(m_hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		return 0;
+
+	case WM_NCCALCSIZE:
+	{
+		if (wparam)
+		{
+			NCCALCSIZE_PARAMS* ncparams = (NCCALCSIZE_PARAMS*)lparam;
+			printf("WM_NCCALCSIZE wparam:True\n");
+			// ncparams->rgrc[0].left += left_off;
+			ncparams->rgrc[0].top += 27;
+			// ncparams->rgrc[0].right -= right_off;
+			// ncparams->rgrc[0].bottom -= bottom_off;
+			return 0;
+		}
+		break;
+	}
+
+	case WM_NCHITTEST:
+	{
+		INT x = GET_X_LPARAM(lparam);
+		INT y = GET_Y_LPARAM(lparam);
+		//return HTCLOSE;
+		//return HTMAXBUTTON;
+		//return HTMINBUTTON;
+		x = 2;
+		break;
+	}
 	}
 	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
 }

@@ -32,6 +32,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	void	LDown(WPARAM, LPARAM);
 	void	RUp(WPARAM, LPARAM);
 	void	RDown(WPARAM, LPARAM);
+	void	ncPaint(WPARAM, LPARAM);
 
 	void	createDefaultLayout();
 
