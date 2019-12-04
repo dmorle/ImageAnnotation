@@ -218,11 +218,13 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 	else
 		hdc = GetDCEx(m_hwnd, (HRGN)wparam, DCX_WINDOW | DCX_CACHE | DCX_LOCKWINDOWUPDATE | DCX_INTERSECTRGN);
 
-	HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::WIDGET_BACK]));
-	FillRect(hdc, &rc, hbr);
-	DeleteObject(hbr);
+	if (hdc) {
+		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::WIDGET_BACK]));
+		FillRect(hdc, &rc, hbr);
+		DeleteObject(hbr);
 
-	ReleaseDC(m_hwnd, hdc);
+		ReleaseDC(m_hwnd, hdc);
+	}
 }
 
 void MainWindow::createDefaultLayout()
