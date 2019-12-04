@@ -13,30 +13,42 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Widget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NCButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Filter Include="Header Files\NCComponents">
+      <UniqueIdentifier>{d6e09da1-4494-4ce1-85d2-36a15415e846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NCComponents">
+      <UniqueIdentifier>{9246ea74-0ee9-421b-a359-e16bf7978a53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WinMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NCButton.h">
+    <ClInclude Include="WinMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NCComponents\NCButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\CloseButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\NCButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\CloseButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

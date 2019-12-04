@@ -27,7 +27,7 @@ public:
 		COLORREF comp_active,
 		COLORREF comp_pressed,
 		void (*onClick)()
-		);
+	);
 	~NCButton();
 
 	void LDown(POINT p);
