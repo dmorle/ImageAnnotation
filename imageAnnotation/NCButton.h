@@ -7,13 +7,26 @@
 class NCButton
 {
 public:
-	NCButton();
+	NCButton(
+		COLORREF back,
+		COLORREF back_passive,
+		COLORREF back_active,
+		COLORREF back_pressed,
+		COLORREF comp,
+		COLORREF comp_passive,
+		COLORREF comp_active,
+		COLORREF comp_pressed
+		);
 	~NCButton();
 
 protected:
 	RECT rc;
 	
-	virtual void display(HDC hdc) = 0;
+	virtual void display(HDC hdc);
+
+	HBRSTRUCT *pBrushes;
+
+
 
 public:
 	enum BUTTONSTATE
@@ -28,7 +41,28 @@ protected:
 	struct HBRSTRUCT
 	{
 	public:
-		HBRSTRUCT();
+		HBRSTRUCT(
+			COLORREF back,
+			COLORREF back_passive,
+			COLORREF back_active,
+			COLORREF back_pressed,
+			COLORREF comp,
+			COLORREF comp_passive,
+			COLORREF comp_active,
+			COLORREF comp_pressed
+		)
+		{
+			hbr_back = CreateSolidBrush(back);
+			hbr_back_passive = CreateSolidBrush(back_passive);
+			hbr_back_active = CreateSolidBrush(back_active);
+			hbr_back_pressed = CreateSolidBrush(back_pressed);
+
+			hbr_comp = CreateSolidBrush(comp);
+			hbr_comp_passive = CreateSolidBrush(comp_passive);
+			hbr_comp_active = CreateSolidBrush(comp_active);
+			hbr_comp_pressed = CreateSolidBrush(comp_pressed);
+		}
+
 		~HBRSTRUCT()
 		{
 			if (hbr_back)
@@ -48,9 +82,9 @@ protected:
 				DeleteObject(hbr_comp_active);
 			if (hbr_comp_pressed)
 				DeleteObject(hbr_comp_pressed);
-			
+
 		}
-		
+
 		// gets the brush for painting the back of the button given the state
 		HBRUSH getBack(BUTTONSTATE state)
 		{
