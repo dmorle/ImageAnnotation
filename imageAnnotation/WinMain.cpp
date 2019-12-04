@@ -337,3 +337,39 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	}
 	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
 }
+
+/**********************************
+**								 **
+** Start of non-client functions **
+**								 **
+**********************************/
+
+void MainWindow::onCloseClick()
+{
+
+}
+
+void MainWindow::onMaximizeClick()
+{
+
+}
+
+void MainWindow::onMinimizeClick()
+{
+
+}
+
+void MainWindow::onFileClick()
+{
+
+}
+
+void MainWindow::onEditClick()
+{
+
+}
+
+void MainWindow::onPreferencesClick()
+{
+
+}

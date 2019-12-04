@@ -36,6 +36,13 @@ class MainWindow : public BaseWindow<MainWindow>
 
 	void	createDefaultLayout();
 
+	void	onCloseClick();
+	void	onMaximizeClick();
+	void	onMinimizeClick();
+	void	onFileClick();
+	void	onEditClick();
+	void	onPreferencesClick();
+
 public:
 
 	MainWindow() : pFactory(NULL), pRenderTarget(NULL) {}
