@@ -2,13 +2,6 @@
 #define NCTEXTBUTTON_H
 
 #include "NCButton.h"
-//#include <gdiplusheaders.h>
-//#include <gdiplusbrush.h>
-//#include <gdipluscolor.h>
-//#include <gdiplusgraphics.h>
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment (lib,"Gdiplus.lib")
 
 class NCTextButton :
 	public NCButton

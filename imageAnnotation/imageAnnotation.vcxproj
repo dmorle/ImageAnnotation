@@ -127,12 +127,14 @@
     <ClInclude Include="basewin.h" />
     <ClInclude Include="NCComponents\CloseButton.h" />
     <ClInclude Include="NCComponents\NCButton.h" />
+    <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NCComponents\CloseButton.cpp" />
     <ClCompile Include="NCComponents\NCButton.cpp" />
+    <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>

@@ -59,6 +59,8 @@ NCTextButton::NCTextButton(
 
 void NCTextButton::display(HDC hdc)
 {
+	NCButton::display(hdc);
+
 	SolidBrush* psbr = getCompBrush();
 	assert(psbr != NULL);
 

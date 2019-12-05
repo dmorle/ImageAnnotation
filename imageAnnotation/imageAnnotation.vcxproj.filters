@@ -36,6 +36,9 @@
     <ClInclude Include="NCComponents\CloseButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
+    <ClInclude Include="NCComponents\NCTextButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Widget.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
     <ClCompile Include="NCComponents\CloseButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\NCTextButton.cpp">
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
   </ItemGroup>
