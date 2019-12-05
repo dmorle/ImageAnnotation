@@ -15,7 +15,8 @@ public:
 		COLORREF comp_passive,
 		COLORREF comp_active,
 		COLORREF comp_pressed,
-		void (*onClick)()
+		void (*onClick)(),
+		RECT rc
 	);
 	CloseButton(
 		COLORREF back_passive,
@@ -24,8 +25,11 @@ public:
 		COLORREF comp_passive,
 		COLORREF comp_active,
 		COLORREF comp_pressed,
-		void (*onClick)()
+		void (*onClick)(),
+		RECT rc
 	);
+
+	void translate(LONG dx, LONG dy);
 
 	void display(HDC hdc);
 

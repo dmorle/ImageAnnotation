@@ -7,6 +7,8 @@
 using namespace Gdiplus;
 #pragma comment (lib,"Gdiplus.lib")
 
+class MainWindow;
+
 enum BUTTONSTATE
 {
 	PASSIVE,

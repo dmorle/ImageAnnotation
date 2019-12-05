@@ -12,7 +12,8 @@ CloseButton::CloseButton(
 	COLORREF comp_passive,
 	COLORREF comp_active,
 	COLORREF comp_pressed,
-	void(*onClick)()
+	void(*onClick)(),
+	RECT rc
 ) : NCButton(
 	back,
 	back_passive,
@@ -23,7 +24,10 @@ CloseButton::CloseButton(
 	comp_active,
 	comp_pressed,
 	onClick
-) {}
+)
+{
+	this->rc = rc;
+}
 
 CloseButton::CloseButton(
 	COLORREF back_passive,
@@ -32,7 +36,8 @@ CloseButton::CloseButton(
 	COLORREF comp_passive,
 	COLORREF comp_active,
 	COLORREF comp_pressed,
-	void(*onClick)()
+	void(*onClick)(),
+	RECT rc
 ) : NCButton(
 	back_passive,
 	back_active,
@@ -41,7 +46,10 @@ CloseButton::CloseButton(
 	comp_active,
 	comp_pressed,
 	onClick
-) {}
+)
+{
+	this->rc = rc;
+}
 
 void CloseButton::display(HDC hdc)
 {

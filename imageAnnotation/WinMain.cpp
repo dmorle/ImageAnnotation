@@ -5,6 +5,46 @@
 #define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
 #define TOD2D1RECTF(rc) D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom)
 
+namespace NCFunc{
+	HWND hwnd;
+
+	/**********************************
+	**								 **
+	** Start of non-client functions **
+	**								 **
+	**********************************/
+
+	void onCloseClick()
+	{
+		PostMessage(hwnd, WM_CLOSE, 0, 0);
+	}
+
+	void onMaximizeClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onMinimizeClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onFileClick()
+	{
+
+	}
+
+	void onEditClick()
+	{
+
+	}
+
+	void onPreferencesClick()
+	{
+
+	}
+}
+
 void MainWindow::savePalette(std::string path)
 {
 
@@ -32,6 +72,39 @@ void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 			widgets[0]->resize(0, 0, size.width, size.height);
 		}
 	}
+}
+
+void MainWindow::CreateNCButtons()
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	RECT rc{
+		rcWin.right - rcWin.left - 50,
+		0,
+		rcWin.right - rcWin.left,
+		top_off
+	};
+	
+
+	ncComponents.push_back(new
+		CloseButton(
+			(COLORREF)NULL,
+			TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+			TOCOLORREF(palette[appPalette::PASSIVE]),
+			TOCOLORREF(palette[appPalette::ACTIVE]),
+			TOCOLORREF(palette[appPalette::TEXT]),
+			(COLORREF)NULL,
+			(COLORREF)NULL,
+			(COLORREF)NULL,
+			&NCFunc::onCloseClick,
+			rc
+		)
+	);
+}
+
+void MainWindow::DiscardNCButtons()
+{
 }
 
 HRESULT MainWindow::CreateGraphicsResources()
@@ -223,6 +296,9 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		FillRect(hdc, &rc, hbr);
 		DeleteObject(hbr);
 
+		for (auto e : ncComponents)
+			e->display(hdc);
+
 		ReleaseDC(m_hwnd, hdc);
 	}
 }
@@ -262,6 +338,8 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
+
+		NCFunc::hwnd = m_hwnd;
 		
 		return 0;
 
@@ -315,10 +393,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		{
 			NCCALCSIZE_PARAMS* ncparams = (NCCALCSIZE_PARAMS*)lparam;
 			printf("WM_NCCALCSIZE wparam:True\n");
-			// ncparams->rgrc[0].left += left_off;
-			ncparams->rgrc[0].top += 27;
-			// ncparams->rgrc[0].right -= right_off;
-			// ncparams->rgrc[0].bottom -= bottom_off;
+			ncparams->rgrc[0].left += left_off;
+			ncparams->rgrc[0].top += top_off;
+			ncparams->rgrc[0].right -= right_off;
+			ncparams->rgrc[0].bottom -= bottom_off;
 			return 0;
 		}
 		break;
@@ -336,40 +414,4 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	}
 	}
 	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
-}
-
-/**********************************
-**								 **
-** Start of non-client functions **
-**								 **
-**********************************/
-
-void MainWindow::onCloseClick()
-{
-	PostMessage(m_hwnd, WM_CLOSE, 0, 0);
-}
-
-void MainWindow::onMaximizeClick()
-{
-	PostMessage(m_hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
-}
-
-void MainWindow::onMinimizeClick()
-{
-	PostMessage(m_hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
-}
-
-void MainWindow::onFileClick()
-{
-
-}
-
-void MainWindow::onEditClick()
-{
-
-}
-
-void MainWindow::onPreferencesClick()
-{
-
 }

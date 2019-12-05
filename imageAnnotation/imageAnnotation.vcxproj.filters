@@ -39,6 +39,9 @@
     <ClInclude Include="NCComponents\NCTextButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
+    <ClInclude Include="NCComponents\NCCmp.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Widget.cpp">
