@@ -346,17 +346,17 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 
 void MainWindow::onCloseClick()
 {
-
+	PostMessage(m_hwnd, WM_CLOSE, 0, 0);
 }
 
 void MainWindow::onMaximizeClick()
 {
-
+	PostMessage(m_hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
 }
 
 void MainWindow::onMinimizeClick()
 {
-
+	PostMessage(m_hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
 }
 
 void MainWindow::onFileClick()
