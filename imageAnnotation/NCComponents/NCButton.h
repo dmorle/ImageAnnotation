@@ -11,8 +11,35 @@ enum BUTTONSTATE
 	PRESSED
 };
 
-typedef struct HBRSTRUCT HBRSTRUCT;
-struct HBRSTRUCT;
+typedef struct GRAPHICSTRUCT GRAPHICSTRUCT;
+struct GRAPHICSTRUCT {
+public:
+	GRAPHICSTRUCT(
+		COLORREF back,
+		COLORREF back_passive,
+		COLORREF back_active,
+		COLORREF back_pressed,
+		COLORREF comp,
+		COLORREF comp_passive,
+		COLORREF comp_active,
+		COLORREF comp_pressed
+	);
+	~GRAPHICSTRUCT();
+
+	HBRUSH getBack(BUTTONSTATE state);
+	COLORREF getComp(BUTTONSTATE state);
+
+private:
+	HBRUSH hbr_back;			// default for back of button
+	HBRUSH hbr_back_passive;	// color for back of button passively
+	HBRUSH hbr_back_active;		// color for back of button when active
+	HBRUSH hbr_back_pressed;	// color for back of button when pressed
+
+	COLORREF crf_comp;			// default for button colors
+	COLORREF crf_comp_passive;	// color for components passively
+	COLORREF crf_comp_active;	// color for components when active
+	COLORREF crf_comp_pressed;	// color for components when pressed
+};
 
 class NCButton
 {
@@ -28,7 +55,16 @@ public:
 		COLORREF comp_pressed,
 		void (*onClick)()
 	);
-	~NCButton();
+	NCButton(
+		COLORREF back_passive,
+		COLORREF back_active,
+		COLORREF back_pressed,
+		COLORREF comp_passive,
+		COLORREF comp_active,
+		COLORREF comp_pressed,
+		void (*onClick)()
+	);
+	virtual ~NCButton();
 
 	void LDown(POINT p);
 	void LUp(POINT p);
@@ -41,7 +77,7 @@ protected:
 	
 	void (*onClick)();
 
-	HBRSTRUCT *pBrushes;
+	GRAPHICSTRUCT *pAssets;
 	BUTTONSTATE state;
 
 	BOOL contains(POINT p);
