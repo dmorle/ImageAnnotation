@@ -14,8 +14,8 @@ NCTextButton::NCTextButton(
 	COLORREF comp_pressed,
 	void(*onClick)(),
 	RECT rc,
-	const LPCSTR msg,
-	UINT fontSize = 12
+	LPCSTR msg,
+	UINT fontSize
 ) : NCButton(
 	back,
 	back_passive,
@@ -43,8 +43,8 @@ NCTextButton::NCTextButton(
 	COLORREF comp_pressed,
 	void(*onClick)(),
 	RECT rc,
-	const LPCSTR msg,
-	UINT fontSize = 12
+	LPCSTR msg,
+	UINT fontSize
 ) : NCButton(
 	back_passive,
 	back_active,

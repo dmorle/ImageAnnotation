@@ -79,28 +79,113 @@ void MainWindow::CreateNCButtons()
 	RECT rcWin;
 	GetWindowRect(m_hwnd, &rcWin);
 
-	RECT rc{
-		rcWin.right - rcWin.left - 50,
-		0,
-		rcWin.right - rcWin.left,
-		top_off
-	};
-	
+	{
+		// creating the File button
 
-	ncComponents.push_back(new
-		CloseButton(
+		RECT rc{
+			0,
+			0,
+			100,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onFileClick,
+				rc,
+				(LPCSTR)"File"
+			)
+		);
+	}
+
+	{
+		// creating the Edit button
+
+		RECT rc{
+			100,
+			0,
+			200,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
 			(COLORREF)NULL,
-			TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-			TOCOLORREF(palette[appPalette::PASSIVE]),
-			TOCOLORREF(palette[appPalette::ACTIVE]),
-			TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onEditClick,
+				rc,
+				(LPCSTR)"Edit"
+			)
+		);
+	}
+
+	{
+		// creating the Preferences button
+
+		RECT rc{
+			200,
+			0,
+			300,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
 			(COLORREF)NULL,
-			(COLORREF)NULL,
-			(COLORREF)NULL,
-			&NCFunc::onCloseClick,
-			rc
-		)
-	);
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onPreferencesClick,
+				rc,
+				(LPCSTR)"Preferences"
+			)
+		);
+	}
+
+	{
+		// creating the close button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 50,
+			0,
+			rcWin.right - rcWin.left,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			CloseButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onCloseClick,
+				rc
+			)
+		);
+	}
 }
 
 void MainWindow::DiscardNCButtons()
@@ -175,11 +260,11 @@ void MainWindow::Paint()
 
 		pRenderTarget->Clear(palette[appPalette::BACKGROUND]);
 
-		/*for (auto& e : widgets)
+		for (auto& e : widgets)
 			e->render(pRenderTarget);
 
 		if (activeWidget)
-			activeWidget->render(pRenderTarget);*/
+			activeWidget->render(pRenderTarget);
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -292,7 +377,7 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		0,
 		0,
 		rcWin.right - rcWin.left,
-		rcWin.bottom - rcWin.top
+		top_off
 	};
 
 	HDC hdc;
@@ -302,13 +387,24 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		hdc = GetDCEx(m_hwnd, (HRGN)wparam, DCX_WINDOW | DCX_CACHE | DCX_LOCKWINDOWUPDATE | DCX_INTERSECTRGN);
 
 	if (hdc) {
+		HDC hbuffer = CreateCompatibleDC(hdc);
+
+		HBITMAP hbmp = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+		HBITMAP holdbmp = (HBITMAP)SelectObject(hbuffer, hbmp);
+
 		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::WIDGET_BACK]));
-		FillRect(hdc, &rc, hbr);
+		FillRect(hbuffer, &rc, hbr);
 		DeleteObject(hbr);
 
 		for (auto e : ncComponents)
-			e->display(hdc);
+			e->display(hbuffer);
+		
+		BitBlt(hdc, 0, 0, rc.right, rc.bottom, hbuffer, 0, 0, SRCCOPY);
 
+		SelectObject(hbuffer, holdbmp);
+		DeleteObject(hbmp);
+
+		DeleteDC(hbuffer);
 		ReleaseDC(m_hwnd, hdc);
 	}
 }
@@ -323,8 +419,7 @@ void MainWindow::ncMoveMove(WPARAM wparam, LPARAM lparam)
 	for (auto e : ncComponents)
 		e->mousemove(p);
 
-	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
-		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+	RedrawWindow(m_hwnd, NULL, NULL, RDW_INVALIDATE | RDW_FRAME | RDW_NOERASE | RDW_UPDATENOW);
 }
 
 void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
@@ -401,6 +496,9 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		SafeRelease(&pFactory);
 		PostQuitMessage(0);
 		return 0;
+
+	case WM_ERASEBKGND:
+		return 1;
 
 	case WM_PAINT:
 		Paint();

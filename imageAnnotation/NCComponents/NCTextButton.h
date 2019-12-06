@@ -6,6 +6,7 @@
 class NCTextButton :
 	public NCButton
 {
+public:
 	NCTextButton(
 		COLORREF back,
 		COLORREF back_passive,
@@ -17,8 +18,8 @@ class NCTextButton :
 		COLORREF comp_pressed,
 		void (*onClick)(),
 		RECT rc,
-		const LPCSTR msg,
-		UINT fontSize
+		LPCSTR msg,
+		UINT fontSize = 12
 	);
 	NCTextButton(
 		COLORREF back_passive,
@@ -29,13 +30,13 @@ class NCTextButton :
 		COLORREF comp_pressed,
 		void (*onClick)(),
 		RECT rc,
-		const LPCSTR msg,
-		UINT fontSize
+		LPCSTR msg,
+		UINT fontSize = 12
 	);
 
 	void display(HDC hdc);
 
-protected:
+private:
 	HFONT hfont;
 	LPCSTR msg;
 };
