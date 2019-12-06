@@ -1,65 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  <Filter Include="Header Files\NCComponents">
-      <UniqueIdentifier>{d6e09da1-4494-4ce1-85d2-36a15415e846}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\NCComponents">
-      <UniqueIdentifier>{9246ea74-0ee9-421b-a359-e16bf7978a53}</UniqueIdentifier>
-    </Filter>
-  <Filter Include="Header Files\WidgetComponents">
-      <UniqueIdentifier>{3979f172-1490-4d52-acb9-fc72ab33cbd5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\WidgetComponents">
-      <UniqueIdentifier>{712e061e-d47e-4e8e-a80f-e11cf0be6622}</UniqueIdentifier>
-    </Filter>
-  <ItemGroup>
-    <ClCompile Include="WinMain.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="WidgetComponents\BaseComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponents\InteractiveComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponents\ParentComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
     <ClCompile Include="Widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="WinMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\CloseButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\MaxButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\MinButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\NCButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\NCTextButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\RestoreDownButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="basewin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WinMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NCComponents\NCButton.h">
-      <Filter>Header Files\NCComponents</Filter>
+    <ClInclude Include="basewin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\BaseComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\WidgetCmp.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\ParentComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\InteractiveComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
     <ClInclude Include="NCComponents\CloseButton.h">
-      <Filter>Header Files\NCComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="NCComponents\NCTextButton.h">
-      <Filter>Header Files\NCComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="NCComponents\NCCmp.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
     <ClInclude Include="NCComponents\MaxButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
-    <ClInclude Include="NCComponents\MinButton.h">
+    <ClInclude Include="NCComponents\NCButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
+    <ClInclude Include="NCComponents\NCCmp.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\NCTextButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\RestoreDownButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e0b39fe7-7773-4700-97c3-95e437ca5702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\NCComponents">
+      <UniqueIdentifier>{8ef9c73a-3cd8-449d-bb31-2d6e90d78ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WidgetComponents">
+      <UniqueIdentifier>{5b3037b2-1b49-48cd-9941-711933870c40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c4724c7c-4a16-4aec-9879-b13e33b61253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{1bdcd160-2322-461a-a722-9800faecd2ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\NCComponents">
+      <UniqueIdentifier>{6876db69-6866-4340-8b1c-061936af381f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WidgetComponents">
+      <UniqueIdentifier>{99c7160e-daee-4892-9063-5b196511d332}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
