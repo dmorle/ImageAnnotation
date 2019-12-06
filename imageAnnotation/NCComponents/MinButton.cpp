@@ -1,8 +1,8 @@
-#include "CloseButton.h"
+#include "MinButton.h"
 
 
 
-CloseButton::CloseButton(
+MinButton::MinButton(
 	COLORREF back,
 	COLORREF back_passive,
 	COLORREF back_active,
@@ -28,7 +28,7 @@ CloseButton::CloseButton(
 	this->rc = rc;
 }
 
-CloseButton::CloseButton(
+MinButton::MinButton(
 	COLORREF back_passive,
 	COLORREF back_active,
 	COLORREF back_pressed,
@@ -50,22 +50,7 @@ CloseButton::CloseButton(
 	this->rc = rc;
 }
 
-void CloseButton::display(HDC hdc)
+void MinButton::display(HDC hdc)
 {
 	NCButton::display(hdc);
-
-	LONG height = rc.bottom - rc.top;
-	LONG width = rc.right - rc.left;
-	LONG size = min(width, height) / 6;
-	LONG xMid = (rc.left + rc.right) / 2;
-	LONG yMid = (rc.top + rc.bottom) / 2;
-
-	HPEN hpen = CreatePen(PS_SOLID, 1, pAssets->getComp(state));
-	SelectObject(hdc, hpen);
-	
-	MoveToEx(hdc, xMid - size, yMid - size, NULL);
-	LineTo(hdc, xMid + size + 1, yMid + size + 1);
-
-	MoveToEx(hdc, xMid - size, yMid + size, NULL);
-	LineTo(hdc, xMid + size + 1, yMid - size - 1);
 }

@@ -126,16 +126,22 @@
   <ItemGroup>
     <ClInclude Include="basewin.h" />
     <ClInclude Include="NCComponents\CloseButton.h" />
+    <ClInclude Include="NCComponents\MaxButton.h" />
+    <ClInclude Include="NCComponents\MinButton.h" />
     <ClInclude Include="NCComponents\NCButton.h" />
     <ClInclude Include="NCComponents\NCCmp.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
+    <ClInclude Include="NCComponents\RestoreDownButton.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NCComponents\CloseButton.cpp" />
+    <ClCompile Include="NCComponents\MaxButton.cpp" />
+    <ClCompile Include="NCComponents\MinButton.cpp" />
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
+    <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>

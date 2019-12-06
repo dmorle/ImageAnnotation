@@ -19,12 +19,17 @@ namespace NCFunc{
 		PostMessage(hwnd, WM_CLOSE, 0, 0);
 	}
 
-	void onMaximizeClick()
+	void onMaxClick()
 	{
 		PostMessage(hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
 	}
 
-	void onMinimizeClick()
+	void onRestoreDownClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_RESTORED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onMinClick()
 	{
 		PostMessage(hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
 	}
@@ -182,6 +187,60 @@ void MainWindow::CreateNCButtons()
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				&NCFunc::onCloseClick,
+				rc
+			)
+		);
+	}
+
+	{
+		// creating the max button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 99,
+			2,
+			rcWin.right - rcWin.left - 51,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			MaxButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onMaxClick,
+				rc
+			)
+		);
+	}
+
+	{
+		// creating the min button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 149,
+			2,
+			rcWin.right - rcWin.left - 101,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			MinButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onMinClick,
 				rc
 			)
 		);

@@ -42,6 +42,15 @@
     <ClInclude Include="NCComponents\NCCmp.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
+    <ClInclude Include="NCComponents\MaxButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\MinButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\RestoreDownButton.h">
+      <Filter>Header Files\NCComponents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Widget.cpp">
@@ -57,6 +66,15 @@
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
     <ClCompile Include="NCComponents\NCTextButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\MaxButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\MinButton.cpp">
+      <Filter>Source Files\NCComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="NCComponents\RestoreDownButton.cpp">
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
   </ItemGroup>
