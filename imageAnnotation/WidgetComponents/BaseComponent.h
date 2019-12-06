@@ -16,11 +16,12 @@ public:
 	virtual void MouseMove(POINT p) = 0;
 	virtual void LDown(POINT p) = 0;
 	virtual void LUp(POINT p) = 0;
+	virtual void MouseLeave() = 0;
+
+	virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 
 protected:
 	PRECT pRc;
-
-	virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 };
 
 typedef BaseComponent* PBaseComponent;
