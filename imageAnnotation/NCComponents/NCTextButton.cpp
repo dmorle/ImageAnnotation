@@ -1,5 +1,4 @@
 #include "NCTextButton.h"
-#include <assert.h>
 
 
 
@@ -28,7 +27,8 @@ NCTextButton::NCTextButton(
 	onClick
 )
 {
-	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, TRUE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+	this->fontSize = fontSize;
+	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
 	this->rc = rc;
 	this->msg = msg;
@@ -55,7 +55,8 @@ NCTextButton::NCTextButton(
 	onClick
 )
 {
-	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, TRUE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+	this->fontSize = fontSize;
+	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
 		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
 	this->rc = rc;
 	this->msg = msg;
@@ -67,5 +68,13 @@ void NCTextButton::display(HDC hdc)
 
 	SetTextColor(hdc, pAssets->getComp(state));
 	SelectObject(hdc, hfont);
-	DrawText(hdc, msg, -1, &rc, DT_VCENTER | DT_CENTER);
+
+	RECT rcTxt{
+		rc.left,
+		rc.top + (rc.bottom - fontSize) / 2,
+		rc.right,
+		rc.bottom
+	};
+
+	DrawText(hdc, msg, -1, &rcTxt, DT_CENTER);
 }

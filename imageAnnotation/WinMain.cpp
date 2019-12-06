@@ -83,9 +83,9 @@ void MainWindow::CreateNCButtons()
 		// creating the File button
 
 		RECT rc{
-			0,
-			0,
-			100,
+			51,
+			2,
+			99,
 			top_off
 		};
 
@@ -110,9 +110,9 @@ void MainWindow::CreateNCButtons()
 		// creating the Edit button
 
 		RECT rc{
-			100,
-			0,
-			200,
+			101,
+			2,
+			149,
 			top_off
 		};
 
@@ -137,9 +137,9 @@ void MainWindow::CreateNCButtons()
 		// creating the Preferences button
 
 		RECT rc{
-			200,
-			0,
-			300,
+			151,
+			2,
+			249,
 			top_off
 		};
 
@@ -164,9 +164,9 @@ void MainWindow::CreateNCButtons()
 		// creating the close button
 
 		RECT rc{
-			rcWin.right - rcWin.left - 50,
-			0,
-			rcWin.right - rcWin.left,
+			rcWin.right - rcWin.left - 49,
+			2,
+			rcWin.right - rcWin.left - 2,
 			top_off
 		};
 
@@ -392,7 +392,7 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		HBITMAP hbmp = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
 		HBITMAP holdbmp = (HBITMAP)SelectObject(hbuffer, hbmp);
 
-		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::WIDGET_BACK]));
+		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::	BACKGROUND]));
 		FillRect(hbuffer, &rc, hbr);
 		DeleteObject(hbr);
 

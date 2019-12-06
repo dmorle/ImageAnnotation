@@ -19,7 +19,7 @@ public:
 		void (*onClick)(),
 		RECT rc,
 		LPCSTR msg,
-		UINT fontSize = 12
+		UINT fontSize = 15
 	);
 	NCTextButton(
 		COLORREF back_passive,
@@ -31,12 +31,13 @@ public:
 		void (*onClick)(),
 		RECT rc,
 		LPCSTR msg,
-		UINT fontSize = 12
+		UINT fontSize = 15
 	);
 
 	void display(HDC hdc);
 
 private:
+	UINT fontSize;
 	HFONT hfont;
 	LPCSTR msg;
 };

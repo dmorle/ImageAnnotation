@@ -52,9 +52,9 @@ struct appPalette
 	};
 
 	appPalette() :
-		background(0.0f, 0.8f, 0.0f),
-		widgetBack(0.1f, 0.1f, 0.1f),
-		passive(0.2f, 0.2f, 0.2f),
+		background(0.0f, 0.0f, 0.6f),
+		widgetBack(0.15f, 0.15f, 0.15f),
+		passive(0.3f, 0.3f, 0.3f),
 		active(0.4f, 0.4f, 0.4f),
 		text(1.0f, 1.0f, 1.0f)
 	{}

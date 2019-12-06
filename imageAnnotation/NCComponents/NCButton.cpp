@@ -161,6 +161,8 @@ void NCButton::display(HDC hdc)
 	HBRUSH hbr = pAssets->getBack(state);
 	if (hbr)
 		FillRect(hdc, &rc, hbr);
+
+	SetBkMode(hdc, TRANSPARENT);
 }
 
 BOOL NCButton::contains(POINT p)
