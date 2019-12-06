@@ -14,7 +14,7 @@ NCTextButton::NCTextButton(
 	COLORREF comp_pressed,
 	void(*onClick)(),
 	RECT rc,
-	const PWCHAR msg,
+	const LPCSTR msg,
 	UINT fontSize = 12
 ) : NCButton(
 	back,
@@ -26,8 +26,10 @@ NCTextButton::NCTextButton(
 	comp_active,
 	comp_pressed,
 	onClick
-), font(L"Arial", fontSize)
+)
 {
+	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, TRUE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
 	this->rc = rc;
 	this->msg = msg;
 }
@@ -41,7 +43,7 @@ NCTextButton::NCTextButton(
 	COLORREF comp_pressed,
 	void(*onClick)(),
 	RECT rc,
-	const PWCHAR msg,
+	const LPCSTR msg,
 	UINT fontSize = 12
 ) : NCButton(
 	back_passive,
@@ -51,8 +53,10 @@ NCTextButton::NCTextButton(
 	comp_active,
 	comp_pressed,
 	onClick
-), font(L"Arial", fontSize)
+)
 {
+	hfont = CreateFont(fontSize, 0, 0, 0, FW_DONTCARE, FALSE, TRUE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
 	this->rc = rc;
 	this->msg = msg;
 }
@@ -61,19 +65,7 @@ void NCTextButton::display(HDC hdc)
 {
 	NCButton::display(hdc);
 
-	SolidBrush* psbr = getCompBrush();
-	assert(psbr != NULL);
-
-	Graphics g(hdc);
-	Status st = g.DrawString(msg, -1, &font, PointF(rc.left, rc.top), psbr);
-	assert(st == Ok);
-
-	delete psbr;
-}
-
-SolidBrush* NCTextButton::getCompBrush()
-{
-	Color c;
-	c.SetFromCOLORREF(pAssets->getComp(state));
-	return new SolidBrush(c);
+	SetTextColor(hdc, pAssets->getComp(state));
+	SelectObject(hdc, hfont);
+	DrawText(hdc, msg, -1, &rc, DT_VCENTER | DT_CENTER);
 }

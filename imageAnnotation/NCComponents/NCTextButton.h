@@ -17,7 +17,7 @@ class NCTextButton :
 		COLORREF comp_pressed,
 		void (*onClick)(),
 		RECT rc,
-		const PWCHAR msg,
+		const LPCSTR msg,
 		UINT fontSize
 	);
 	NCTextButton(
@@ -29,17 +29,15 @@ class NCTextButton :
 		COLORREF comp_pressed,
 		void (*onClick)(),
 		RECT rc,
-		const PWCHAR msg,
+		const LPCSTR msg,
 		UINT fontSize
 	);
 
 	void display(HDC hdc);
 
 protected:
-	Font font;
-	PWCHAR msg;
-
-	SolidBrush* getCompBrush();
+	HFONT hfont;
+	LPCSTR msg;
 };
 
 #endif

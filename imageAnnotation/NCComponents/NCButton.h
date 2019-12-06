@@ -3,9 +3,6 @@
 
 #include <Windows.h>
 #include <wingdi.h>
-#include <gdiplus.h>
-using namespace Gdiplus;
-#pragma comment (lib,"Gdiplus.lib")
 
 class MainWindow;
 
