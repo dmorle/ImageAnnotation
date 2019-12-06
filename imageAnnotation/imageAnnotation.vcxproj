@@ -125,11 +125,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Widget.cpp" />
+    <ClCompile Include="WidgetComponents\BaseComponent.cpp" />
+    <ClCompile Include="WidgetComponents\InteractiveComponent.cpp" />
+    <ClCompile Include="WidgetComponents\ParentComponent.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
     <ClInclude Include="Widget.h" />
+    <ClInclude Include="WidgetComponents\BaseComponent.h" />
+    <ClInclude Include="WidgetComponents\InteractiveComponent.h" />
+    <ClInclude Include="WidgetComponents\ParentComponent.h" />
+    <ClInclude Include="WidgetComponents\WidgetCmp.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

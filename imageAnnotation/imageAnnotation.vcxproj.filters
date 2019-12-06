@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\WidgetComponents">
+      <UniqueIdentifier>{3979f172-1490-4d52-acb9-fc72ab33cbd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WidgetComponents">
+      <UniqueIdentifier>{712e061e-d47e-4e8e-a80f-e11cf0be6622}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -20,6 +26,15 @@
     </ClCompile>
     <ClCompile Include="Widget.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponents\BaseComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponents\InteractiveComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetComponents\ParentComponent.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +46,18 @@
     </ClInclude>
     <ClInclude Include="Widget.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\BaseComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\WidgetCmp.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\InteractiveComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\ParentComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
