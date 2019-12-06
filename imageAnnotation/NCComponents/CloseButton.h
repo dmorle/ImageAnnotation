@@ -32,9 +32,6 @@ public:
 	void translate(LONG dx, LONG dy);
 
 	void display(HDC hdc);
-
-private:
-	Pen* getCompPen();
 };
 
 #endif

@@ -93,7 +93,7 @@ void MainWindow::CreateNCButtons()
 			TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 			TOCOLORREF(palette[appPalette::PASSIVE]),
 			TOCOLORREF(palette[appPalette::ACTIVE]),
-			TOCOLORREF(palette[appPalette::TEXT]),
+			TOCOLORREF(palette[appPalette::TEXT_COLOR]),
 			(COLORREF)NULL,
 			(COLORREF)NULL,
 			(COLORREF)NULL,
@@ -151,7 +151,7 @@ HRESULT MainWindow::CreateGraphicsResources()
 		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::ACTIVE], &brushes.active);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT], &brushes.text);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT_COLOR], &brushes.text);
 	return hr;
 }
 
@@ -228,6 +228,16 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 				activeWidget = e->MouseMove(wparam, p);
 				break;
 			}
+
+	BOOL redraw = FALSE;
+
+	for (auto e : ncComponents)
+		if (e->mouseleave())
+			redraw = TRUE;
+
+	if (redraw)
+		SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+			SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 void MainWindow::MouseLeave(WPARAM wparam, LPARAM lparam)
@@ -303,6 +313,48 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 	}
 }
 
+void MainWindow::ncMoveMove(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->mousemove(p);
+
+	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
+void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->LDown(p);
+
+	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
+void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->LUp(p);
+
+	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
 void MainWindow::createDefaultLayout()
 {
 	
@@ -340,6 +392,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 			return -1;  // Fail CreateWindowEx.
 
 		NCFunc::hwnd = m_hwnd;
+		CreateNCButtons();
 		
 		return 0;
 
@@ -404,14 +457,29 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 
 	case WM_NCHITTEST:
 	{
+		RECT rcWin;
+		GetWindowRect(m_hwnd, &rcWin);
+
 		INT x = GET_X_LPARAM(lparam);
 		INT y = GET_Y_LPARAM(lparam);
-		//return HTCLOSE;
-		//return HTMAXBUTTON;
-		//return HTMINBUTTON;
-		x = 2;
-		break;
+
+		// temp code
+		if (y < rcWin.top + top_off)
+			return HTCAPTION;
+		return HTCLIENT;
 	}
+
+	case WM_NCMOUSEMOVE:
+		ncMoveMove(wparam, lparam);
+		return 0;
+
+	case WM_NCLBUTTONUP:
+		ncLUp(wparam, lparam);
+		return 0;
+
+	case WM_NCLBUTTONDOWN:
+		ncLDown(wparam, lparam);
+		return 0;
 	}
 	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
 }

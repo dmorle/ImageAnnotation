@@ -74,6 +74,7 @@ public:
 	void LDown(POINT p);
 	void LUp(POINT p);
 	void mousemove(POINT p);
+	BOOL mouseleave();
 
 	virtual void display(HDC hdc);
 

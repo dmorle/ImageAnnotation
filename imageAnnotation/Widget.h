@@ -48,7 +48,7 @@ struct appPalette
 		WIDGET_BACK,
 		PASSIVE,
 		ACTIVE,
-		TEXT
+		TEXT_COLOR
 	};
 
 	appPalette() :
@@ -84,7 +84,7 @@ struct appPalette
 			return passive;
 		case ACTIVE:
 			return active;
-		case TEXT:
+		case TEXT_COLOR:
 			return text;
 		}
 	}

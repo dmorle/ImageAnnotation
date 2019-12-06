@@ -91,6 +91,7 @@ NCButton::NCButton(
 		comp_pressed
 	);
 	this->onClick = onClick;
+	state = PASSIVE;
 }
 
 NCButton::NCButton(
@@ -114,6 +115,7 @@ NCButton::NCButton(
 		comp_pressed
 	);
 	this->onClick = onClick;
+	state = PASSIVE;
 }
 
 NCButton::~NCButton()
@@ -137,10 +139,21 @@ void NCButton::LUp(POINT p)
 
 void NCButton::mousemove(POINT p)
 {
-	if (contains(p) && state != PRESSED)
-		state = ACTIVE;
+	if (contains(p)) {
+		if (state != PRESSED)
+			state = ACTIVE;
+	}
+	else
+		state = PASSIVE;
+}
 
-	state = PASSIVE;
+BOOL NCButton::mouseleave()
+{
+	if (state != PASSIVE) {
+		state = PASSIVE;
+		return TRUE;
+	}
+	return FALSE;
 }
 
 void NCButton::display(HDC hdc)
