@@ -1,10 +1,18 @@
 #include "BaseComponent.h"
 
+
+
+BaseComponent::~BaseComponent()
+{
+	if (pRc)
+		delete pRc;
+}
+
 BOOL BaseComponent::contains(POINT p)
 {
 	if (
-		p.x >= rc.left && p.x < rc.right &&
-		p.y >= rc.top && p.y < rc.bottom
+		p.x >= pRc->left && p.x < pRc->right &&
+		p.y >= pRc->top && p.y < pRc->bottom
 		)
 		return TRUE;
 

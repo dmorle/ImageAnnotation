@@ -9,12 +9,20 @@
 class BaseComponent
 {
 public:
+	~BaseComponent();
+
 	BOOL contains(POINT p);
 
+	virtual void MouseMove(POINT p) = 0;
+	virtual void LDown(POINT p) = 0;
+	virtual void LUp(POINT p) = 0;
+
 protected:
-	RECT rc;
+	PRECT pRc;
 
 	virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 };
+
+typedef BaseComponent* PBaseComponent;
 
 #endif

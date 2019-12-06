@@ -13,7 +13,7 @@ enum STATE {
 
 #define getOld_SU STATE old = state
 #define runFunc_SU(func, arg) func(arg)
-#define checkPaint_SU(old, state) if (old != state) paintSelf(&rc)
+#define checkPaint_SU(old, state) if (old != state) paintSelf(pRc)
 
 #define StateUpdateFunc(func, arg) getOld_SU; runFunc_SU(func, arg); checkPaint_SU(old, state);
 
