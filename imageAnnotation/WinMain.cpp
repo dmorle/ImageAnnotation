@@ -2,6 +2,54 @@
 
 
 
+#define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
+#define TOD2D1RECTF(rc) D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom)
+
+namespace NCFunc{
+	HWND hwnd;
+
+	/**********************************
+	**								 **
+	** Start of non-client functions **
+	**								 **
+	**********************************/
+
+	void onCloseClick()
+	{
+		PostMessage(hwnd, WM_CLOSE, 0, 0);
+	}
+
+	void onMaxClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onRestoreDownClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_RESTORED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onMinClick()
+	{
+		PostMessage(hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
+	}
+
+	void onFileClick()
+	{
+
+	}
+
+	void onEditClick()
+	{
+
+	}
+
+	void onPreferencesClick()
+	{
+
+	}
+}
+
 void MainWindow::savePalette(std::string path)
 {
 
@@ -29,6 +77,178 @@ void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 			widgets[0]->resize(0, 0, size.width, size.height);
 		}
 	}
+}
+
+void MainWindow::CreateNCButtons()
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	{
+		// creating the File button
+
+		RECT rc{
+			51,
+			2,
+			99,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onFileClick,
+				rc,
+				(LPCSTR)"File"
+			)
+		);
+	}
+
+	{
+		// creating the Edit button
+
+		RECT rc{
+			101,
+			2,
+			149,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
+			(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onEditClick,
+				rc,
+				(LPCSTR)"Edit"
+			)
+		);
+	}
+
+	{
+		// creating the Preferences button
+
+		RECT rc{
+			151,
+			2,
+			249,
+			top_off
+		};
+
+		ncComponents.push_back(new
+			NCTextButton(
+			(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onPreferencesClick,
+				rc,
+				(LPCSTR)"Preferences"
+			)
+		);
+	}
+
+	{
+		// creating the close button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 49,
+			2,
+			rcWin.right - rcWin.left - 2,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			CloseButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onCloseClick,
+				rc
+			)
+		);
+	}
+
+	{
+		// creating the max button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 99,
+			2,
+			rcWin.right - rcWin.left - 51,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			MaxButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onMaxClick,
+				rc
+			)
+		);
+	}
+
+	{
+		// creating the min button
+
+		RECT rc{
+			rcWin.right - rcWin.left - 149,
+			2,
+			rcWin.right - rcWin.left - 101,
+			top_off
+		};
+
+
+		ncComponents.push_back(new
+			MinButton(
+				(COLORREF)NULL,
+				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
+				TOCOLORREF(palette[appPalette::PASSIVE]),
+				TOCOLORREF(palette[appPalette::ACTIVE]),
+				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				(COLORREF)NULL,
+				&NCFunc::onMinClick,
+				rc
+			)
+		);
+	}
+}
+
+void MainWindow::DiscardNCButtons()
+{
 }
 
 HRESULT MainWindow::CreateGraphicsResources()
@@ -75,7 +295,7 @@ HRESULT MainWindow::CreateGraphicsResources()
 		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::ACTIVE], &brushes.active);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT], &brushes.text);
+		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT_COLOR], &brushes.text);
 	return hr;
 }
 
@@ -116,6 +336,13 @@ void MainWindow::Paint()
 
 void MainWindow::Resize()
 {
+	RECT rect;
+	HRGN rgn;
+	GetWindowRect(m_hwnd, &rect);
+	rgn = CreateRectRgn(0, 0, rect.right, rect.bottom);
+	SetWindowRgn(m_hwnd, rgn, TRUE);
+	DeleteObject(rgn);
+
 	if (pRenderTarget != NULL)
 	{
 		D2D1_SIZE_F prev = pRenderTarget->GetSize();
@@ -145,6 +372,16 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 				activeWidget = e->MouseMove(wparam, p);
 				break;
 			}
+
+	BOOL redraw = FALSE;
+
+	for (auto e : ncComponents)
+		if (e->mouseleave())
+			redraw = TRUE;
+
+	if (redraw)
+		SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+			SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
 void MainWindow::MouseLeave(WPARAM wparam, LPARAM lparam)
@@ -191,6 +428,87 @@ void MainWindow::RDown(WPARAM wparam, LPARAM lparam)
 {
 }
 
+void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+	RECT rc{
+		0,
+		0,
+		rcWin.right - rcWin.left,
+		top_off
+	};
+
+	HDC hdc;
+	if (wparam == 0 || wparam == 1)
+		hdc = GetWindowDC(m_hwnd);
+	else
+		hdc = GetDCEx(m_hwnd, (HRGN)wparam, DCX_WINDOW | DCX_CACHE | DCX_LOCKWINDOWUPDATE | DCX_INTERSECTRGN);
+
+	if (hdc) {
+		HDC hbuffer = CreateCompatibleDC(hdc);
+
+		HBITMAP hbmp = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
+		HBITMAP holdbmp = (HBITMAP)SelectObject(hbuffer, hbmp);
+
+		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::	BACKGROUND]));
+		FillRect(hbuffer, &rc, hbr);
+		DeleteObject(hbr);
+
+		for (auto e : ncComponents)
+			e->display(hbuffer);
+		
+		BitBlt(hdc, 0, 0, rc.right, rc.bottom, hbuffer, 0, 0, SRCCOPY);
+
+		SelectObject(hbuffer, holdbmp);
+		DeleteObject(hbmp);
+
+		DeleteDC(hbuffer);
+		ReleaseDC(m_hwnd, hdc);
+	}
+}
+
+void MainWindow::ncMoveMove(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->mousemove(p);
+
+	RedrawWindow(m_hwnd, NULL, NULL, RDW_INVALIDATE | RDW_FRAME | RDW_NOERASE | RDW_UPDATENOW);
+}
+
+void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->LDown(p);
+
+	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
+void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
+{
+	RECT rcWin;
+	GetWindowRect(m_hwnd, &rcWin);
+
+	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
+
+	for (auto e : ncComponents)
+		e->LUp(p);
+
+	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
+		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
 void MainWindow::createDefaultLayout()
 {
 	
@@ -226,6 +544,9 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
+
+		NCFunc::hwnd = m_hwnd;
+		CreateNCButtons();
 		
 		return 0;
 
@@ -234,6 +555,9 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		SafeRelease(&pFactory);
 		PostQuitMessage(0);
 		return 0;
+
+	case WM_ERASEBKGND:
+		return 1;
 
 	case WM_PAINT:
 		Paint();
@@ -263,6 +587,55 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		return 0;
 
 	case WM_RBUTTONDOWN:
+		return 0;
+
+	case WM_NCPAINT:
+		ncPaint(wparam, lparam);
+		return 0;
+
+	case WM_NCACTIVATE:
+		SetWindowPos(m_hwnd, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		return 0;
+
+	case WM_NCCALCSIZE:
+	{
+		if (wparam)
+		{
+			NCCALCSIZE_PARAMS* ncparams = (NCCALCSIZE_PARAMS*)lparam;
+			printf("WM_NCCALCSIZE wparam:True\n");
+			ncparams->rgrc[0].left += left_off;
+			ncparams->rgrc[0].top += top_off;
+			ncparams->rgrc[0].right -= right_off;
+			ncparams->rgrc[0].bottom -= bottom_off;
+			return 0;
+		}
+		break;
+	}
+
+	case WM_NCHITTEST:
+	{
+		RECT rcWin;
+		GetWindowRect(m_hwnd, &rcWin);
+
+		INT x = GET_X_LPARAM(lparam);
+		INT y = GET_Y_LPARAM(lparam);
+
+		// temp code
+		if (y < rcWin.top + top_off)
+			return HTCAPTION;
+		return HTCLIENT;
+	}
+
+	case WM_NCMOUSEMOVE:
+		ncMoveMove(wparam, lparam);
+		return 0;
+
+	case WM_NCLBUTTONUP:
+		ncLUp(wparam, lparam);
+		return 0;
+
+	case WM_NCLBUTTONDOWN:
+		ncLDown(wparam, lparam);
 		return 0;
 	}
 	return DefWindowProc(m_hwnd, uMsg, wparam, lparam);
