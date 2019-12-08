@@ -1,13 +1,46 @@
-#include "ImageComponent.h"
+#include "ImageBaseComponent.h"
 
 
 
-HRESULT ImageComponent::LoadBitmapFromFile(
+HRESULT ImageBaseComponent::LoadBitmapBrush(
+    ID2D1HwndRenderTarget* pRenderTarget,
+    IWICImagingFactory* pIWICFactory,
+    PCWSTR uri,
+    ID2D1BitmapBrush** ppBrush,
+    ID2D1Bitmap** ppBitmap
+)
+{
+    HRESULT hr;
+
+    // Create the bitmap to be used by the bitmap brush
+    hr = LoadBitmapFromFile(
+        pRenderTarget,
+        pIWICFactory,
+        uri,
+        ppBitmap
+    );
+
+    if (SUCCEEDED(hr)) {
+        D2D1_BITMAP_BRUSH_PROPERTIES propertiesXClampYClamp = D2D1::BitmapBrushProperties(
+            D2D1_EXTEND_MODE_CLAMP,
+            D2D1_EXTEND_MODE_CLAMP,
+            D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR
+        );
+
+        hr = pRenderTarget->CreateBitmapBrush(
+            *ppBitmap,
+            propertiesXClampYClamp,
+            ppBrush
+        );
+    }
+
+    return hr;
+}
+
+HRESULT ImageBaseComponent::LoadBitmapFromFile(
     ID2D1RenderTarget* pRenderTarget,
     IWICImagingFactory* pIWICFactory,
     PCWSTR uri,
-    UINT destinationWidth,
-    UINT destinationHeight,
     ID2D1Bitmap** ppBitmap
 )
 {

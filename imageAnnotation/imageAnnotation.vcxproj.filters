@@ -34,7 +34,7 @@
     <ClCompile Include="NCComponents\RestoreDownButton.cpp">
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetComponents\ImageComponent.cpp">
+    <ClCompile Include="WidgetComponents\ImageBaseComponent.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,7 +78,7 @@
     <ClInclude Include="NCComponents\RestoreDownButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetComponents\ImageComponent.h">
+    <ClInclude Include="WidgetComponents\ImageBaseComponent.h">
       <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
   </ItemGroup>
