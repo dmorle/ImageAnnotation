@@ -6,6 +6,20 @@
 #include <d2d1.h>
 #pragma comment(lib, "d2d1")
 
+#ifndef SAFERELEASE
+#define SAFERELEASE
+
+template <class T> void SafeRelease(T** ppT)
+{
+	if (*ppT)
+	{
+		(*ppT)->Release();
+		*ppT = NULL;
+	}
+}
+
+#endif
+
 class BaseComponent
 {
 public:

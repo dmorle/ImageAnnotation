@@ -16,6 +16,9 @@ enum RECT_SIDE {
 
 class MainWindow;
 
+#ifndef SAFERELEASE
+#define SAFERELEASE
+
 template <class T> void SafeRelease(T** ppT)
 {
 	if (*ppT)
@@ -24,6 +27,8 @@ template <class T> void SafeRelease(T** ppT)
 		*ppT = NULL;
 	}
 }
+
+#endif
 
 const static std::vector<std::string> appColors
 {
