@@ -11,7 +11,8 @@
 template <typename T>
 class Buffer {
 public:
-	Buffer(std::string target, std::string suffix) {
+	Buffer(std::string target, std::string suffix)
+	{
 		this->target = target;
 		absIndex = 0;
 
@@ -19,16 +20,29 @@ public:
 		loadNewBuffer();
 	}
 
+	~Buffer()
+	{
+
+	}
+
 	void next()
 	{
-		if (SUCCEEDED(m_next()))
-			absIndex++;
+		if (absIndex == elemVec.size() - 1)
+			return;
+
+		absIndex++;
+		if (FAILED(m_next()))
+			absIndex--;
 	}
 
 	void prev()
 	{
-		if (SUCCEEDED(m_prev()))
-			absIndex--;
+		if (absIndex == 0)
+			return;
+
+		absIndex--;
+		if (FAILED(m_prev()))
+			absIndex++;
 	}
 
 protected:
@@ -40,9 +54,11 @@ protected:
 	std::list<T>::iterator active;
 	std::list<T> elemLoaded;
 
-	virtual T* loadElem(PSTR file) = 0;
+	// loades the element at absIndex
+	virtual T* loadElem() = 0;
 
-	USHORT activeIndex() {
+	USHORT activeIndex()
+	{
 		USHORT index;
 		for (auto it : elements) {
 			if (it == active)
@@ -52,7 +68,8 @@ protected:
 	}
 
 private:
-	void loadFileNames() {
+	void loadFileNames()
+	{
 		auto dir = std::filesystem::directory_iterator(target);
 		for (auto& entry : dir) {
 			std::string* pStr = new entry.path();
@@ -61,25 +78,34 @@ private:
 		}
 	}
 
-	void loadNewBuffer() {
+	void loadNewBuffer()
+	{
 		// throws away the current buffer and creates a new one
 		// new buffer is created on another thread from object state
 	}
 
 	HRESULT m_next()
 	{
-		if (activeIndex() < bufferSize) {
+		if (absIndex <= bufferSize) {
 			// at the start of target
 		}
-		else if (activeIndex() > bufferSize) {
+		else if (absIndex + bufferSize >= elemVec.size()) {
 			// at the end of target
 		}
 		else {
 			// normal response
+			T* nE = LoadElem();
+
+			if (!nE)
+				return E_FAIL;
+
+			delete elemLoaded.back;
+			elemLoaded.push_front(nE);
+			std::advance(active, 1);
 		}
 	}
 
-	HRESULT m_prev* ()
+	HRESULT m_prev()
 	{
 
 	}
