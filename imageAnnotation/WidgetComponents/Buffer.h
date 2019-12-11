@@ -1,12 +1,17 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+
 #include <Windows.h>
 #include <list>
 #include <vector>
+#include <iterator>
 #include <string>
 #include <thread>
-#include <filesystem>
+#include <experimental/filesystem>
+
+namespace fs = std::experimental::filesystem::v1;
 
 template <typename T>
 class Buffer {
@@ -38,7 +43,7 @@ public:
 			return threadReturn;
 
 		absIndex++;
-		std::advance(active, 1);
+		std::advance(*active, 1);
 
 		loadingThread = new std::thread(m_next);
 		return S_OK;
@@ -55,7 +60,7 @@ public:
 			return threadReturn;
 
 		absIndex--;
-		std::advance(active, -1);
+		std::advance(*active, -1);
 
 		std::thread newThread(m_prev);
 
@@ -71,25 +76,16 @@ public:
 
 protected:
 	std::string target;
-	std::vector<std::string*> diskItems;
+	std::string suffix;
+	std::vector<std::wstring*> diskItems;
 	UINT absIndex;
 
 	USHORT bufferSize;
-	std::list<T*>::iterator active;
+	typename std::list<T*>::iterator* active;
 	std::list<T*> buffer;
 
 	// loades the element at absIndex
-	virtual T* loadElem(std::string*) = 0;
-
-	USHORT activeIndex()
-	{
-		USHORT index;
-		for (auto it : elements) {
-			if (it == active)
-				return index;
-		}
-		return -1;
-	}
+	virtual T* loadElem(std::wstring*) = 0;
 
 private:
 	std::thread* loadingThread;
@@ -103,7 +99,7 @@ private:
 				delete e;
 			diskItems.clear();
 
-			activeIndex = 0;
+			absIndex = 0;
 		}
 	}
 
@@ -113,6 +109,7 @@ private:
 			releaseThread();
 
 			// reseting the active element
+			delete active;
 			active = NULL;
 
 			// deleting the elements in the buffer
@@ -126,14 +123,14 @@ private:
 
 	void loadFileNames()
 	{
-		auto dir = std::filesystem::directory_iterator(target);
+		auto dir = fs::directory_iterator(target);
 		for (auto& entry : dir) {
-			std::string* pStr = new entry.path();
+			std::wstring* pStr = new std::wstring(entry.path());
 			// TODO: check if pStr ends in suffix
-			buffer.push_back(pStr);
+			diskItems.push_back(pStr);
 		}
 
-		activeIndex = 0;
+		absIndex = 0;
 	}
 	
 	HRESULT loadNewBuffer()
@@ -148,6 +145,8 @@ private:
 
 				buffer.push_back(nE);
 			}
+
+			active = new std::list<T*>::iterator(buffer.begin());
 			return S_OK;
 		}
 
@@ -159,6 +158,8 @@ private:
 
 			buffer.push_back(nE);
 		}
+
+		active = new std::list<T*>::iterator(buffer.begin());
 		return S_OK;
 	}
 
