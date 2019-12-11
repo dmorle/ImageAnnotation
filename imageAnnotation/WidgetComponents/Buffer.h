@@ -16,11 +16,12 @@ namespace fs = std::experimental::filesystem::v1;
 template <typename T>
 class Buffer {
 public:
-	Buffer(std::string target, std::string suffix, USHORT bufferSize)
+	Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*))
 	{
 		this->target = target;
 		this->suffix = suffix;
 		this->bufferSize = bufferSize;
+		this->loadElem = loadElem;
 
 		loadFileNames();
 		loadNewBuffer();
@@ -84,8 +85,8 @@ protected:
 	typename std::list<T*>::iterator* active;
 	std::list<T*> buffer;
 
-	// loades the element at absIndex
-	virtual T* loadElem(std::wstring*) = 0;
+	// loads the element at the given path
+	T* (*loadElem)(std::wstring*);
 
 private:
 	std::thread* loadingThread;
@@ -94,7 +95,7 @@ private:
 	void clearDiskItems()
 	{
 		// clearing the loaded file paths
-		if (!diskItems.size()) {
+		if (diskItems.size()) {
 			for (auto& e : diskItems)
 				delete e;
 			diskItems.clear();
@@ -146,12 +147,12 @@ private:
 				buffer.push_back(nE);
 			}
 
-			active = new std::list<T*>::iterator(buffer.begin());
+			active = new typename std::list<T*>::iterator(buffer.begin());
 			return S_OK;
 		}
 
 		// standard buffer load
-		for (int i = 0; i < bufferSize * 2; i++) {
+		for (int i = 0; i <= bufferSize * 2; i++) {
 			T* nE = loadElem(diskItems[i]);
 			if (!nE)
 				return E_FAIL;
@@ -159,7 +160,7 @@ private:
 			buffer.push_back(nE);
 		}
 
-		active = new std::list<T*>::iterator(buffer.begin());
+		active = new typename std::list<T*>::iterator(buffer.begin());
 		return S_OK;
 	}
 
