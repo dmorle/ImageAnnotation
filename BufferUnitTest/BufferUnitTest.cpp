@@ -1,16 +1,23 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "fstream"
-#include "../imageAnnotation/WidgetComponents/WidgetCmp.h"
+#include "../imageAnnotation/WidgetComponents/Buffer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace BufferUnitTest
 {
+	void deleteMockFiles(std::string target)
+	{
+		auto dir = fs::directory_iterator(target);
+		for (auto& entry : dir)
+			remove(entry.path());
+	}
+
 	void createMockFiles(std::string target, std::string suffix, UINT n)
 	{
 		for (int i = 0; i < n; i++) {
-			std::ofstream outfile("test" + i + suffix);
+			std::ofstream outfile(target + "test" + std::to_string(i) + suffix);
 			outfile.close();
 		}
 	}
@@ -19,10 +26,10 @@ namespace BufferUnitTest
 	{
 	public:
 		stringBuffer(std::string target, std::string suffix, USHORT bufferSize)
-			: Buffer(target, suffix, bufferSize) {}
+			: Buffer(target, suffix, bufferSize, &loadTextFile) {}
 
-	protected:
-		std::string* loadElem(std::wstring*)
+	private:
+		static std::string* loadTextFile(std::wstring* path)
 		{
 			return new std::string("");
 		}
@@ -32,13 +39,34 @@ namespace BufferUnitTest
 	{
 	public:
 		
-		TEST_METHOD(TestBufferInit)
+		TEST_METHOD(TestInitStandard)
 		{
-			std::string testTarget = "./testTarget/";
+			std::string testTarget = "C:/testTarget/";
 			std::string testSuffix = "";
 			USHORT testSize = 5;
 
+			deleteMockFiles(testTarget);
 			createMockFiles(testTarget, ".txt", 20);
+
+			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
+
+			return;
 		}
+
+		TEST_METHOD(TestInitSmallTarget)
+		{
+			std::string testTarget = "C:/testTarget/";
+			std::string testSuffix = "";
+			USHORT testSize = 20;
+
+			deleteMockFiles(testTarget);
+			createMockFiles(testTarget, ".txt", 10);
+
+			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
+
+			return;
+		}
+
+
 	};
 }
