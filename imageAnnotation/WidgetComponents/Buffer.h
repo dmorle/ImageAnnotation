@@ -11,10 +11,11 @@
 template <typename T>
 class Buffer {
 public:
-	Buffer(std::string target, std::string suffix)
+	Buffer(std::string target, std::string suffix, USHORT bufferSize)
 	{
 		this->target = target;
-		absIndex = 0;
+		this->suffix = suffix;
+		this->bufferSize = bufferSize;
 
 		loadFileNames();
 		loadNewBuffer();

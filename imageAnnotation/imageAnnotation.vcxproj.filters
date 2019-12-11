@@ -37,6 +37,9 @@
     <ClCompile Include="WidgetComponents\ImageBaseComponent.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
+    <ClCompile Include="WidgetComponents\ImageBuffer.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Widget.h">
@@ -79,6 +82,12 @@
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
     <ClInclude Include="WidgetComponents\ImageBaseComponent.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\ImageBuffer.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetComponents\Buffer.h">
       <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
   </ItemGroup>
