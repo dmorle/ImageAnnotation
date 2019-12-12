@@ -5,7 +5,7 @@
 namespace WCMP {
 
 	ImageBuffer::ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, std::string target, UINT bufferSize)
-		: Buffer(target, "", bufferSize), pRenderTarget(pRenderTarget)
+		: Buffer(target, "", bufferSize, &LoadElem), pRenderTarget(pRenderTarget)
 	{
 		this->pRc = pRc;
 	}
@@ -17,7 +17,7 @@ namespace WCMP {
 
 	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget) {}
 
-	ID2D1Bitmap* ImageBuffer::LoadElem()
+	ID2D1Bitmap* ImageBuffer::LoadElem(std::wstring* path)
 	{
 		return NULL;
 	}

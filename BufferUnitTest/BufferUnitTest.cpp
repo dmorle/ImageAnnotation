@@ -9,7 +9,7 @@ namespace BufferUnitTest
 {
 	void deleteMockFiles(std::string target)
 	{
-		auto dir = fs::directory_iterator(target);
+		auto dir = WCMP::fs::directory_iterator(target);
 		for (auto& entry : dir)
 			remove(entry.path());
 	}
@@ -23,7 +23,7 @@ namespace BufferUnitTest
 		}
 	}
 
-	class stringBuffer : public Buffer<std::string>
+	class stringBuffer : public WCMP::Buffer<std::string>
 	{
 	public:
 		stringBuffer(std::string target, std::string suffix, USHORT bufferSize)

@@ -95,7 +95,7 @@ void MainWindow::CreateNCButtons()
 		};
 
 		ncComponents.push_back(new
-			NCTextButton(
+			NCCMP::NCTextButton(
 				(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),
@@ -122,7 +122,7 @@ void MainWindow::CreateNCButtons()
 		};
 
 		ncComponents.push_back(new
-			NCTextButton(
+			NCCMP::NCTextButton(
 			(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),
@@ -149,7 +149,7 @@ void MainWindow::CreateNCButtons()
 		};
 
 		ncComponents.push_back(new
-			NCTextButton(
+			NCCMP::NCTextButton(
 			(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),
@@ -177,7 +177,7 @@ void MainWindow::CreateNCButtons()
 
 
 		ncComponents.push_back(new
-			CloseButton(
+			NCCMP::CloseButton(
 				(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),
@@ -204,7 +204,7 @@ void MainWindow::CreateNCButtons()
 
 
 		ncComponents.push_back(new
-			MaxButton(
+			NCCMP::MaxButton(
 				(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),
@@ -231,7 +231,7 @@ void MainWindow::CreateNCButtons()
 
 
 		ncComponents.push_back(new
-			MinButton(
+			NCCMP::MinButton(
 				(COLORREF)NULL,
 				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
 				TOCOLORREF(palette[appPalette::PASSIVE]),

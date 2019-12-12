@@ -23,7 +23,7 @@ namespace WCMP {
 	protected:
 		ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, std::string target, UINT bufferSize);
 
-		ID2D1Bitmap* LoadElem();
+		static ID2D1Bitmap* LoadElem(std::wstring* path);
 
 	private:
 		ID2D1HwndRenderTarget*& pRenderTarget;

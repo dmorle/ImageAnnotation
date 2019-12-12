@@ -23,7 +23,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	std::vector<Widget*> widgets;
 	Widget* activeWidget = NULL;
 
-	std::vector<NCButton*> ncComponents;
+	std::vector<NCCMP::NCButton*> ncComponents;
 
 	void	savePalette(std::string);
 	void	loadPalette(std::string);
