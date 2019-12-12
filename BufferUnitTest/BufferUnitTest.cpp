@@ -18,11 +18,12 @@ namespace BufferUnitTest
 	{
 		for (int i = 0; i < n; i++) {
 			std::ofstream outfile(target + "test" + std::to_string(i) + suffix);
+			outfile << i;
 			outfile.close();
 		}
 	}
 
-	class stringBuffer : Buffer<std::string>
+	class stringBuffer : public Buffer<std::string>
 	{
 	public:
 		stringBuffer(std::string target, std::string suffix, USHORT bufferSize)
@@ -31,7 +32,8 @@ namespace BufferUnitTest
 	private:
 		static std::string* loadTextFile(std::wstring* path)
 		{
-			return new std::string("");
+			static int i = 0;
+			return new std::string(std::to_string(i++));
 		}
 	};
 
@@ -39,7 +41,7 @@ namespace BufferUnitTest
 	{
 	public:
 		
-		TEST_METHOD(TestInitStandard)
+		TEST_METHOD(StandardInit)
 		{
 			std::string testTarget = "C:/testTarget/";
 			std::string testSuffix = "";
@@ -49,11 +51,9 @@ namespace BufferUnitTest
 			createMockFiles(testTarget, ".txt", 20);
 
 			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
-
-			return;
 		}
 
-		TEST_METHOD(TestInitSmallTarget)
+		TEST_METHOD(SmallTargetInit)
 		{
 			std::string testTarget = "C:/testTarget/";
 			std::string testSuffix = "";
@@ -63,10 +63,37 @@ namespace BufferUnitTest
 			createMockFiles(testTarget, ".txt", 10);
 
 			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
-
-			return;
 		}
 
+		TEST_METHOD(Iteration)
+		{
+			std::string testTarget = "C:/testTarget/";
+			std::string testSuffix = "";
+			USHORT testSize = 2;
+
+			deleteMockFiles(testTarget);
+			createMockFiles(testTarget, ".txt", 25);
+
+			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
+
+			for (int i = 0; i < 10; i++)
+				test.next();
+		}
+
+		TEST_METHOD(MaxIteration)
+		{
+			std::string testTarget = "C:/testTarget/";
+			std::string testSuffix = "";
+			USHORT testSize = 2;
+
+			deleteMockFiles(testTarget);
+			createMockFiles(testTarget, ".txt", 10);
+
+			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
+
+			for (int i = 0; i < 25; i++)
+				test.next();
+		}
 
 	};
 }

@@ -25,6 +25,9 @@ public:
 
 		loadFileNames();
 		loadNewBuffer();
+
+		loadingThread = NULL;
+		threadReturn = S_OK;
 	}
 
 	virtual ~Buffer()
@@ -46,7 +49,7 @@ public:
 		absIndex++;
 		std::advance(*active, 1);
 
-		loadingThread = new std::thread(m_next);
+		loadingThread = new std::thread(&Buffer<T>::m_next, this);
 		return S_OK;
 	}
 
@@ -63,9 +66,7 @@ public:
 		absIndex--;
 		std::advance(*active, -1);
 
-		std::thread newThread(m_prev);
-
-		loadingThread = new std::thread(m_next);
+		loadingThread = new std::thread(&Buffer<T>::m_prev, this);
 		return S_OK;
 	}
 
@@ -181,7 +182,7 @@ private:
 				threadReturn = E_FAIL;
 
 			else {
-				delete buffer.front;
+				delete buffer.front();
 				buffer.pop_front();
 				buffer.push_back(nE);
 				threadReturn = S_OK;
@@ -206,7 +207,7 @@ private:
 				threadReturn = E_FAIL;
 
 			else {
-				delete buffer.back;
+				delete buffer.back();
 				buffer.pop_back();
 				buffer.push_front(nE);
 				threadReturn = S_OK;
@@ -217,7 +218,7 @@ private:
 	void releaseThread() {
 		if (loadingThread) {
 			loadingThread->join();
-			delete loadingThread;
+			loadingThread = NULL;
 		}
 	}
 };
