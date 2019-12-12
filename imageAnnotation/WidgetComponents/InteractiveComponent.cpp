@@ -2,51 +2,55 @@
 
 
 
-void InteractiveComponent::MouseMove(POINT p)
-{
-	StateUpdateFunc(m_MouseMove, p)
-}
+namespace WCMP {
 
-void InteractiveComponent::LDown(POINT p)
-{
-	StateUpdateFunc(m_LDown, p)
-}
+	void InteractiveComponent::MouseMove(POINT p)
+	{
+		StateUpdateFunc(m_MouseMove, p)
+	}
 
-void InteractiveComponent::LUp(POINT p)
-{
-	StateUpdateFunc(m_LUp, p)
-}
+	void InteractiveComponent::LDown(POINT p)
+	{
+		StateUpdateFunc(m_LDown, p)
+	}
 
-void InteractiveComponent::MouseLeave()
-{
-	StateUpdateFunc(m_MouseLeave,)
-}
+	void InteractiveComponent::LUp(POINT p)
+	{
+		StateUpdateFunc(m_LUp, p)
+	}
 
-void InteractiveComponent::m_MouseMove(POINT p)
-{
-	if (contains(p)) {
-		if (state != PRESSED)
+	void InteractiveComponent::MouseLeave()
+	{
+		StateUpdateFunc(m_MouseLeave, )
+	}
+
+	void InteractiveComponent::m_MouseMove(POINT p)
+	{
+		if (contains(p)) {
+			if (state != PRESSED)
+				state = ACTIVE;
+		}
+		else
+			state = PASSIVE;
+	}
+
+	void InteractiveComponent::m_LDown(POINT p)
+	{
+		if (contains(p))
+			state = PRESSED;
+	}
+
+	void InteractiveComponent::m_LUp(POINT p)
+	{
+		if (contains(p) && state == PRESSED) {
 			state = ACTIVE;
+			onClick();
+		}
 	}
-	else
+
+	void InteractiveComponent::m_MouseLeave()
+	{
 		state = PASSIVE;
-}
-
-void InteractiveComponent::m_LDown(POINT p)
-{
-	if (contains(p))
-		state = PRESSED;
-}
-
-void InteractiveComponent::m_LUp(POINT p)
-{
-	if (contains(p) && state == PRESSED) {
-		state = ACTIVE;
-		onClick();
 	}
-}
 
-void InteractiveComponent::m_MouseLeave()
-{
-	state = PASSIVE;
 }

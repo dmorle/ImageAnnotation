@@ -4,25 +4,29 @@
 #include "BaseComponent.h"
 #include <list>
 
-class ParentComponent :
-	public BaseComponent
-{
-public:
-	~ParentComponent();
+namespace WCMP {
 
-	void MouseMove(POINT p);
-	void LDown(POINT p);
-	void LUp(POINT p);
-	void MouseLeave();
+	class ParentComponent :
+		public BaseComponent
+	{
+	public:
+		~ParentComponent();
 
-	virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
+		void MouseMove(POINT p);
+		void LDown(POINT p);
+		void LUp(POINT p);
+		void MouseLeave();
 
-protected:
-	std::list<PBaseComponent> children;
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
 
-	void activateElement(std::list<PBaseComponent>::iterator);
-};
+	protected:
+		std::list<PBaseComponent> children;
 
-typedef ParentComponent* PParentComponent;
+		void activateElement(std::list<PBaseComponent>::iterator);
+	};
+
+	typedef ParentComponent* PParentComponent;
+
+}
 
 #endif

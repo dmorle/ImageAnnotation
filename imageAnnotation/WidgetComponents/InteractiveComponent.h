@@ -3,12 +3,6 @@
 
 #include "BaseComponent.h"
 
-enum STATE {
-	PASSIVE,
-	ACTIVE,
-	PRESSED
-};
-
 #ifndef StateUpdateFunc
 
 #define getOld_SU STATE old = state
@@ -19,26 +13,36 @@ enum STATE {
 
 #endif
 
-class InteractiveComponent :
-	public BaseComponent
-{
-public:
-	void MouseMove(POINT p);
-	void LDown(POINT p);
-	void LUp(POINT p);
-	void MouseLeave();
+namespace WCMP {
 
-protected:
-	STATE state;
+	enum STATE {
+		PASSIVE,
+		ACTIVE,
+		PRESSED
+	};
 
-	void (*onClick)();
-	void (*paintSelf)(PRECT);
+	class InteractiveComponent :
+		public BaseComponent
+	{
+	public:
+		void MouseMove(POINT p);
+		void LDown(POINT p);
+		void LUp(POINT p);
+		void MouseLeave();
 
-private:
-	void m_MouseMove(POINT p);
-	void m_LDown(POINT p);
-	void m_LUp(POINT p);
-	void m_MouseLeave();
-};
+	protected:
+		STATE state;
+
+		void (*onClick)();
+		void (*paintSelf)(PRECT);
+
+	private:
+		void m_MouseMove(POINT p);
+		void m_LDown(POINT p);
+		void m_LUp(POINT p);
+		void m_MouseLeave();
+	};
+
+}
 
 #endif

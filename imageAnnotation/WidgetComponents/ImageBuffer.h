@@ -7,24 +7,28 @@
 #include <list>
 #include <string>
 
-class ImageBuffer :
-	public ImageBaseComponent, public Buffer<ID2D1Bitmap>
-{
-public:
-	virtual void MouseMove(POINT p);
-	virtual void LDown(POINT p);
-	virtual void LUp(POINT p);
-	virtual void MouseLeave();
+namespace WCMP {
 
-	virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
+	class ImageBuffer :
+		public ImageBaseComponent, public Buffer<ID2D1Bitmap>
+	{
+	public:
+		virtual void MouseMove(POINT p);
+		virtual void LDown(POINT p);
+		virtual void LUp(POINT p);
+		virtual void MouseLeave();
 
-protected:
-	ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, std::string target, UINT bufferSize);
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
 
-	ID2D1Bitmap* LoadElem();
+	protected:
+		ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, std::string target, UINT bufferSize);
 
-private:
-	ID2D1HwndRenderTarget*& pRenderTarget;
-};
+		ID2D1Bitmap* LoadElem();
+
+	private:
+		ID2D1HwndRenderTarget*& pRenderTarget;
+	};
+
+}
 
 #endif

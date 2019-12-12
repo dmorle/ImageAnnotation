@@ -20,24 +20,28 @@ template <class T> void SafeRelease(T** ppT)
 
 #endif
 
-class BaseComponent
-{
-public:
-	~BaseComponent();
+namespace WCMP {
 
-	BOOL contains(POINT p);
+	class BaseComponent
+	{
+	public:
+		~BaseComponent();
 
-	virtual void MouseMove(POINT p) = 0;
-	virtual void LDown(POINT p) = 0;
-	virtual void LUp(POINT p) = 0;
-	virtual void MouseLeave() = 0;
+		BOOL contains(POINT p);
 
-	virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
+		virtual void MouseMove(POINT p) = 0;
+		virtual void LDown(POINT p) = 0;
+		virtual void LUp(POINT p) = 0;
+		virtual void MouseLeave() = 0;
 
-protected:
-	PRECT pRc;
-};
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 
-typedef BaseComponent* PBaseComponent;
+	protected:
+		PRECT pRc;
+	};
+
+	typedef BaseComponent* PBaseComponent;
+
+}
 
 #endif

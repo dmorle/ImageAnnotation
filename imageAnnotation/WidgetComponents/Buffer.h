@@ -11,137 +11,152 @@
 #include <thread>
 #include <experimental/filesystem>
 
-namespace fs = std::experimental::filesystem::v1;
+namespace WCMP {
 
-template <typename T>
-class Buffer {
-public:
-	Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*))
-	{
-		this->target = target;
-		this->suffix = suffix;
-		this->bufferSize = bufferSize;
-		this->loadElem = loadElem;
+	namespace fs = std::experimental::filesystem::v1;
 
-		loadFileNames();
-		loadNewBuffer();
+	template <typename T>
+	class Buffer {
+	public:
+		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*))
+		{
+			this->target = target;
+			this->suffix = suffix;
+			this->bufferSize = bufferSize;
+			this->loadElem = loadElem;
 
-		loadingThread = NULL;
-		threadReturn = S_OK;
-	}
+			loadFileNames();
+			loadNewBuffer();
 
-	virtual ~Buffer()
-	{
-		clearDiskItems();
-		emptyBuffer();
-	}
+			loadingThread = NULL;
+			threadReturn = S_OK;
+		}
 
-	HRESULT next()
-	{
-		if (absIndex == diskItems.size() - 1)
-			return E_ABORT;
+		virtual ~Buffer()
+		{
+			clearDiskItems();
+			emptyBuffer();
+		}
 
-		releaseThread();
+		HRESULT next()
+		{
+			if (absIndex == diskItems.size() - 1)
+				return E_ABORT;
 
-		if (FAILED(threadReturn))
-			return threadReturn;
+			releaseThread();
 
-		absIndex++;
-		std::advance(*active, 1);
+			if (FAILED(threadReturn))
+				return threadReturn;
 
-		loadingThread = new std::thread(&Buffer<T>::m_next, this);
-		return S_OK;
-	}
+			absIndex++;
+			std::advance(*active, 1);
 
-	HRESULT prev()
-	{
-		if (absIndex == 0)
-			return E_ABORT;
+			loadingThread = new std::thread(&Buffer<T>::m_next, this);
+			return S_OK;
+		}
 
-		releaseThread();
+		HRESULT prev()
+		{
+			if (absIndex == 0)
+				return E_ABORT;
 
-		if (FAILED(threadReturn))
-			return threadReturn;
+			releaseThread();
 
-		absIndex--;
-		std::advance(*active, -1);
+			if (FAILED(threadReturn))
+				return threadReturn;
 
-		loadingThread = new std::thread(&Buffer<T>::m_prev, this);
-		return S_OK;
-	}
+			absIndex--;
+			std::advance(*active, -1);
 
-	HRESULT setActive(UINT nI)
-	{
-		if (nI >= absIndex)
-			return E_ABORT;
-	}
+			loadingThread = new std::thread(&Buffer<T>::m_prev, this);
+			return S_OK;
+		}
 
-protected:
-	std::string target;
-	std::string suffix;
-	std::vector<std::wstring*> diskItems;
-	UINT absIndex;
+		HRESULT setActive(UINT nI)
+		{
+			if (nI >= absIndex)
+				return E_ABORT;
+		}
 
-	USHORT bufferSize;
-	typename std::list<T*>::iterator* active;
-	std::list<T*> buffer;
+	protected:
+		std::string target;
+		std::string suffix;
+		std::vector<std::wstring*> diskItems;
+		UINT absIndex;
 
-	// loads the element at the given path
-	T* (*loadElem)(std::wstring*);
+		USHORT bufferSize;
+		typename std::list<T*>::iterator* active;
+		std::list<T*> buffer;
 
-private:
-	std::thread* loadingThread;
-	HRESULT threadReturn;
+		// loads the element at the given path
+		T* (*loadElem)(std::wstring*);
 
-	void clearDiskItems()
-	{
-		// clearing the loaded file paths
-		if (diskItems.size()) {
-			for (auto& e : diskItems)
-				delete e;
-			diskItems.clear();
+	private:
+		std::thread* loadingThread;
+		HRESULT threadReturn;
+
+		void clearDiskItems()
+		{
+			// clearing the loaded file paths
+			if (diskItems.size()) {
+				for (auto& e : diskItems)
+					delete e;
+				diskItems.clear();
+
+				absIndex = 0;
+			}
+		}
+
+		void emptyBuffer()
+		{
+			if (active) {
+				releaseThread();
+
+				// reseting the active element
+				delete active;
+				active = NULL;
+
+				// deleting the elements in the buffer
+				for (auto& e : buffer)
+					delete e;
+
+				// clearing the buffer
+				buffer.clear();
+			}
+		}
+
+		void loadFileNames()
+		{
+			auto dir = fs::directory_iterator(target);
+			for (auto& entry : dir) {
+				std::wstring* pStr = new std::wstring(entry.path());
+				// TODO: check if pStr ends in suffix
+				diskItems.push_back(pStr);
+			}
 
 			absIndex = 0;
 		}
-	}
 
-	void emptyBuffer()
-	{
-		if (active) {
-			releaseThread();
+		HRESULT loadNewBuffer()
+		{
+			// check if buffer size is too large
+			if (diskItems.size() < bufferSize * 2) {
+				// Load all disk items
+				for (auto& e : diskItems) {
+					T* nE = loadElem(e);
+					if (!nE)
+						return E_FAIL;
 
-			// reseting the active element
-			delete active;
-			active = NULL;
+					buffer.push_back(nE);
+				}
 
-			// deleting the elements in the buffer
-			for (auto& e : buffer)
-				delete e;
+				active = new typename std::list<T*>::iterator(buffer.begin());
+				return S_OK;
+			}
 
-			// clearing the buffer
-			buffer.clear();
-		}
-	}
-
-	void loadFileNames()
-	{
-		auto dir = fs::directory_iterator(target);
-		for (auto& entry : dir) {
-			std::wstring* pStr = new std::wstring(entry.path());
-			// TODO: check if pStr ends in suffix
-			diskItems.push_back(pStr);
-		}
-
-		absIndex = 0;
-	}
-	
-	HRESULT loadNewBuffer()
-	{
-		// check if buffer size is too large
-		if (diskItems.size() < bufferSize * 2) {
-			// Load all disk items
-			for (auto& e : diskItems) {
-				T* nE = loadElem(e);
+			// standard buffer load
+			for (int i = 0; i <= bufferSize * 2; i++) {
+				T* nE = loadElem(diskItems[i]);
 				if (!nE)
 					return E_FAIL;
 
@@ -152,75 +167,64 @@ private:
 			return S_OK;
 		}
 
-		// standard buffer load
-		for (int i = 0; i <= bufferSize * 2; i++) {
-			T* nE = loadElem(diskItems[i]);
-			if (!nE)
-				return E_FAIL;
+		void m_next()
+		{
+			if (absIndex <= bufferSize)
+				// at the start of target => buffer ready
+				threadReturn = S_OK;
 
-			buffer.push_back(nE);
-		}
-
-		active = new typename std::list<T*>::iterator(buffer.begin());
-		return S_OK;
-	}
-
-	void m_next()
-	{
-		if (absIndex <= bufferSize)
-			// at the start of target => buffer ready
-			threadReturn = S_OK;
-
-		else if (absIndex + bufferSize >= diskItems.size())
-			// at the end of target => buffer ready
-			threadReturn = S_OK;
-
-		else {
-			// normal response
-			T* nE = loadElem(diskItems[absIndex + bufferSize]);
-			if (!nE)
-				threadReturn = E_FAIL;
+			else if (absIndex + bufferSize >= diskItems.size())
+				// at the end of target => buffer ready
+				threadReturn = S_OK;
 
 			else {
-				delete buffer.front();
-				buffer.pop_front();
-				buffer.push_back(nE);
-				threadReturn = S_OK;
+				// normal response
+				T* nE = loadElem(diskItems[absIndex + bufferSize]);
+				if (!nE)
+					threadReturn = E_FAIL;
+
+				else {
+					delete buffer.front();
+					buffer.pop_front();
+					buffer.push_back(nE);
+					threadReturn = S_OK;
+				}
 			}
 		}
-	}
 
-	void m_prev()
-	{
-		if (absIndex <= bufferSize)
-			// at the start of target => buffer ready
-			threadReturn = S_OK;
+		void m_prev()
+		{
+			if (absIndex <= bufferSize)
+				// at the start of target => buffer ready
+				threadReturn = S_OK;
 
-		else if (absIndex + bufferSize >= diskItems.size())
-			// at the end of target => buffer ready
-			threadReturn = S_OK;
-
-		else {
-			// normal response
-			T* nE = loadElem(diskItems[absIndex - bufferSize]);
-			if (!nE)
-				threadReturn = E_FAIL;
+			else if (absIndex + bufferSize >= diskItems.size())
+				// at the end of target => buffer ready
+				threadReturn = S_OK;
 
 			else {
-				delete buffer.back();
-				buffer.pop_back();
-				buffer.push_front(nE);
-				threadReturn = S_OK;
+				// normal response
+				T* nE = loadElem(diskItems[absIndex - bufferSize]);
+				if (!nE)
+					threadReturn = E_FAIL;
+
+				else {
+					delete buffer.back();
+					buffer.pop_back();
+					buffer.push_front(nE);
+					threadReturn = S_OK;
+				}
 			}
 		}
-	}
 
-	void releaseThread() {
-		if (loadingThread) {
-			loadingThread->join();
-			loadingThread = NULL;
+		void releaseThread() {
+			if (loadingThread) {
+				loadingThread->join();
+				loadingThread = NULL;
+			}
 		}
-	}
-};
+	};
+
+}
 
 #endif
