@@ -6,84 +6,88 @@
 
 class MainWindow;
 
-enum BUTTONSTATE
-{
-	PASSIVE,
-	ACTIVE,
-	PRESSED
-};
+namespace NCCMP {
 
-typedef struct GRAPHICSTRUCT GRAPHICSTRUCT;
-struct GRAPHICSTRUCT {
-public:
-	GRAPHICSTRUCT(
-		COLORREF back,
-		COLORREF back_passive,
-		COLORREF back_active,
-		COLORREF back_pressed,
-		COLORREF comp,
-		COLORREF comp_passive,
-		COLORREF comp_active,
-		COLORREF comp_pressed
-	);
-	~GRAPHICSTRUCT();
+	enum BUTTONSTATE
+	{
+		PASSIVE,
+		ACTIVE,
+		PRESSED
+	};
 
-	HBRUSH getBack(BUTTONSTATE state);
-	COLORREF getComp(BUTTONSTATE state);
+	typedef struct GRAPHICSTRUCT GRAPHICSTRUCT;
+	struct GRAPHICSTRUCT {
+	public:
+		GRAPHICSTRUCT(
+			COLORREF back,
+			COLORREF back_passive,
+			COLORREF back_active,
+			COLORREF back_pressed,
+			COLORREF comp,
+			COLORREF comp_passive,
+			COLORREF comp_active,
+			COLORREF comp_pressed
+		);
+		~GRAPHICSTRUCT();
 
-private:
-	HBRUSH hbr_back;			// default for back of button
-	HBRUSH hbr_back_passive;	// color for back of button passively
-	HBRUSH hbr_back_active;		// color for back of button when active
-	HBRUSH hbr_back_pressed;	// color for back of button when pressed
+		HBRUSH getBack(BUTTONSTATE state);
+		COLORREF getComp(BUTTONSTATE state);
 
-	COLORREF crf_comp;			// default for button colors
-	COLORREF crf_comp_passive;	// color for components passively
-	COLORREF crf_comp_active;	// color for components when active
-	COLORREF crf_comp_pressed;	// color for components when pressed
-};
+	private:
+		HBRUSH hbr_back;			// default for back of button
+		HBRUSH hbr_back_passive;	// color for back of button passively
+		HBRUSH hbr_back_active;		// color for back of button when active
+		HBRUSH hbr_back_pressed;	// color for back of button when pressed
 
-class NCButton
-{
-public:
-	NCButton(
-		COLORREF back,
-		COLORREF back_passive,
-		COLORREF back_active,
-		COLORREF back_pressed,
-		COLORREF comp,
-		COLORREF comp_passive,
-		COLORREF comp_active,
-		COLORREF comp_pressed,
-		void (*onClick)()
-	);
-	NCButton(
-		COLORREF back_passive,
-		COLORREF back_active,
-		COLORREF back_pressed,
-		COLORREF comp_passive,
-		COLORREF comp_active,
-		COLORREF comp_pressed,
-		void (*onClick)()
-	);
-	virtual ~NCButton();
+		COLORREF crf_comp;			// default for button colors
+		COLORREF crf_comp_passive;	// color for components passively
+		COLORREF crf_comp_active;	// color for components when active
+		COLORREF crf_comp_pressed;	// color for components when pressed
+	};
 
-	void LDown(POINT p);
-	void LUp(POINT p);
-	void mousemove(POINT p);
-	BOOL mouseleave();
+	class NCButton
+	{
+	public:
+		NCButton(
+			COLORREF back,
+			COLORREF back_passive,
+			COLORREF back_active,
+			COLORREF back_pressed,
+			COLORREF comp,
+			COLORREF comp_passive,
+			COLORREF comp_active,
+			COLORREF comp_pressed,
+			void (*onClick)()
+		);
+		NCButton(
+			COLORREF back_passive,
+			COLORREF back_active,
+			COLORREF back_pressed,
+			COLORREF comp_passive,
+			COLORREF comp_active,
+			COLORREF comp_pressed,
+			void (*onClick)()
+		);
+		virtual ~NCButton();
 
-	virtual void display(HDC hdc);
+		void LDown(POINT p);
+		void LUp(POINT p);
+		void mousemove(POINT p);
+		BOOL mouseleave();
 
-protected:
-	RECT rc;
-	
-	void (*onClick)();
+		virtual void display(HDC hdc);
 
-	GRAPHICSTRUCT *pAssets;
-	BUTTONSTATE state;
+	protected:
+		RECT rc;
 
-	BOOL contains(POINT p);
-};
+		void (*onClick)();
+
+		GRAPHICSTRUCT* pAssets;
+		BUTTONSTATE state;
+
+		BOOL contains(POINT p);
+	};
+
+}
 
 #endif
