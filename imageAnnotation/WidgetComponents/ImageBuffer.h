@@ -1,6 +1,7 @@
 #ifndef IMAGEBUFFER_H
 #define IMAGEBUFFER_H
 
+#include "InteractiveComponent.h"
 #include "ImageBaseComponent.h"
 #include "Buffer.h"
 
@@ -10,23 +11,29 @@
 namespace WCMP {
 
 	class ImageBuffer :
-		public ImageBaseComponent, public Buffer<ID2D1Bitmap>
+		public InteractiveComponent, public ImageBaseComponent, public Buffer<ID2D1Bitmap>
 	{
 	public:
+		ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory, std::string target, UINT bufferSize);
+
 		virtual void MouseMove(POINT p);
 		virtual void LDown(POINT p);
 		virtual void LUp(POINT p);
 		virtual void MouseLeave();
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
+		virtual void MouseWheel(POINT p, WORD lOrder);
+
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget = NULL);
 
 	protected:
-		ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, std::string target, UINT bufferSize);
-
-		static ID2D1Bitmap* LoadElem(std::wstring* path);
+		FLOAT zoom;
+		POINT* pTrans;
 
 	private:
-		ID2D1HwndRenderTarget*& pRenderTarget;
+		POINT* pMouseLoc;
+
+		static ID2D1Bitmap* LoadElem(std::wstring* path);
+		void m_MouseLeave();
 	};
 
 }

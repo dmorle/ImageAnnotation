@@ -4,9 +4,10 @@
 
 namespace WCMP {
 
-    HRESULT ImageBaseComponent::LoadBitmapBrush(
-        ID2D1HwndRenderTarget* pRenderTarget,
-        IWICImagingFactory* pIWICFactory,
+	ImageBaseComponent::ImageBaseComponent(ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory)
+        : pRenderTarget(pRenderTarget), pWicFactory(pWicFactory) {}
+
+	HRESULT ImageBaseComponent::LoadBitmapBrush(
         PCWSTR uri,
         ID2D1BitmapBrush** ppBrush,
         ID2D1Bitmap** ppBitmap
@@ -16,8 +17,6 @@ namespace WCMP {
 
         // Create the bitmap to be used by the bitmap brush
         hr = LoadBitmapFromFile(
-            pRenderTarget,
-            pIWICFactory,
             uri,
             ppBitmap
         );
@@ -40,8 +39,6 @@ namespace WCMP {
     }
 
     HRESULT ImageBaseComponent::LoadBitmapFromFile(
-        ID2D1RenderTarget* pRenderTarget,
-        IWICImagingFactory* pIWICFactory,
         PCWSTR uri,
         ID2D1Bitmap** ppBitmap
     )
@@ -52,7 +49,7 @@ namespace WCMP {
         IWICFormatConverter* pConverter = NULL;
         IWICBitmapScaler* pScaler = NULL;
 
-        HRESULT hr = pIWICFactory->CreateDecoderFromFilename(
+        HRESULT hr = pWicFactory->CreateDecoderFromFilename(
             uri,
             NULL,
             GENERIC_READ,
@@ -71,7 +68,7 @@ namespace WCMP {
 
             // Convert the image format to 32bppPBGRA
             // (DXGI_FORMAT_B8G8R8A8_UNORM + D2D1_ALPHA_MODE_PREMULTIPLIED).
-            hr = pIWICFactory->CreateFormatConverter(&pConverter);
+            hr = pWicFactory->CreateFormatConverter(&pConverter);
 
         }
 

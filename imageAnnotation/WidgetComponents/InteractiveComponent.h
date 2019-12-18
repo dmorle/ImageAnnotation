@@ -22,7 +22,7 @@ namespace WCMP {
 	};
 
 	class InteractiveComponent :
-		public BaseComponent
+		virtual public BaseComponent
 	{
 	public:
 		void MouseMove(POINT p);
@@ -36,11 +36,12 @@ namespace WCMP {
 		void (*onClick)();
 		void (*paintSelf)(PRECT);
 
+		virtual void m_MouseLeave();
+
 	private:
 		void m_MouseMove(POINT p);
 		void m_LDown(POINT p);
 		void m_LUp(POINT p);
-		void m_MouseLeave();
 	};
 
 }

@@ -7,13 +7,16 @@
 namespace WCMP {
 
     class ImageBaseComponent :
-        public BaseComponent
+        virtual public BaseComponent
     {
     public:
+        ImageBaseComponent(ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory);
+
     protected:
+        ID2D1HwndRenderTarget*& pRenderTarget;
+        IWICImagingFactory*& pWicFactory;
+
         HRESULT LoadBitmapBrush(
-            ID2D1HwndRenderTarget*,
-            IWICImagingFactory*,
             PCWSTR,
             ID2D1BitmapBrush**,
             ID2D1Bitmap**
@@ -21,8 +24,6 @@ namespace WCMP {
 
     private:
         HRESULT LoadBitmapFromFile(
-            ID2D1RenderTarget*,
-            IWICImagingFactory*,
             PCWSTR,
             ID2D1Bitmap**
         );
