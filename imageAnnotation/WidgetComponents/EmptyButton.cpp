@@ -138,11 +138,13 @@ namespace WCMP {
 
 
 
-	EmptyButton::EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, PRECT pRc, appPalette palette)
+	EmptyButton::EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, appPalette palette, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*))
 	{
 		this->pRc = pRc;
 		this->pGs = new GRAPHICSTRUCT(pRenderTarget, palette);
 		this->state = PASSIVE;
+		this->onClick = onClick;
+		this->paintSelf = paintSelf;
 	}
 
 	EmptyButton::~EmptyButton()
@@ -156,16 +158,16 @@ namespace WCMP {
 		switch (state) {
 		case PASSIVE:
 			if (pGs->back_passive)
-				pRenderTarget->FillRectangle(&pRc, pGs->back_passive); // d2d1_rectf not RECT
+				pRenderTarget->FillRectangle(*pRc, pGs->back_passive);
 		case ACTIVE:
 			if (pGs->back_active)
-				pRenderTarget->FillRectangle(&pRc, pGs->back_active); // d2d1_rectf not RECT
+				pRenderTarget->FillRectangle(*pRc, pGs->back_active);
 		case PRESSED:
 			if (pGs->back_pressed)
-				pRenderTarget->FillRectangle(&pRc, pGs->back_pressed); // d2d1_rectf not RECT
+				pRenderTarget->FillRectangle(*pRc, pGs->back_pressed);
 		default:
 			if (pGs->back)
-				pRenderTarget->FillRectangle(&pRc, pGs->back); // d2d1_rectf not RECT
+				pRenderTarget->FillRectangle(*pRc, pGs->back);
 		}
 	}
 }
