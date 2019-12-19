@@ -133,6 +133,7 @@
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WidgetComponents\BaseComponent.cpp" />
+    <ClCompile Include="WidgetComponents\EmptyButton.cpp" />
     <ClCompile Include="WidgetComponents\ImageBaseComponent.cpp" />
     <ClCompile Include="WidgetComponents\ImageBuffer.cpp" />
     <ClCompile Include="WidgetComponents\InteractiveComponent.cpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WidgetComponents\BaseComponent.h" />
     <ClInclude Include="WidgetComponents\Buffer.h" />
+    <ClInclude Include="WidgetComponents\EmptyButton.h" />
     <ClInclude Include="WidgetComponents\ImageBaseComponent.h" />
     <ClInclude Include="WidgetComponents\ImageBuffer.h" />
     <ClInclude Include="WidgetComponents\InteractiveComponent.h" />
