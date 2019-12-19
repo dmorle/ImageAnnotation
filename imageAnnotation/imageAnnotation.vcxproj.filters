@@ -96,6 +96,12 @@
     <ClInclude Include="WidgetComponents\Buffer.h">
       <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
+    <ClInclude Include="WidgetComponents\EmptyButton.h">
+      <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetLayouts\ImageLayout.h">
+      <Filter>Header Files\WidgetLayouts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
