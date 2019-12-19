@@ -34,7 +34,7 @@ namespace WCMP {
 		STATE state;
 
 		void (*onClick)();
-		void (*paintSelf)(PRECT);
+		void (*paintSelf)(D2D1_RECT_F*);
 
 		virtual void m_MouseLeave();
 

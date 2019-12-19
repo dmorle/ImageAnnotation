@@ -76,7 +76,7 @@ namespace WCMP {
 		public InteractiveComponent
 	{
 	public:
-		EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, PRECT pRc, appPalette palette);
+		EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, appPalette palette, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*));
 		virtual ~EmptyButton();
 
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);

@@ -37,7 +37,7 @@ namespace WCMP {
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 
 	protected:
-		PRECT pRc;
+		D2D1_RECT_F* pRc;
 	};
 
 	typedef BaseComponent* PBaseComponent;

@@ -4,7 +4,7 @@
 
 namespace WCMP {
 
-	ImageBuffer::ImageBuffer(PRECT pRc, ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory, std::string target, UINT bufferSize)
+	ImageBuffer::ImageBuffer(D2D1_RECT_F* pRc, ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory, std::string target, UINT bufferSize)
 		: Buffer(target, "", bufferSize, &LoadElem), ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
 		this->pRc = pRc;
