@@ -43,6 +43,9 @@
     <ClCompile Include="WidgetLayouts\ImageLayout.cpp">
       <Filter>Source Files\WidgetLayouts</Filter>
     </ClCompile>
+    <ClCompile Include="WidgetComponents\EmptyButton.cpp">
+      <Filter>Source Files\WidgetComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Widget.h">
@@ -92,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="WidgetComponents\Buffer.h">
       <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetLayouts\ImageLayout.h">
-      <Filter>Header Files\WidgetLayouts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
