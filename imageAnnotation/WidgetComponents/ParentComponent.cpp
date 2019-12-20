@@ -50,10 +50,10 @@ namespace WCMP {
 			(*it)->MouseLeave();
 	}
 
-	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget)
+	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent)
 	{
 		for (auto it = children.end(); it != children.begin(); it--)
-			(*it)->display(pRenderTarget);
+			(*it)->display(pRenderTarget, parent);
 	}
 
 	BaseComponent* ParentComponent::clone()

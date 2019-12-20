@@ -76,6 +76,8 @@ Widget* Widget::createSplit(RECT rect)
 	// TODO: resize components if appropriate
 	for (auto e : components)
 		npWidget->components.push_back(e->clone());
+
+	return npWidget;
 }
 
 void Widget::resize(LONG left, LONG top, LONG right, LONG bottom)
@@ -84,6 +86,8 @@ void Widget::resize(LONG left, LONG top, LONG right, LONG bottom)
 	rect.top = top;
 	rect.right = right;
 	rect.bottom = bottom;
+
+	// TODO: resize all widget components
 }
 
 void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
@@ -187,9 +191,14 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 	/*
 		Displaying the widget components for a standard widget
 	*/
-
+	D2D1_RECT_F rc{
+		rect.left,
+		rect.top,
+		rect.right,
+		rect.bottom
+	};
 	for (auto& e : components)
-		e->display(pRenderTarget);
+		e->display(pRenderTarget, rc);
 }
 
 Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
@@ -490,6 +499,17 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		SetCursor(mw->cursors.sizens);
 	}
 
+	// passing action to components
+	p.x -= rect.left;
+	p.y -= rect.top;
+
+	for (auto & e : components) {
+		if (e->contains(p))
+			e->MouseMove(p);
+		else
+			e->MouseLeave();
+	}
+
 	return NULL;
 }
 
@@ -534,6 +554,14 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 		InvalidateRect(hwnd, const_cast<RECT*>(&rect), TRUE);
 		return NULL;
 	}
+
+	// passing action to components
+	p.x -= rect.left;
+	p.y -= rect.top;
+
+	for (auto & e : components)
+		if (e->contains(p))
+			e->LUp(p);
 
 	return NULL;
 }
@@ -593,6 +621,14 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 		widgetEdit = TRUE;
 		return this;
 	}
+
+	// passing action to components
+	p.x -= rect.left;
+	p.y -= rect.top;
+
+	for (auto & e : components)
+		if (e->contains(p))
+			e->LDown(p);
 
 	return NULL;
 }

@@ -53,7 +53,7 @@ namespace WCMP {
 
 	}
 
-	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget) {}
+	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent) {}
 
 	ID2D1Bitmap* ImageBuffer::LoadElem(std::wstring* path)
 	{

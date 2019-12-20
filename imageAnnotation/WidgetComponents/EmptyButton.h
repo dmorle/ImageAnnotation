@@ -21,6 +21,7 @@ namespace WCMP {
 		ID2D1SolidColorBrush* comp_pressed;
 
 		GRAPHICSTRUCT() {}
+		GRAPHICSTRUCT(PGRAPHICSTRUCT pGs);
 		GRAPHICSTRUCT(ID2D1HwndRenderTarget* pRenderTarget, appPalette palette);
 
 		GRAPHICSTRUCT(
@@ -81,7 +82,7 @@ namespace WCMP {
 		EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, appPalette palette, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*));
 		virtual ~EmptyButton();
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent);
 
 		virtual BaseComponent* clone();
 

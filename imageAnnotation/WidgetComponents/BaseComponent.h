@@ -34,7 +34,7 @@ namespace WCMP {
 		virtual void LUp(POINT p) = 0;
 		virtual void MouseLeave() = 0;
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent) = 0;
 
 		virtual BaseComponent* clone() = 0;
 

@@ -92,7 +92,7 @@ namespace WCMP {
 			this->bufferSize = B.bufferSize;
 			this->loadElem = B.loadElem;
 			for (auto e : B.diskItems)
-				this->diskItems.push_back(new std::wstring(&e));
+				this->diskItems.push_back(new std::wstring(*e));
 
 			loadingThread = NULL;
 			threadReturn = B.threadReturn;

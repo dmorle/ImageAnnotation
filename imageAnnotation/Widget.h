@@ -40,8 +40,8 @@ const static std::vector<std::string> appColors
 };
 
 // contains all the colors which will be used by the program
-typedef struct _appPalette appPalette;
-struct _appPalette
+typedef struct appPalette appPalette;
+struct appPalette
 {
 	typedef int PALETTE_COLOR;
 
@@ -53,7 +53,7 @@ struct _appPalette
 		TEXT_COLOR
 	};
 
-	_appPalette() :
+	appPalette() :
 		background(0.0f, 0.0f, 0.6f),
 		widgetBack(0.15f, 0.15f, 0.15f),
 		passive(0.3f, 0.3f, 0.3f),

@@ -23,7 +23,7 @@ namespace WCMP {
 
 		virtual void MouseWheel(POINT p, WORD lOrder);
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget = NULL);
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent);
 
 		virtual BaseComponent* clone();
 

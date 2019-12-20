@@ -4,16 +4,16 @@
 
 namespace WCMP {
 
-	GRAPHICSTRUCT::GRAPHICSTRUCT(const GRAPHICSTRUCT& gs)
+	GRAPHICSTRUCT::GRAPHICSTRUCT(const PGRAPHICSTRUCT pGs)
 	{
-		back         = gs.back;
-		back_passive = gs.back_passive;
-		back_active  = gs.back_active;
-		back_pressed = gs.back_pressed;
-		comp         = gs.comp;
-		comp_passive = gs.comp_passive;
-		comp_active  = gs.comp_active;
-		comp_pressed = gs.comp_pressed;
+		back         = pGs->back;
+		back_passive = pGs->back_passive;
+		back_active  = pGs->back_active;
+		back_pressed = pGs->back_pressed;
+		comp         = pGs->comp;
+		comp_passive = pGs->comp_passive;
+		comp_active  = pGs->comp_active;
+		comp_pressed = pGs->comp_pressed;
 	}
 
 	GRAPHICSTRUCT::GRAPHICSTRUCT(ID2D1HwndRenderTarget *pRenderTarget, appPalette palette)
@@ -176,24 +176,30 @@ namespace WCMP {
 
 	BaseComponent* EmptyButton::clone()
 	{
-		return new EmptyButton(new D2D1_RECT_F(*pRc), new GRAPHICSTRUCT(*pGs), onClick, paintSelf);
+		return new EmptyButton(new D2D1_RECT_F(*pRc), new GRAPHICSTRUCT(pGs), onClick, paintSelf);
 	}
 
-	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget)
+	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent)
 	{
+		D2D1_RECT_F rc{
+			pRc->left + parent.left,
+			pRc->top + parent.top,
+			pRc->right + parent.left,
+			pRc->bottom + parent.top,
+		};
 		switch (state) {
 		case PASSIVE:
 			if (pGs->back_passive)
-				pRenderTarget->FillRectangle(*pRc, pGs->back_passive);
+				pRenderTarget->FillRectangle(rc, pGs->back_passive);
 		case ACTIVE:
 			if (pGs->back_active)
-				pRenderTarget->FillRectangle(*pRc, pGs->back_active);
+				pRenderTarget->FillRectangle(rc, pGs->back_active);
 		case PRESSED:
 			if (pGs->back_pressed)
-				pRenderTarget->FillRectangle(*pRc, pGs->back_pressed);
+				pRenderTarget->FillRectangle(rc, pGs->back_pressed);
 		default:
 			if (pGs->back)
-				pRenderTarget->FillRectangle(*pRc, pGs->back);
+				pRenderTarget->FillRectangle(rc, pGs->back);
 		}
 	}
 }

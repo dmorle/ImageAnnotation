@@ -40,9 +40,6 @@
     <ClCompile Include="WidgetComponents\ImageBuffer.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetLayouts\ImageLayout.cpp">
-      <Filter>Source Files\WidgetLayouts</Filter>
-    </ClCompile>
     <ClCompile Include="WidgetComponents\EmptyButton.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
@@ -99,9 +96,6 @@
     <ClInclude Include="WidgetComponents\EmptyButton.h">
       <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetLayouts\ImageLayout.h">
-      <Filter>Header Files\WidgetLayouts</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -124,12 +118,6 @@
     </Filter>
     <Filter Include="Source Files\WidgetComponents">
       <UniqueIdentifier>{99c7160e-daee-4892-9063-5b196511d332}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\WidgetLayouts">
-      <UniqueIdentifier>{5403bb23-2534-49c7-b6af-cf7424885c60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\WidgetLayouts">
-      <UniqueIdentifier>{d699c44e-8381-4a3d-a98b-6031a44b7b9b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
