@@ -85,6 +85,19 @@ namespace WCMP {
 		}
 
 	protected:
+		Buffer(const Buffer<T>& B)
+		{
+			this->target = B.target;
+			this->suffix = B.suffix;
+			this->bufferSize = B.bufferSize;
+			this->loadElem = B.loadElem;
+			for (auto e : B.diskItems)
+				this->diskItems.push_back(new std::wstring(&e));
+
+			loadingThread = NULL;
+			threadReturn = B.threadReturn;
+		}
+
 		// path the current target
 		std::string target;
 		// filter target for files ending in 'suffix'
@@ -236,6 +249,7 @@ namespace WCMP {
 			}
 		}
 
+	protected:
 		// waits for any active threads to finish
 		void releaseThread() {
 			if (loadingThread) {

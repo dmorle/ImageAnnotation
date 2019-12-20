@@ -36,6 +36,8 @@ namespace WCMP {
 
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 
+		virtual BaseComponent* clone() = 0;
+
 	protected:
 		D2D1_RECT_F* pRc;
 	};

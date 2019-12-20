@@ -19,6 +19,8 @@ namespace WCMP {
 
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
 
+		virtual BaseComponent* clone();
+
 	protected:
 		std::list<PBaseComponent> children;
 

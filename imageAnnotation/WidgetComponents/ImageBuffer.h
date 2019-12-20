@@ -14,7 +14,7 @@ namespace WCMP {
 		public InteractiveComponent, public ImageBaseComponent, public Buffer<ID2D1Bitmap>
 	{
 	public:
-		ImageBuffer(D2D1_RECT_F* pRc, ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory, std::string target, UINT bufferSize);
+		ImageBuffer(D2D1_RECT_F* pRc, ID2D1HwndRenderTarget* pRenderTarget, IWICImagingFactory* pWicFactory, std::string target, UINT bufferSize);
 
 		virtual void MouseMove(POINT p);
 		virtual void LDown(POINT p);
@@ -25,9 +25,14 @@ namespace WCMP {
 
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget = NULL);
 
+		virtual BaseComponent* clone();
+
 	protected:
 		FLOAT zoom;
 		POINT* pTrans;
+
+		ID2D1HwndRenderTarget* pRenderTarget;
+		IWICImagingFactory* pWicFactory;
 
 	private:
 		POINT* pMouseLoc;

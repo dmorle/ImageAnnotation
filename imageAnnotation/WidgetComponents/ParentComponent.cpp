@@ -56,6 +56,18 @@ namespace WCMP {
 			(*it)->display(pRenderTarget);
 	}
 
+	BaseComponent* ParentComponent::clone()
+	{
+		ParentComponent* npCmp = new ParentComponent();
+
+		npCmp->pRc = new D2D1_RECT_F(*pRc);
+		for (auto e : children)
+			if (e)
+				npCmp->children.push_back(e->clone());
+
+		return npCmp;
+	}
+
 	void ParentComponent::activateElement(std::list<PBaseComponent>::iterator it)
 	{
 		if (it != children.begin()) {

@@ -83,8 +83,13 @@ namespace WCMP {
 
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
 
+		virtual BaseComponent* clone();
+
 	protected:
 		PGRAPHICSTRUCT pGs;
+
+	private:
+		EmptyButton(D2D1_RECT_F* pRc, PGRAPHICSTRUCT pGs, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*));
 	};
 
 }
