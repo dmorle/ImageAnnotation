@@ -14,6 +14,14 @@ namespace WCMP {
 		comp_passive = pGs->comp_passive;
 		comp_active  = pGs->comp_active;
 		comp_pressed = pGs->comp_pressed;
+		pGs->back->AddRef();
+		pGs->back_passive->AddRef();
+		pGs->back_active->AddRef();
+		pGs->back_pressed->AddRef();
+		pGs->comp->AddRef();
+		pGs->comp_passive->AddRef();
+		pGs->comp_active->AddRef();
+		pGs->comp_pressed->AddRef();
 	}
 
 	GRAPHICSTRUCT::GRAPHICSTRUCT(ID2D1HwndRenderTarget *pRenderTarget, appPalette palette)
@@ -150,16 +158,17 @@ namespace WCMP {
 
 
 
-	EmptyButton::EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, appPalette palette, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*))
+	EmptyButton::EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, PRECT parentpRc, appPalette palette, void (*onClick)(), void (*paintSelf)(PRECT))
+		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc)
 	{
-		this->pRc = pRc;
 		this->pGs = new GRAPHICSTRUCT(pRenderTarget, palette);
 		this->state = PASSIVE;
 		this->onClick = onClick;
 		this->paintSelf = paintSelf;
 	}
 
-	EmptyButton::EmptyButton(D2D1_RECT_F* pRc, PGRAPHICSTRUCT pGs, void (*onClick)(), void (*paintSelf)(D2D1_RECT_F*))
+	EmptyButton::EmptyButton(D2D1_RECT_F* pRc, PRECT parentpRc, PGRAPHICSTRUCT pGs, void (*onClick)(), void (*paintSelf)(PRECT))
+		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc)
 	{
 		this->pRc = pRc;
 		this->pGs = pGs;
@@ -174,29 +183,29 @@ namespace WCMP {
 			delete pGs;
 	};
 
-	BaseComponent* EmptyButton::clone()
+	BaseComponent* EmptyButton::clone(PRECT nparentpRc)
 	{
-		return new EmptyButton(new D2D1_RECT_F(*pRc), new GRAPHICSTRUCT(pGs), onClick, paintSelf);
+		return new EmptyButton(new D2D1_RECT_F(*pRc), nparentpRc, new GRAPHICSTRUCT(pGs), onClick, paintSelf);
 	}
 
-	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent)
+	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
-		D2D1_RECT_F rc{
-			pRc->left + parent.left,
-			pRc->top + parent.top,
-			pRc->right + parent.left,
-			pRc->bottom + parent.top,
-		};
+		D2D1_RECT_F rc;
+		getGlobalRect(rc);
+
 		switch (state) {
 		case PASSIVE:
 			if (pGs->back_passive)
 				pRenderTarget->FillRectangle(rc, pGs->back_passive);
+			break;
 		case ACTIVE:
 			if (pGs->back_active)
 				pRenderTarget->FillRectangle(rc, pGs->back_active);
+			break;
 		case PRESSED:
 			if (pGs->back_pressed)
 				pRenderTarget->FillRectangle(rc, pGs->back_pressed);
+			break;
 		default:
 			if (pGs->back)
 				pRenderTarget->FillRectangle(rc, pGs->back);

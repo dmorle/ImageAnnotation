@@ -25,6 +25,8 @@ namespace WCMP {
 	class BaseComponent
 	{
 	public:
+		BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc);
+
 		virtual ~BaseComponent();
 
 		BOOL contains(POINT p);
@@ -34,12 +36,19 @@ namespace WCMP {
 		virtual void LUp(POINT p) = 0;
 		virtual void MouseLeave() = 0;
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent) = 0;
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) = 0;
 
-		virtual BaseComponent* clone() = 0;
+		virtual BaseComponent* clone(PRECT nparentpRc) = 0;
 
 	protected:
 		D2D1_RECT_F* pRc;
+		PRECT parentpRc;
+
+		void getGlobalRect(RECT& nrc);
+		void getGlobalRect(D2D1_RECT_F& nrc);
+
+		void getGlobalRect(PRECT npRc);
+		void getGlobalRect(D2D1_RECT_F* npRc);
 	};
 
 	typedef BaseComponent* PBaseComponent;

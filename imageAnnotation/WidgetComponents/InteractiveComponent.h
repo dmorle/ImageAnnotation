@@ -5,9 +5,11 @@
 
 #ifndef StateUpdateFunc
 
+#define paintSelf_SU { PRECT pRcSU = new RECT(); getGlobalRect(pRcSU); paintSelf(pRcSU); }
+
 #define getOld_SU STATE old = state
 #define runFunc_SU(func, arg) func(arg)
-#define checkPaint_SU(old, state) if (old != state) paintSelf(pRc)
+#define checkPaint_SU(old, state) if (old != state) paintSelf_SU
 
 #define StateUpdateFunc(func, arg) getOld_SU; runFunc_SU(func, arg); checkPaint_SU(old, state);
 
@@ -25,23 +27,24 @@ namespace WCMP {
 		virtual public BaseComponent
 	{
 	public:
-		void MouseMove(POINT p);
-		void LDown(POINT p);
-		void LUp(POINT p);
-		void MouseLeave();
+		InteractiveComponent(D2D1_RECT_F* pRc, PRECT parentpRc);
+
+		void MouseMove(POINT p) override;
+		void LDown(POINT p) override;
+		void LUp(POINT p) override;
+		void MouseLeave() override;
 
 	protected:
 		STATE state;
 
 		void (*onClick)();
-		void (*paintSelf)(D2D1_RECT_F*);
-
-		virtual void m_MouseLeave();
+		void (*paintSelf)(PRECT);
 
 	private:
 		void m_MouseMove(POINT p);
 		void m_LDown(POINT p);
 		void m_LUp(POINT p);
+		void m_MouseLeave();
 	};
 
 }

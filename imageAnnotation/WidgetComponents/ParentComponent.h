@@ -10,6 +10,8 @@ namespace WCMP {
 		public BaseComponent
 	{
 	public:
+		ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc);
+
 		~ParentComponent();
 
 		void MouseMove(POINT p);
@@ -17,9 +19,9 @@ namespace WCMP {
 		void LUp(POINT p);
 		void MouseLeave();
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent);
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
 
-		virtual BaseComponent* clone();
+		virtual BaseComponent* clone(PRECT nparentpRc);
 
 	protected:
 		std::list<PBaseComponent> children;

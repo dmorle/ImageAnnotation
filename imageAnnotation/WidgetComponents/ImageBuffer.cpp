@@ -4,10 +4,9 @@
 
 namespace WCMP {
 
-	ImageBuffer::ImageBuffer(D2D1_RECT_F* pRc, ID2D1HwndRenderTarget* pRenderTarget, IWICImagingFactory* pWicFactory, std::string target, UINT bufferSize)
-		: Buffer(target, "", bufferSize, &LoadElem), ImageBaseComponent(pRenderTarget, pWicFactory)
+	ImageBuffer::ImageBuffer(D2D1_RECT_F* pRc, PRECT parentpRc, ID2D1HwndRenderTarget* pRenderTarget, IWICImagingFactory* pWicFactory, std::string target, UINT bufferSize)
+		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(target, "", bufferSize, &LoadElem), ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
-		this->pRc = pRc;
 		this->pMouseLoc = NULL;
 
 		this->zoom = 1;
@@ -53,7 +52,7 @@ namespace WCMP {
 
 	}
 
-	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent) {}
+	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget) {}
 
 	ID2D1Bitmap* ImageBuffer::LoadElem(std::wstring* path)
 	{
@@ -61,11 +60,12 @@ namespace WCMP {
 		return NULL;
 	}
 
-	BaseComponent* ImageBuffer::clone()
+	BaseComponent* ImageBuffer::clone(PRECT npRc)
 	{
 		releaseThread();
 
 		ImageBuffer* npBuffer = new ImageBuffer(*this);
+		npBuffer->parentpRc = npRc;
 		D2D1_POINT_2U point = D2D1_POINT_2U{ 0, 0 };
 
 		// creating the new buffer

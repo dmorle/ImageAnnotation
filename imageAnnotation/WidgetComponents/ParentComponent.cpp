@@ -4,6 +4,9 @@
 
 namespace WCMP {
 
+	ParentComponent::ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc)
+		: BaseComponent(pRc, parentpRc) {}
+
 	ParentComponent::~ParentComponent()
 	{
 		for (auto e : children)
@@ -50,20 +53,20 @@ namespace WCMP {
 			(*it)->MouseLeave();
 	}
 
-	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget, const D2D1_RECT_F& parent)
+	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
 		for (auto it = children.end(); it != children.begin(); it--)
-			(*it)->display(pRenderTarget, parent);
+			(*it)->display(pRenderTarget);
 	}
 
-	BaseComponent* ParentComponent::clone()
+	BaseComponent* ParentComponent::clone(PRECT nparentpRc)
 	{
-		ParentComponent* npCmp = new ParentComponent();
+		ParentComponent* npCmp = new ParentComponent(pRc, nparentpRc);
 
 		npCmp->pRc = new D2D1_RECT_F(*pRc);
 		for (auto e : children)
 			if (e)
-				npCmp->children.push_back(e->clone());
+				npCmp->children.push_back(e->clone(nparentpRc));
 
 		return npCmp;
 	}

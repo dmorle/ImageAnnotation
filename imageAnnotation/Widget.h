@@ -148,7 +148,7 @@ class Widget
 	MainWindow* mw;
 
 	// defines the region which the widget occupies
-	RECT rect;
+	PRECT pRc;
 
 	// basic widget dimensions
 	FLOAT edgeSpace = 2;
@@ -174,11 +174,11 @@ class Widget
 	// Contains all widget compoenents for the widget
 	std::vector<WCMP::BaseComponent*> components;
 
-	Widget* createSplit(RECT rect);
+	Widget* createSplit(PRECT pRc);
 
 public:
 	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);
-	Widget(HWND hwnd, RECT rect, MainWindow* mw);
+	Widget(HWND hwnd, PRECT pRc, MainWindow* mw);
 
 	~Widget();
 
