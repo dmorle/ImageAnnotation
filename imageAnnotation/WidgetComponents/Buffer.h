@@ -38,6 +38,7 @@ namespace WCMP {
 			emptyBuffer();
 		}
 
+		// changes internal state to the next element in the buffer and shifts accordingly
 		HRESULT next()
 		{
 			if (absIndex == diskItems.size() - 1)
@@ -55,6 +56,7 @@ namespace WCMP {
 			return S_OK;
 		}
 
+		// changes internal state to the previous element in the buffer and shifts accordingly
 		HRESULT prev()
 		{
 			if (absIndex == 0)
@@ -72,6 +74,10 @@ namespace WCMP {
 			return S_OK;
 		}
 
+		/*
+			Sets the crrent index to any element in the target
+			TODO: entire imlementation
+		*/
 		HRESULT setActive(UINT nI)
 		{
 			if (nI >= absIndex)
@@ -79,13 +85,20 @@ namespace WCMP {
 		}
 
 	protected:
+		// path the current target
 		std::string target;
+		// filter target for files ending in 'suffix'
 		std::string suffix;
+		// paths to all files in target
 		std::vector<std::wstring*> diskItems;
+		// current index of the buffer in target
 		UINT absIndex;
 
+		// the number of elements to store in RAM at a time
 		USHORT bufferSize;
+		// the current element
 		typename std::list<T*>::iterator* active;
+		// the buffer of items surrounding active
 		std::list<T*> buffer;
 
 		// loads the element at the given path
@@ -95,6 +108,7 @@ namespace WCMP {
 		std::thread* loadingThread;
 		HRESULT threadReturn;
 
+		// empties diskItems and resets absIndex
 		void clearDiskItems()
 		{
 			// clearing the loaded file paths
@@ -107,6 +121,7 @@ namespace WCMP {
 			}
 		}
 
+		// empties buffer and resets active
 		void emptyBuffer()
 		{
 			if (active) {
@@ -125,6 +140,7 @@ namespace WCMP {
 			}
 		}
 
+		// initializes diskItems and absIndex
 		void loadFileNames()
 		{
 			auto dir = fs::directory_iterator(target);
@@ -137,6 +153,7 @@ namespace WCMP {
 			absIndex = 0;
 		}
 
+		// initializes buffer and active
 		HRESULT loadNewBuffer()
 		{
 			// check if buffer size is too large
@@ -167,6 +184,7 @@ namespace WCMP {
 			return S_OK;
 		}
 
+		// loads the next element from target
 		void m_next()
 		{
 			if (absIndex <= bufferSize)
@@ -192,6 +210,7 @@ namespace WCMP {
 			}
 		}
 
+		// loads the previous element from target
 		void m_prev()
 		{
 			if (absIndex <= bufferSize)
@@ -217,6 +236,7 @@ namespace WCMP {
 			}
 		}
 
+		// waits for any active threads to finish
 		void releaseThread() {
 			if (loadingThread) {
 				loadingThread->join();
