@@ -2,6 +2,7 @@
 #define WIDGETCMP_H
 
 #include "BaseComponent.h"
+#include "EmptyButton.h"
 #include "Buffer.h"
 #include "ImageBaseComponent.h"
 #include "ImageBuffer.h"

@@ -2,24 +2,80 @@
 
 
 
+namespace {	// Creating a namespace local to this file to handle widget component painting
+
+	HWND cmp_hwnd;
+
+	void paintSelf(D2D1_RECT_F* pRc)
+	{
+		RECT rc
+		{
+			pRc->left,
+			pRc->right,
+			pRc->top,
+			pRc->bottom
+		};
+		InvalidateRect(cmp_hwnd, &rc, TRUE);
+	}
+
+}
+
 Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, MainWindow* mw)
 {
 	this->mw = mw;
-	this->hwnd = hwnd;
+	this->hwnd = cmp_hwnd = hwnd;
 	this->rect = RECT { left, top, right, bottom };
+
+	// creating a test component
+	components.push_back(
+		new WCMP::EmptyButton(
+			mw->pRenderTarget,
+			new D2D1_RECT_F{ 0, 0, 10, 10 },
+			mw->palette,
+			NULL,
+			paintSelf
+		)
+	);
 }
 
 Widget::Widget(HWND hwnd, RECT rect, MainWindow* mw)
 {
 	this->mw = mw;
-	this->hwnd = hwnd;
+	this->hwnd = cmp_hwnd = hwnd;
 	this->rect = rect;
+
+	// creating a test component
+	components.push_back(
+		new WCMP::EmptyButton(
+			mw->pRenderTarget,
+			new D2D1_RECT_F{ 0, 0, 10, 10 },
+			mw->palette,
+			NULL,
+			paintSelf
+		)
+	);
 }
 
 Widget::~Widget()
 {
 	if (npWidget)
 		delete npWidget;
+
+	/*
+		Deleting all widget components
+	*/
+
+	for (auto& e : components)
+		delete e;
+}
+
+Widget* Widget::createSplit(RECT rect)
+{
+	Widget* npWidget = new Widget(hwnd, rect, mw);
+
+	// TODO: resize components if appropriate
+	for (auto e : components)
+		npWidget->components.push_back(e->clone());
 }
 
 void Widget::resize(LONG left, LONG top, LONG right, LONG bottom)
@@ -79,6 +135,10 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 					mw->brushes.active
 				);
 
+		/*
+			Displaying the widget components for a widget in edit mode
+		*/
+
 		return;
 	}
 	if (delWidget) {
@@ -123,6 +183,13 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 			{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
 			mw->brushes.active
 		);
+
+	/*
+		Displaying the widget components for a standard widget
+	*/
+
+	for (auto& e : components)
+		e->display(pRenderTarget);
 }
 
 Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
@@ -321,6 +388,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			if (rect.bottom == delWidget->rect.bottom) {
 				// horizontal widget merge
 				if (rect.right > p.x) {
+					// stop merge
 					if (minSize < rect.bottom - p.y)
 						npWidget = new Widget(hwnd, RECT{ rect.left, p.y, rect.right, rect.bottom }, mw);
 
@@ -341,6 +409,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			else {
 				// vertical widget merge
 				if (rect.bottom > p.y) {
+					// stop merging
 					if (minSize < rect.right - p.x)
 						npWidget = new Widget(hwnd, RECT{ p.x, rect.top, rect.right, rect.bottom }, mw);
 

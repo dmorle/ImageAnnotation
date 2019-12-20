@@ -25,7 +25,7 @@ namespace WCMP {
 	class BaseComponent
 	{
 	public:
-		~BaseComponent();
+		virtual ~BaseComponent();
 
 		BOOL contains(POINT p);
 

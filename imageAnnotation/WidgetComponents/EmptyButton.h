@@ -2,6 +2,8 @@
 #define EMPTYBUTTON_H
 
 #include "InteractiveComponent.h"
+
+typedef struct appPalette appPalette;
 #include "../Widget.h"
 
 namespace WCMP {

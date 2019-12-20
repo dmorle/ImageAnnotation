@@ -40,8 +40,8 @@ const static std::vector<std::string> appColors
 };
 
 // contains all the colors which will be used by the program
-typedef struct appPalette appPalette;
-struct appPalette
+typedef struct _appPalette appPalette;
+struct _appPalette
 {
 	typedef int PALETTE_COLOR;
 
@@ -53,7 +53,7 @@ struct appPalette
 		TEXT_COLOR
 	};
 
-	appPalette() :
+	_appPalette() :
 		background(0.0f, 0.0f, 0.6f),
 		widgetBack(0.15f, 0.15f, 0.15f),
 		passive(0.3f, 0.3f, 0.3f),
@@ -163,9 +163,18 @@ class Widget
 	// used when merging widgets
 	Widget* delWidget;
 
-	// used when resizing widgets
+	// used when resizing widgets : all other widgets being resized as a result
 	std::vector<Widget*> neighbors;
+	// used when resizing widgets : the active side being resized
 	RECT_SIDE side;
+
+	// Note that neighbors.size() != 0, delWidget != NULL, and npWidget != NULL are mutually exclusive
+	// Only one can be true at a time
+
+	// Contains all widget compoenents for the widget
+	std::vector<WCMP::BaseComponent*> components;
+
+	Widget* createSplit(RECT rect);
 
 public:
 	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);
@@ -184,10 +193,13 @@ public:
 	// determines if p is in this->rect
 	BOOL contains(POINT p);
 
-	// getters for the location of each of the widgets bounding sides
+	// getter for this->rect.left
 	FLOAT getLeft();
+	// getter for this->rect.top
 	FLOAT getTop();
+	// getter for this->rect.right
 	FLOAT getRight();
+	// getter for this->rect.bottom
 	FLOAT getBottom();
 };
 

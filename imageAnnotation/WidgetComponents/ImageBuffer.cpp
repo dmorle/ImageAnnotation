@@ -58,4 +58,6 @@ namespace WCMP {
 		return NULL;
 	}
 
+	void ImageBuffer::m_MouseLeave() {}
+
 }
