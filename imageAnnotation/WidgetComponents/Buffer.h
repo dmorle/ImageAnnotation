@@ -11,25 +11,48 @@
 #include <thread>
 #include <experimental/filesystem>
 
+#define bufferItem _bufferItem<T>
+
 namespace WCMP {
+
+	namespace {
+
+		template <typename T>
+		struct _bufferItem {
+			T* item;					// contains the item loaded by the thread
+			std::thread* loadingThread; // will be NULL once the thread has finished
+			HRESULT threadReturn;  // contains the thread status once loadingThread is NULL
+
+			_bufferItem()
+			{
+				item = NULL;
+				loadingThread = NULL;
+				threadReturn = S_OK;
+			}
+		};
+	}
 
 	namespace fs = std::experimental::filesystem::v1;
 
+	/*
+		Creates a buffer of object for quick usage through multithreading
+
+		'bufferSize' objects are loaded previous to and preceeding the active element
+		TODO: Create a buffer for cloud resources
+	*/
 	template <typename T>
 	class Buffer {
 	public:
-		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*))
+		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*), void(*destructItem)(T*) = NULL)
 		{
 			this->target = target;
 			this->suffix = suffix;
 			this->bufferSize = bufferSize;
 			this->loadElem = loadElem;
+			this->destructItem = destructItem;
 
 			loadFileNames();
 			loadNewBuffer();
-
-			loadingThread = NULL;
-			threadReturn = S_OK;
 		}
 
 		virtual ~Buffer()
@@ -39,50 +62,76 @@ namespace WCMP {
 		}
 
 		// changes internal state to the next element in the buffer and shifts accordingly
-		HRESULT next()
+		void next()
 		{
-			if (absIndex == diskItems.size() - 1)
-				return E_ABORT;
+			// checking to ensure request is valid
+			if (absIndex - 1 >= diskItems.size())
+				return;
 
-			releaseThread();
-
-			if (FAILED(threadReturn))
-				return threadReturn;
-
-			absIndex++;
+			// moving the active buffer element
 			std::advance(*active, 1);
+			absIndex++;
 
-			loadingThread = new std::thread(&Buffer<T>::m_next, this);
-			return S_OK;
+			// ensuring the element has finished loading
+			if ((**active)->loadingThread)
+				(**active)->loadingThread->join();
+
+			// deleting and loading the edge elements
+			if (!smallTarget) {
+				if (absIndex + bufferSize < diskItems.size()) {
+					buffer.push_back(new bufferItem{});
+					buffer.back()->loadingThread = new std::thread(&Buffer<T>::loadDiskItem, this, buffer.back(), diskItems[absIndex + bufferSize]);
+				}
+
+				bufferItem* pOld = buffer.front();
+				if (SUCCEEDED(pOld->threadReturn)) {
+					if (destructItem)
+						destructItem(pOld->item);
+					else
+						delete pOld->item;
+				}
+				buffer.pop_front();
+			}
 		}
 
 		// changes internal state to the previous element in the buffer and shifts accordingly
-		HRESULT prev()
+		void prev()
 		{
-			if (absIndex == 0)
-				return E_ABORT;
+			// checking to ensure request is valid
+			if (absIndex <= 0)
+				return;
 
-			releaseThread();
-
-			if (FAILED(threadReturn))
-				return threadReturn;
-
-			absIndex--;
+			// moving the active buffer element
 			std::advance(*active, -1);
+			absIndex--;
 
-			loadingThread = new std::thread(&Buffer<T>::m_prev, this);
-			return S_OK;
+			// ensuring the element has finished loading
+			if ((*active)->loadingThread)
+				(*active)->loadingThread->join();
+
+			// deleting and loading the edge elements
+			if (!smallTarget) {
+				if (absIndex + bufferSize < diskItems.size()) {
+					buffer.push_front(new bufferItem{});
+					buffer.front()->loadingThread = new std::thread(&Buffer<T>::loadDiskItem, this, buffer.front(), diskItems[absIndex + bufferSize]);
+				}
+
+				bufferItem* pOld = buffer.back();
+				if (SUCCEEDED(pOld->threadReturn)) {
+					if (destructItem)
+						destructItem(pOld->item);
+					else
+						delete pOld->item;
+				}
+				buffer.pop_back();
+			}
 		}
 
 		/*
 			Sets the crrent index to any element in the target
 			TODO: entire imlementation
 		*/
-		HRESULT setActive(UINT nI)
-		{
-			if (nI >= absIndex)
-				return E_ABORT;
-		}
+		void setActive(UINT nI) {}
 
 	protected:
 		Buffer(const Buffer<T>& B)
@@ -94,8 +143,7 @@ namespace WCMP {
 			for (auto e : B.diskItems)
 				this->diskItems.push_back(new std::wstring(*e));
 
-			loadingThread = NULL;
-			threadReturn = B.threadReturn;
+			loadNewBuffer();
 		}
 
 		// path the current target
@@ -110,16 +158,16 @@ namespace WCMP {
 		// the number of elements to store in RAM at a time
 		USHORT bufferSize;
 		// the current element
-		typename std::list<T*>::iterator* active;
+		typename std::list<bufferItem*>::iterator* active;
 		// the buffer of items surrounding active
-		std::list<T*> buffer;
+		std::list<bufferItem*> buffer;
 
 		// loads the element at the given path
 		T* (*loadElem)(std::wstring*);
 
 	private:
-		std::thread* loadingThread;
-		HRESULT threadReturn;
+		void (*destructItem)(T*);
+		BOOL smallTarget;
 
 		// empties diskItems and resets absIndex
 		void clearDiskItems()
@@ -137,20 +185,17 @@ namespace WCMP {
 		// empties buffer and resets active
 		void emptyBuffer()
 		{
-			if (active) {
-				releaseThread();
-
-				// reseting the active element
-				delete active;
-				active = NULL;
-
-				// deleting the elements in the buffer
-				for (auto& e : buffer)
-					delete e;
-
-				// clearing the buffer
-				buffer.clear();
+			releaseThreads();
+			for (auto& e : buffer) {
+				if (SUCCEEDED(e->threadReturn)) {
+					if (destructItem)
+						destructItem(e->item);
+					else
+						delete e->item;
+				}
+				delete e;
 			}
+			buffer.clear();
 		}
 
 		// initializes diskItems and absIndex
@@ -167,95 +212,84 @@ namespace WCMP {
 		}
 
 		// initializes buffer and active
-		HRESULT loadNewBuffer()
+		void loadNewBuffer()
 		{
 			// check if buffer size is too large
 			if (diskItems.size() < bufferSize * 2) {
 				// Load all disk items
+				smallTarget = TRUE;
+				for (auto& e : diskItems)
+					buffer.push_back(loadBufferItem(e));
+			}
+			else {
+				// standard buffer load
+				smallTarget = FALSE;
+				int i = 0;
 				for (auto& e : diskItems) {
-					T* nE = loadElem(e);
-					if (!nE)
-						return E_FAIL;
-
-					buffer.push_back(nE);
+					buffer.push_back(loadBufferItem(e));
+					if (bufferSize < ++i)
+						break;
 				}
-
-				active = new typename std::list<T*>::iterator(buffer.begin());
-				return S_OK;
 			}
-
-			// standard buffer load
-			for (int i = 0; i <= bufferSize * 2; i++) {
-				T* nE = loadElem(diskItems[i]);
-				if (!nE)
-					return E_FAIL;
-
-				buffer.push_back(nE);
-			}
-
-			active = new typename std::list<T*>::iterator(buffer.begin());
-			return S_OK;
+			active = new typename std::list<bufferItem*>::iterator(buffer.begin());
 		}
 
-		// loads the next element from target
-		void m_next()
+		// loads an item from target into the buffer
+		void loadDiskItem(bufferItem* npItem, std::wstring* path)
 		{
-			if (absIndex <= bufferSize)
-				// at the start of target => buffer ready
-				threadReturn = S_OK;
+			// loading the item from disk
+			T* nE = loadElem(path);
 
-			else if (absIndex + bufferSize >= diskItems.size())
-				// at the end of target => buffer ready
-				threadReturn = S_OK;
-
-			else {
-				// normal response
-				T* nE = loadElem(diskItems[absIndex + bufferSize]);
-				if (!nE)
-					threadReturn = E_FAIL;
-
-				else {
-					delete buffer.front();
-					buffer.pop_front();
-					buffer.push_back(nE);
-					threadReturn = S_OK;
-				}
-			}
-		}
-
-		// loads the previous element from target
-		void m_prev()
-		{
-			if (absIndex <= bufferSize)
-				// at the start of target => buffer ready
-				threadReturn = S_OK;
-
-			else if (absIndex + bufferSize >= diskItems.size())
-				// at the end of target => buffer ready
-				threadReturn = S_OK;
-
-			else {
-				// normal response
-				T* nE = loadElem(diskItems[absIndex - bufferSize]);
-				if (!nE)
-					threadReturn = E_FAIL;
-
-				else {
-					delete buffer.back();
-					buffer.pop_back();
-					buffer.push_front(nE);
-					threadReturn = S_OK;
-				}
-			}
+			// putting the result into the buffer
+			npItem->item = nE;
+			if (!nE)
+				npItem->threadReturn = E_FAIL;
 		}
 
 	protected:
-		// waits for any active threads to finish
-		void releaseThread() {
-			if (loadingThread) {
-				loadingThread->join();
-				loadingThread = NULL;
+		// waits for all active threads to finish
+		void releaseThreads()
+		{
+			for (auto& e : buffer)
+				readyBufferItem(e);
+		}
+
+		// loads a new bufferItem into npItem from path
+		bufferItem* loadBufferItem(std::wstring* path)
+		{
+			auto npItem = new bufferItem();
+			npItem->loadingThread = new std::thread(&Buffer<T>::loadDiskItem, this, npItem, path);
+			return npItem;
+		}
+
+		// ensures pItem is ready for use
+		void readyBufferItem(bufferItem* pItem)
+		{
+			if (pItem->loadingThread) {
+				pItem->loadingThread->join();
+				delete pItem->loadingThread;
+				pItem->loadingThread = NULL;
 			}
+		}
+
+		// deletes a bufferItem object
+		void releaseBufferItem(bufferItem*& pItem)
+		{
+			// ensuring that the item can be deleted
+			readyBufferItem(pItem);
+
+			// deleting the contained item
+			if (pItem->threadReturn == S_OK) {
+				if (destructItem)
+					destructItem(pItem->item);
+				else
+					delete pItem->item;
+			}
+
+			// deleting the bufferItem itself
+			delete pItem;
+			pItem = NULL;
+
 		}
 	};
 
