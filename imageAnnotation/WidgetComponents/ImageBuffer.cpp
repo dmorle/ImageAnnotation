@@ -5,15 +5,21 @@
 namespace WCMP {
 
 	ImageBuffer::ImageBuffer(D2D1_RECT_F* pRc, PRECT parentpRc, ID2D1HwndRenderTarget* pRenderTarget, IWICImagingFactory* pWicFactory, std::string target, UINT bufferSize)
-		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(target, "", bufferSize, &LoadElem), ImageBaseComponent(pRenderTarget, pWicFactory)
+		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(target, "", bufferSize, &LoadItem, &CopyItem, &ReleaseItem), ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
 		this->pMouseLoc = NULL;
 
 		this->zoom = 1;
 		this->pTrans = NULL;
+	}
 
-		this->pRenderTarget = pRenderTarget;
-		this->pWicFactory = pWicFactory;
+	ImageBuffer::ImageBuffer(ImageBuffer* pThis)
+		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(pThis), ImageBaseComponent()
+	{
+		this->pMouseLoc = new POINT(*pThis->pMouseLoc);
+		
+		this->zoom = pThis->zoom;
+		this->pTrans = new POINT(*pThis->pTrans);
 	}
 
 	void ImageBuffer::MouseMove(POINT p)
@@ -54,47 +60,28 @@ namespace WCMP {
 
 	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget) {}
 
-	ID2D1Bitmap* ImageBuffer::LoadElem(std::wstring* path)
+	ID2D1Bitmap* ImageBuffer::LoadItem(std::wstring* path)
 	{
-		
+		ID2D1Bitmap* npBmp;
+		if (SUCCEEDED(LoadBitmapFromFile(path->c_str(), &npBmp)))
+			return npBmp;
 		return NULL;
+	}
+
+	ID2D1Bitmap* ImageBuffer::CopyItem(ID2D1Bitmap* pBmp)
+	{
+		pBmp->AddRef();
+		return pBmp;
+	}
+
+	void ImageBuffer::ReleaseItem(ID2D1Bitmap* pBmp)
+	{
+		SafeRelease(&pBmp);
 	}
 
 	BaseComponent* ImageBuffer::clone(PRECT npRc)
 	{
-		releaseThread();
-
-		ImageBuffer* npBuffer = new ImageBuffer(*this);
-		npBuffer->parentpRc = npRc;
-		D2D1_POINT_2U point = D2D1_POINT_2U{ 0, 0 };
-
-		// creating the new buffer
-		for (auto e : buffer) {
-			// creating the copy bitmap
-			ID2D1Bitmap* npBmp;
-			FLOAT dpiX;
-			FLOAT dpiY;
-			e->GetDpi(&dpiX, &dpiY);
-			pRenderTarget->CreateBitmap(
-				e->GetPixelSize(),
-				D2D1_BITMAP_PROPERTIES{ e->GetPixelFormat(), dpiX, dpiY },
-				&npBmp
-			);
-
-			// copying the old bitmap
-			D2D1_SIZE_U size = e->GetPixelSize();
-			D2D1_RECT_U src = D2D1_RECT_U{ 0, 0, size.width, size.height };
-			npBmp->CopyFromBitmap(&point, e, &src);
-
-			// building the new buffer
-			npBuffer->buffer.push_back(npBmp);
-		}
-
-		// getting the active element
-		npBuffer->active = new std::list<ID2D1Bitmap*>::iterator(npBuffer->buffer.begin());
-		std::advance(npBuffer->active, bufferSize + 1);
-
-		return npBuffer;
+		return new ImageBuffer(this);
 	}
 
 	void ImageBuffer::m_MouseLeave() {}

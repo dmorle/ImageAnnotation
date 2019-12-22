@@ -23,11 +23,20 @@ namespace WCMP {
 			std::thread* loadingThread; // will be NULL once the thread has finished
 			HRESULT threadReturn;  // contains the thread status once loadingThread is NULL
 
+			// constructor for creating a new bufferItem from disk
 			_bufferItem()
 			{
 				item = NULL;
 				loadingThread = NULL;
 				threadReturn = S_OK;
+			}
+
+			// constructor used for copying a buffer
+			_bufferItem(T* item, HRESULT threadReturn)
+			{
+				this->item = item;
+				this->loadingThread = NULL;
+				this->threadReturn = threadReturn;
 			}
 		};
 	}
@@ -43,12 +52,13 @@ namespace WCMP {
 	template <typename T>
 	class Buffer {
 	public:
-		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadElem)(std::wstring*), void(*destructItem)(T*) = NULL)
+		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadItem)(std::wstring*), T* (*copyItem)(T*), void(*destructItem)(T*) = NULL)
 		{
 			this->target = target;
 			this->suffix = suffix;
 			this->bufferSize = bufferSize;
-			this->loadElem = loadElem;
+			this->loadItem = loadItem;
+			this->copyItem = copyItem;
 			this->destructItem = destructItem;
 
 			loadFileNames();
@@ -133,13 +143,19 @@ namespace WCMP {
 		*/
 		void setActive(UINT nI) {}
 
+		T* getActiveItem()
+		{
+			readyBufferItem(*active);
+			return (*active)->item;
+		}
+
 	protected:
 		Buffer(const Buffer<T>& B)
 		{
 			this->target = B.target;
 			this->suffix = B.suffix;
 			this->bufferSize = B.bufferSize;
-			this->loadElem = B.loadElem;
+			this->loadItem = B.loadItem;
 			for (auto e : B.diskItems)
 				this->diskItems.push_back(new std::wstring(*e));
 
@@ -163,7 +179,9 @@ namespace WCMP {
 		std::list<bufferItem*> buffer;
 
 		// loads the element at the given path
-		T* (*loadElem)(std::wstring*);
+		T* (*loadItem)(std::wstring*);
+		// create a copy of the given item
+		T* (*copyItem)(T*);
 
 	private:
 		void (*destructItem)(T*);
@@ -185,16 +203,9 @@ namespace WCMP {
 		// empties buffer and resets active
 		void emptyBuffer()
 		{
-			releaseThreads();
-			for (auto& e : buffer) {
-				if (SUCCEEDED(e->threadReturn)) {
-					if (destructItem)
-						destructItem(e->item);
-					else
-						delete e->item;
-				}
-				delete e;
-			}
+			for (auto& e : buffer)
+				releaseBufferItem(e);
+
 			buffer.clear();
 		}
 
@@ -238,7 +249,7 @@ namespace WCMP {
 		void loadDiskItem(bufferItem* npItem, std::wstring* path)
 		{
 			// loading the item from disk
-			T* nE = loadElem(path);
+			T* nE = loadItem(path);
 
 			// putting the result into the buffer
 			npItem->item = nE;
@@ -290,6 +301,30 @@ namespace WCMP {
 			delete pItem;
 			pItem = NULL;
 
+		}
+
+		Buffer(const Buffer* pb)
+		{
+			target = pb->target;
+			suffix = pb->suffix;
+			bufferSize = pb->bufferSize;
+			loadItem = pb->loadItem;
+			destructItem = pb->destructItem;
+			smallTarget = pb->smallTarget;
+
+			loadFileNames();
+
+			for (auto e : pb->buffer) {
+				readyBufferItem(e);
+				buffer.push_back(new bufferItem(copyItem(e->item), e->threadReturn));
+			}
+
+			// getting active properly initialized
+			active = new typename std::list<bufferItem*>::iterator(buffer.begin());
+			if (smallTarget)
+				std::advance(*active, min(absIndex, bufferSize));
+			else
+				std::advance(*active, absIndex);
 		}
 	};
 

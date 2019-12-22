@@ -4,8 +4,13 @@
 
 namespace WCMP {
 
-	ImageBaseComponent::ImageBaseComponent(ID2D1HwndRenderTarget*& pRenderTarget, IWICImagingFactory*& pWicFactory)
-        : pRenderTarget(pRenderTarget), pWicFactory(pWicFactory) {}
+    ImageBaseComponent::ImageBaseComponent(ID2D1HwndRenderTarget*& arg_pRenderTarget, IWICImagingFactory*& arg_pWicFactory)
+    {
+        pRenderTarget = arg_pRenderTarget;
+        pWicFactory = arg_pWicFactory;
+    }
+
+    ImageBaseComponent::ImageBaseComponent() {}
 
 	HRESULT ImageBaseComponent::LoadBitmapBrush(
         PCWSTR uri,
@@ -100,6 +105,11 @@ namespace WCMP {
         SafeRelease(&pScaler);
 
         return hr;
+    }
+
+    HRESULT ImageBaseComponent::TransformBitmap(ID2D1Bitmap* src, FLOAT zoom, POINT pTrans, ID2D1Bitmap** ppBitmap)
+    {
+        return E_NOTIMPL;
     }
 
 }

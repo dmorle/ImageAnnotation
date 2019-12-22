@@ -28,16 +28,21 @@ namespace WCMP {
 		virtual BaseComponent* clone(PRECT nparentpRc);
 
 	protected:
+		ImageBuffer(ImageBuffer* pThis);
+
+		// the current zoom level for the image
 		FLOAT zoom;
+		// the current translation of the image
 		POINT* pTrans;
 
-		ID2D1HwndRenderTarget* pRenderTarget;
-		IWICImagingFactory* pWicFactory;
-
 	private:
+		// the current location of the mouse when on the component
 		POINT* pMouseLoc;
 
-		static ID2D1Bitmap* LoadElem(std::wstring* path);
+		static ID2D1Bitmap* LoadItem(std::wstring* path);
+		static ID2D1Bitmap* CopyItem(ID2D1Bitmap* pBmp);
+		static void ReleaseItem(ID2D1Bitmap* pBmp);
+
 		void m_MouseLeave();
 	};
 
