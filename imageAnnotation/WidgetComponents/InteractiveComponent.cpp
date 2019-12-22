@@ -4,8 +4,18 @@
 
 namespace WCMP {
 
-	InteractiveComponent::InteractiveComponent(D2D1_RECT_F* pRc, PRECT parentpRc)
-		: BaseComponent(pRc, parentpRc) {}
+	InteractiveComponent::InteractiveComponent(
+		D2D1_RECT_F* pRc,
+		PRECT parentpRc,
+		void (*onClick)(),
+		void (*paintSelf)(PRECT)
+	) :
+		BaseComponent(pRc, parentpRc)
+	{
+		this->onClick = onClick;
+		this->paintSelf = paintSelf;
+		this->state = STATE::PASSIVE;
+	}
 
 	void InteractiveComponent::MouseMove(POINT p)
 	{
@@ -30,30 +40,31 @@ namespace WCMP {
 	void InteractiveComponent::m_MouseMove(POINT p)
 	{
 		if (contains(p)) {
-			if (state != PRESSED)
-				state = ACTIVE;
+			if (state != STATE::PRESSED)
+				state = STATE::ACTIVE;
 		}
 		else
-			state = PASSIVE;
+			state = STATE::PASSIVE;
 	}
 
 	void InteractiveComponent::m_LDown(POINT p)
 	{
 		if (contains(p))
-			state = PRESSED;
+			state = STATE::PRESSED;
 	}
 
 	void InteractiveComponent::m_LUp(POINT p)
 	{
-		if (contains(p) && state == PRESSED) {
-			state = ACTIVE;
-			onClick();
-		}
+		if (onClick)
+			if (contains(p) && state == STATE::PRESSED) {
+				state = STATE::ACTIVE;
+				onClick();
+			}
 	}
 
 	void InteractiveComponent::m_MouseLeave()
 	{
-		state = PASSIVE;
+		state = STATE::PASSIVE;
 	}
 
 }

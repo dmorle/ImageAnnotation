@@ -9,6 +9,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	friend class Widget;
 
 	ID2D1Factory			*pFactory;
+	IWICImagingFactory      *pWicFactory;
 	ID2D1HwndRenderTarget	*pRenderTarget;
 
 	LONG left_off = 0;

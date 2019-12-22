@@ -166,23 +166,31 @@ namespace WCMP {
 
 
 
-	EmptyButton::EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, PRECT parentpRc, appPalette palette, void (*onClick)(), void (*paintSelf)(PRECT))
-		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc)
+	EmptyButton::EmptyButton(
+		ID2D1HwndRenderTarget* pRenderTarget,
+		D2D1_RECT_F* pRc,
+		PRECT parentpRc,
+		void (*onClick)(),
+		void (*paintSelf)(PRECT),
+		appPalette palette
+	) :
+		BaseComponent(pRc, parentpRc),
+		InteractiveComponent(pRc, parentpRc, onClick, paintSelf)
 	{
 		this->pGs = new GRAPHICSTRUCT(pRenderTarget, palette);
-		this->state = PASSIVE;
-		this->onClick = onClick;
-		this->paintSelf = paintSelf;
 	}
 
-	EmptyButton::EmptyButton(D2D1_RECT_F* pRc, PRECT parentpRc, PGRAPHICSTRUCT pGs, void (*onClick)(), void (*paintSelf)(PRECT))
-		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc)
+	EmptyButton::EmptyButton(
+		D2D1_RECT_F* pRc,
+		PRECT parentpRc,
+		void (*onClick)(),
+		void (*paintSelf)(PRECT),
+		PGRAPHICSTRUCT pGs
+	) :
+		BaseComponent(pRc, parentpRc),
+		InteractiveComponent(pRc, parentpRc, onClick, paintSelf)
 	{
-		this->pRc = pRc;
 		this->pGs = pGs;
-		this->state = PASSIVE;
-		this->onClick = onClick;
-		this->paintSelf = paintSelf;
 	}
 
 	EmptyButton::~EmptyButton()
@@ -193,7 +201,15 @@ namespace WCMP {
 
 	BaseComponent* EmptyButton::clone(PRECT nparentpRc)
 	{
-		return new EmptyButton(new D2D1_RECT_F(*pRc), nparentpRc, new GRAPHICSTRUCT(pGs), onClick, paintSelf);
+		return new EmptyButton(new D2D1_RECT_F(*pRc), nparentpRc, onClick, paintSelf, new GRAPHICSTRUCT(pGs));
+	}
+
+	void EmptyButton::resize(PRECT npRc)
+	{
+		if (!npRc)
+			npRc = parentpRc;
+
+		// TODO: resize to tempRc
 	}
 
 	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget)
@@ -202,15 +218,15 @@ namespace WCMP {
 		getGlobalRect(rc);
 
 		switch (state) {
-		case PASSIVE:
+		case STATE::PASSIVE:
 			if (pGs->back_passive)
 				pRenderTarget->FillRectangle(rc, pGs->back_passive);
 			break;
-		case ACTIVE:
+		case STATE::ACTIVE:
 			if (pGs->back_active)
 				pRenderTarget->FillRectangle(rc, pGs->back_active);
 			break;
-		case PRESSED:
+		case STATE::PRESSED:
 			if (pGs->back_pressed)
 				pRenderTarget->FillRectangle(rc, pGs->back_pressed);
 			break;

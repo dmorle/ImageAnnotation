@@ -79,9 +79,19 @@ namespace WCMP {
 		public InteractiveComponent
 	{
 	public:
-		EmptyButton(ID2D1HwndRenderTarget* pRenderTarget, D2D1_RECT_F* pRc, PRECT parentpRc, appPalette palette, void (*onClick)(), void (*paintSelf)(PRECT));
+		EmptyButton(
+			ID2D1HwndRenderTarget* pRenderTarget,
+			D2D1_RECT_F* pRc,
+			PRECT parentpRc,
+			void (*onClick)(),
+			void (*paintSelf)(PRECT),
+			appPalette palette
+		);
+
 		virtual ~EmptyButton();
 
+		// temporary, this will be implimented by derived classes
+		void resize(PRECT npRc) override;
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) override;
 
 		virtual BaseComponent* clone(PRECT nparentpRc) override;
@@ -90,7 +100,13 @@ namespace WCMP {
 		PGRAPHICSTRUCT pGs;
 
 	private:
-		EmptyButton(D2D1_RECT_F* pRc, PRECT parentpRc, PGRAPHICSTRUCT pGs, void (*onClick)(), void (*paintSelf)(PRECT));
+		EmptyButton(
+			D2D1_RECT_F* pRc, 
+			PRECT parentpRc,
+			void (*onClick)(),
+			void (*paintSelf)(PRECT),
+			PGRAPHICSTRUCT pGs
+		);
 	};
 
 }

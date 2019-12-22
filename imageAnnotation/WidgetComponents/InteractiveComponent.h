@@ -7,17 +7,18 @@
 
 #define paintSelf_SU { PRECT pRcSU = new RECT(); getGlobalRect(pRcSU); paintSelf(pRcSU); }
 
-#define getOld_SU STATE old = state
+#define getOld_SU enum class STATE old = state
 #define runFunc_SU(func, arg) func(arg)
 #define checkPaint_SU(old, state) if (old != state) paintSelf_SU
 
-#define StateUpdateFunc(func, arg) getOld_SU; runFunc_SU(func, arg); checkPaint_SU(old, state);
+// calls paintSelf if the state has been updated
+#define StateUpdateFunc(func, arg) { getOld_SU; runFunc_SU(func, arg); checkPaint_SU(old, state); }
 
 #endif
 
 namespace WCMP {
 
-	enum STATE {
+	enum class STATE {
 		PASSIVE,
 		ACTIVE,
 		PRESSED
@@ -27,7 +28,12 @@ namespace WCMP {
 		virtual public BaseComponent
 	{
 	public:
-		InteractiveComponent(D2D1_RECT_F* pRc, PRECT parentpRc);
+		InteractiveComponent(
+			D2D1_RECT_F* pRc,
+			PRECT parentpRc,
+			void (*onClick)(),
+			void (*paintSelf)(PRECT)
+		);
 
 		void MouseMove(POINT p) override;
 		void LDown(POINT p) override;
@@ -35,7 +41,7 @@ namespace WCMP {
 		void MouseLeave() override;
 
 	protected:
-		STATE state;
+		enum class STATE state;
 
 		void (*onClick)();
 		void (*paintSelf)(PRECT);

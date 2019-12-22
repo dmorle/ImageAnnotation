@@ -73,23 +73,40 @@ void MainWindow::loadPalette(std::string path)
 
 void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 {
-	PRECT pRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
-	Widget* npWidget = new Widget(pRc, this);
+	{
+		// creating a test widget
+		PRECT pRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
+		Widget* npWidget = new Widget(pRc, this);
 
-	// creating a test component
-	npWidget->addComponent(
-		new WCMP::EmptyButton(
-			this->pRenderTarget,
-			new D2D1_RECT_F{ 10, 10, 30, 30 },
-			pRc,
-			this->palette,
-			NULL,
-			WFunc::paintSelf
-		)
-	);
+		// creating a test empty button
+		npWidget->addComponent(
+			new WCMP::EmptyButton(
+				pRenderTarget,
+				new D2D1_RECT_F{ 10, 10, 30, 30 },
+				pRc,
+				NULL,
+				WFunc::paintSelf,
+				this->palette
+			)
+		);
 
-	// adding the widget to the window
-	widgets.push_back(npWidget);
+		// testing imageBuffer
+		npWidget->addComponent(
+			new WCMP::ImageBuffer(
+				pRenderTarget,
+				pWicFactory,
+				new D2D1_RECT_F{ 30, 30, 100, 100 },
+				pRc,
+				NULL,
+				WFunc::paintSelf,
+				std::string("C:/Users/%USERNAME%/Documents/line170 - images/"),
+				5
+			)
+		);
+
+		// adding the widget to the window
+		widgets.push_back(npWidget);
+	}
 }
 
 // Recalculate drawing layout when the size of the window changes.
@@ -575,6 +592,11 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
+
+		if (FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)))
+			return -1;
+		if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pWicFactory)))
+			return -1;
 
 		// creating the non client components
 		NCFunc::hwnd = m_hwnd;

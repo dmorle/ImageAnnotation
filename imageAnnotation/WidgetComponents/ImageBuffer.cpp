@@ -4,8 +4,20 @@
 
 namespace WCMP {
 
-	ImageBuffer::ImageBuffer(D2D1_RECT_F* pRc, PRECT parentpRc, ID2D1HwndRenderTarget* pRenderTarget, IWICImagingFactory* pWicFactory, std::string target, UINT bufferSize)
-		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(target, "", bufferSize, &LoadItem, &CopyItem, &ReleaseItem), ImageBaseComponent(pRenderTarget, pWicFactory)
+	ImageBuffer::ImageBuffer(
+		ID2D1HwndRenderTarget* pRenderTarget,
+		IWICImagingFactory* pWicFactory,
+		D2D1_RECT_F* pRc,
+		PRECT parentpRc,
+		void (*onClick)(),
+		void (*paintSelf)(PRECT),
+		std::string target,
+		UINT bufferSize
+	) :
+		BaseComponent(pRc, parentpRc),
+		InteractiveComponent(pRc, parentpRc, onClick, paintSelf),
+		Buffer(target, "", bufferSize, &LoadItem, &CopyItem, &ReleaseItem),
+		ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
 		this->pMouseLoc = NULL;
 
@@ -13,13 +25,32 @@ namespace WCMP {
 		this->pTrans = NULL;
 	}
 
-	ImageBuffer::ImageBuffer(ImageBuffer* pThis)
-		: BaseComponent(pRc, parentpRc), InteractiveComponent(pRc, parentpRc), Buffer(pThis), ImageBaseComponent()
+	ImageBuffer::ImageBuffer(
+		ImageBuffer* pThis,
+		PRECT parentpRc
+	) :
+		BaseComponent(NULL, NULL),
+		InteractiveComponent(NULL, NULL, onClick, pThis->paintSelf),
+		Buffer(pThis),
+		ImageBaseComponent()
 	{
-		this->pMouseLoc = new POINT(*pThis->pMouseLoc);
+		this->pRc = new D2D1_RECT_F(*pThis->pRc);
+		this->parentpRc = parentpRc;
+
+		this->pMouseLoc = NULL;
 		
 		this->zoom = pThis->zoom;
-		this->pTrans = new POINT(*pThis->pTrans);
+		if (pThis->pTrans)
+			this->pTrans = new POINT(*pThis->pTrans);
+	}
+
+	ImageBuffer::~ImageBuffer()
+	{
+		if (pTrans)
+			delete pTrans;
+
+		if (pMouseLoc)
+			delete pMouseLoc;
 	}
 
 	void ImageBuffer::MouseMove(POINT p)
@@ -49,8 +80,10 @@ namespace WCMP {
 	{
 		InteractiveComponent::MouseLeave();
 
-		if (pMouseLoc)
+		if (pMouseLoc) {
 			delete pMouseLoc;
+			pMouseLoc = NULL;
+		}
 	}
 
 	void ImageBuffer::MouseWheel(POINT p, WORD lWord)
@@ -58,7 +91,23 @@ namespace WCMP {
 
 	}
 
-	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget) {}
+	void ImageBuffer::resize(PRECT npRc)
+	{
+		if (!npRc)
+			npRc = parentpRc;
+		
+		// TODO: resize to tempRc
+	}
+
+	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget)
+	{
+		ID2D1SolidColorBrush* pBrush;
+		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0), &pBrush);
+		D2D1_RECT_F rc;
+		getGlobalRect(rc);
+		pRenderTarget->FillRectangle(rc, pBrush);
+		pBrush->Release();
+	}
 
 	ID2D1Bitmap* ImageBuffer::LoadItem(std::wstring* path)
 	{
@@ -81,7 +130,7 @@ namespace WCMP {
 
 	BaseComponent* ImageBuffer::clone(PRECT npRc)
 	{
-		return new ImageBuffer(this);
+		return new ImageBuffer(this, npRc);
 	}
 
 	void ImageBuffer::m_MouseLeave() {}
