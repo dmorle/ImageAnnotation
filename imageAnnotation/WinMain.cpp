@@ -50,6 +50,17 @@ namespace NCFunc{
 	}
 }
 
+namespace WFunc{	// Creating a namespace local to this file to handle widget component painting
+
+	HWND hwnd;
+
+	void paintSelf(PRECT pRc)
+	{
+		InvalidateRect(hwnd, pRc, TRUE);
+	}
+
+}
+
 void MainWindow::savePalette(std::string path)
 {
 
@@ -60,6 +71,27 @@ void MainWindow::loadPalette(std::string path)
 
 }
 
+void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
+{
+	PRECT pRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
+	Widget* npWidget = new Widget(pRc, this);
+
+	// creating a test component
+	npWidget->addComponent(
+		new WCMP::EmptyButton(
+			this->pRenderTarget,
+			new D2D1_RECT_F{ 10, 10, 30, 30 },
+			pRc,
+			this->palette,
+			NULL,
+			WFunc::paintSelf
+		)
+	);
+
+	// adding the widget to the window
+	widgets.push_back(npWidget);
+}
+
 // Recalculate drawing layout when the size of the window changes.
 void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 {
@@ -68,8 +100,7 @@ void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 		D2D1_SIZE_F size = pRenderTarget->GetSize();
 
 		if (!widgets.size()) {
-			// create default layout
-			widgets.push_back(new Widget(m_hwnd, 0, 0, size.width, size.height, this));
+			CreateDefaultLayout(size);
 		}
 
 		else {
@@ -495,6 +526,11 @@ void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
 		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
+void MainWindow::RepaintRect(PRECT pRc, BOOL erase)
+{
+	InvalidateRect(m_hwnd, pRc, erase);
+}
+
 void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
 {
 	RECT rcWin;
@@ -507,11 +543,6 @@ void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
 
 	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
 		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
-}
-
-void MainWindow::createDefaultLayout()
-{
-	
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
@@ -545,8 +576,12 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
 
+		// creating the non client components
 		NCFunc::hwnd = m_hwnd;
 		CreateNCButtons();
+
+		// Creating the widget componenetss
+		WFunc::hwnd = m_hwnd;
 		
 		return 0;
 

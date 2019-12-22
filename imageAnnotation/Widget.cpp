@@ -2,53 +2,18 @@
 
 
 
-namespace {	// Creating a namespace local to this file to handle widget component painting
-
-	HWND cmp_hwnd;
-
-	void paintSelf(PRECT pRc)
-	{
-		InvalidateRect(cmp_hwnd, pRc, TRUE);
-	}
-
-}
-
-Widget::Widget(HWND hwnd, LONG left, LONG top, LONG right, LONG bottom, MainWindow* mw)
+Widget::Widget(LONG left, LONG top, LONG right, LONG bottom, MainWindow* mw)
 {
 	this->mw = mw;
-	this->hwnd = cmp_hwnd = hwnd;
 	this->pRc = new RECT { left, top, right, bottom };
-
-	// creating a test component
-	components.push_back(
-		new WCMP::EmptyButton(
-			mw->pRenderTarget,
-			new D2D1_RECT_F{ 10, 10, 30, 30 },
-			pRc,
-			mw->palette,
-			NULL,
-			paintSelf
-		)
-	);
+	this->delWidget = NULL;
 }
 
-Widget::Widget(HWND hwnd, PRECT pRc, MainWindow* mw)
+Widget::Widget(PRECT pRc, MainWindow* mw)
 {
 	this->mw = mw;
-	this->hwnd = cmp_hwnd = hwnd;
 	this->pRc = pRc;
-
-	// creating a test component
-	components.push_back(
-		new WCMP::EmptyButton(
-			mw->pRenderTarget,
-			new D2D1_RECT_F{ 10, 10, 30, 30 },
-			pRc,
-			mw->palette,
-			NULL,
-			paintSelf
-		)
-	);
+	this->delWidget = NULL;
 }
 
 Widget::~Widget()
@@ -64,9 +29,14 @@ Widget::~Widget()
 		delete e;
 }
 
+void Widget::addComponent(WCMP::BaseComponent* npCmp)
+{
+	components.push_back(npCmp);
+}
+
 Widget* Widget::createSplit(PRECT pRc)
 {
-	Widget* npWidget = new Widget(hwnd, pRc, mw);
+	Widget* npWidget = new Widget(pRc, mw);
 
 	// TODO: resize components if appropriate
 	for (auto e : components)
@@ -135,7 +105,7 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 				);
 
 		/*
-			Displaying the widget components for a widget in edit mode
+			Not displaying the widget components for a widget while in edit mode
 		*/
 
 		return;
@@ -393,8 +363,12 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				// horizontal widget merge
 				if (pRc->right > p.x) {
 					// stop merge
-					if (minSize < pRc->bottom - p.y)
-						npWidget = new Widget(hwnd, new RECT{ pRc->left, p.y, pRc->right, pRc->bottom }, mw);
+					if (minSize < pRc->bottom - p.y) {
+						PRECT npRc = new RECT{ pRc->left, p.y, pRc->right, pRc->bottom };
+						npWidget = new Widget(npRc, mw);
+						for (auto e : components)
+							npWidget->addComponent(e->clone(npRc));
+					}
 
 					else if (pRc->bottom < p.y)
 						for (Widget* e : mw->widgets)
@@ -414,8 +388,12 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				// vertical widget merge
 				if (pRc->bottom > p.y) {
 					// stop merging
-					if (minSize < pRc->right - p.x)
-						npWidget = new Widget(hwnd, new RECT{ p.x, pRc->top, pRc->right, pRc->bottom }, mw);
+					if (minSize < pRc->right - p.x) {
+						PRECT npRc = new RECT{ p.x, pRc->top, pRc->right, pRc->bottom };
+						npWidget = new Widget(npRc, mw);
+						for (auto e : components)
+							npWidget->addComponent(e->clone(npRc));
+					}
 
 					else if (pRc->right < p.x)
 						for (Widget* e : mw->widgets)
@@ -434,9 +412,13 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		}
 		else {
 			// Center Region of Widget Managment
-			if (minSize < pRc->right - p.x)
+			if (minSize < pRc->right - p.x) {
 				// splitting horizontally
-				npWidget = new Widget(hwnd, new RECT{ p.x, pRc->top, pRc->right, pRc->bottom }, mw);
+				PRECT npRc = new RECT{ p.x, pRc->top, pRc->right, pRc->bottom };
+				npWidget = new Widget(npRc, mw);
+				for (auto e : components)
+					npWidget->addComponent(e->clone(npRc));
+			}
 
 			else if (pRc->right < p.x) {
 				// merging horizontally
@@ -453,9 +435,13 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 				if (delWidget)
 					updateRect.right = delWidget->pRc->right;
 			}
-			else if (minSize < pRc->bottom - p.y)
+			else if (minSize < pRc->bottom - p.y) {
 				// splitting vertically
-				npWidget = new Widget(hwnd, new RECT{ pRc->left, p.y, pRc->right, pRc->bottom }, mw);
+				PRECT npRc = new RECT{ pRc->left, p.y, pRc->right, pRc->bottom };
+				npWidget = new Widget(npRc, mw);
+				for (auto e : components)
+					npWidget->addComponent(e->clone(npRc));
+			}
 
 			else if (pRc->bottom < p.y) {
 				// merging vertically
@@ -474,7 +460,7 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			}
 		}
 
-		InvalidateRect(hwnd, const_cast<RECT*>(&updateRect), TRUE);
+		mw->RepaintRect(&updateRect);
 		return this;
 	}
 	if (edgeSpace >= p.x - pRc->left && pRc->left != 0) {
@@ -515,7 +501,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 			neighbors.clear();
 
 		else if (npWidget) {
-			InvalidateRect(hwnd, pRc, TRUE);
+			mw->RepaintRect(pRc);
 
 			if (npWidget->pRc->top == pRc->top)
 				pRc->right = npWidget->pRc->left;
@@ -546,7 +532,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 		}
 
 		widgetEdit = FALSE;
-		InvalidateRect(hwnd, pRc, TRUE);
+		mw->RepaintRect(pRc);
 		return NULL;
 	}
 

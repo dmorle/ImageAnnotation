@@ -28,6 +28,8 @@ class MainWindow : public BaseWindow<MainWindow>
 	void	savePalette(std::string);
 	void	loadPalette(std::string);
 
+	void	CreateDefaultLayout(D2D1_SIZE_F size);
+
 	void    CalculateLayout(D2D1_SIZE_F prev);
 	void	CreateNCButtons();
 	void	DiscardNCButtons();
@@ -48,7 +50,7 @@ class MainWindow : public BaseWindow<MainWindow>
 	void	ncLUp(WPARAM, LPARAM);
 	void	ncLDown(WPARAM, LPARAM);
 
-	void	createDefaultLayout();
+	void	RepaintRect(PRECT pRc, BOOL erase = TRUE);
 
 public:
 

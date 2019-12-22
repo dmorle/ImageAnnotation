@@ -14,14 +14,22 @@ namespace WCMP {
 		comp_passive = pGs->comp_passive;
 		comp_active  = pGs->comp_active;
 		comp_pressed = pGs->comp_pressed;
-		pGs->back->AddRef();
-		pGs->back_passive->AddRef();
-		pGs->back_active->AddRef();
-		pGs->back_pressed->AddRef();
-		pGs->comp->AddRef();
-		pGs->comp_passive->AddRef();
-		pGs->comp_active->AddRef();
-		pGs->comp_pressed->AddRef();
+		if (back)
+			back->AddRef();
+		if (back_passive)
+			back_passive->AddRef();
+		if (back_active)
+			back_active->AddRef();
+		if (back_pressed)
+			back_pressed->AddRef();
+		if (comp)
+			comp->AddRef();
+		if (comp_passive)
+			comp_passive->AddRef();
+		if (comp_active)
+			comp_active->AddRef();
+		if (comp_pressed)
+			comp_pressed->AddRef();
 	}
 
 	GRAPHICSTRUCT::GRAPHICSTRUCT(ID2D1HwndRenderTarget *pRenderTarget, appPalette palette)

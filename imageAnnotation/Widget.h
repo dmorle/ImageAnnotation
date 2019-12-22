@@ -144,7 +144,6 @@ struct stdCursors
 class Widget
 {
 	// basic widget stuff : parents of the widget
-	HWND hwnd;
 	MainWindow* mw;
 
 	// defines the region which the widget occupies
@@ -177,10 +176,12 @@ class Widget
 	Widget* createSplit(PRECT pRc);
 
 public:
-	Widget(HWND hwnd, LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);
-	Widget(HWND hwnd, PRECT pRc, MainWindow* mw);
+	Widget(LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);
+	Widget(PRECT pRc, MainWindow* mw);
 
 	~Widget();
+
+	void addComponent(WCMP::BaseComponent* npCmp);
 
 	void resize(LONG left, LONG top, LONG right, LONG bottom);
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
