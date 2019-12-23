@@ -53,6 +53,14 @@ namespace WCMP {
 			(*it)->MouseLeave();
 	}
 
+	void ParentComponent::resize(PRECT npRc)
+	{
+		if (!npRc)
+			npRc = parentpRc;
+
+		// TODO: resize to npRc
+	}
+
 	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
 		for (auto it = children.end(); it != children.begin(); it--)

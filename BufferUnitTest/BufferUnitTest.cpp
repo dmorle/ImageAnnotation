@@ -30,10 +30,14 @@ namespace BufferUnitTest
 			: Buffer(target, suffix, bufferSize, &loadTextFile, &copyString) {}
 
 	private:
-		static std::string* loadTextFile(std::wstring* path)
+		static std::string* loadTextFile(std::wstring* pwpath)
 		{
-			static int i = 0;
-			return new std::string(std::to_string(i++));
+			std::string path(pwpath->begin(), pwpath->end());
+			std::ifstream in(path);
+			std::stringstream buf;
+			buf << in.rdbuf();
+			in.close();
+			return new std::string(buf.str());
 		}
 
 		static std::string* copyString(std::string* pStr)
@@ -98,6 +102,25 @@ namespace BufferUnitTest
 
 			for (int i = 0; i < 25; i++)
 				test.next();
+		}
+
+		TEST_METHOD(getIndicies)
+		{
+			std::string testTarget = "C:/testTarget/";
+			std::string testSuffix = "";
+			USHORT testSize = 3;
+
+			deleteMockFiles(testTarget);
+			createMockFiles(testTarget, ".txt", 10);
+
+			stringBuffer test = stringBuffer(testTarget, testSuffix, testSize);
+
+			Assert::AreEqual(test.getActiveItem()->c_str()[0], '0');
+
+			for (int i = 0; i < 40; i++)
+				test.next();
+
+			Assert::AreEqual(test.getActiveItem()->c_str()[0], '9');
 		}
 
 	};

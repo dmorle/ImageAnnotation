@@ -11,17 +11,17 @@
 #include <thread>
 #include <experimental/filesystem>
 
-#define bufferItem _bufferItem<T>
+#define bufferItem BufferElement::_bufferItem<T>
 
 namespace WCMP {
 
-	namespace {
+	namespace BufferElement{
 
 		template <typename T>
 		struct _bufferItem {
-			T* item;					// contains the item loaded by the thread
+			T* item;                    // contains the item loaded by the thread
 			std::thread* loadingThread; // will be NULL once the thread has finished
-			HRESULT threadReturn;  // contains the thread status once loadingThread is NULL
+			HRESULT threadReturn;       // contains the thread status once loadingThread is NULL
 
 			// constructor for creating a new bufferItem from disk
 			_bufferItem()
@@ -52,13 +52,12 @@ namespace WCMP {
 	template <typename T>
 	class Buffer {
 	public:
-		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadItem)(std::wstring*), T* (*copyItem)(T*), void(*destructItem)(T*) = NULL)
+		Buffer(std::string target, std::string suffix, USHORT bufferSize, T* (*loadItem)(std::wstring*), void(*destructItem)(T*) = NULL)
 		{
 			this->target = target;
 			this->suffix = suffix;
 			this->bufferSize = bufferSize;
 			this->loadItem = loadItem;
-			this->copyItem = copyItem;
 			this->destructItem = destructItem;
 
 			loadFileNames();
@@ -75,32 +74,24 @@ namespace WCMP {
 		void next()
 		{
 			// checking to ensure request is valid
-			if (absIndex - 1 >= diskItems.size())
+			if (absIndex >= diskItems.size() - 1)
 				return;
 
 			// moving the active buffer element
-			std::advance(*active, 1);
+			std::advance(active, 1);
 			absIndex++;
-
-			// ensuring the element has finished loading
-			if ((**active)->loadingThread)
-				(**active)->loadingThread->join();
 
 			// deleting and loading the edge elements
 			if (!smallTarget) {
-				if (absIndex + bufferSize < diskItems.size()) {
-					buffer.push_back(new bufferItem{});
-					buffer.back()->loadingThread = new std::thread(&Buffer<T>::loadDiskItem, this, buffer.back(), diskItems[absIndex + bufferSize]);
-				}
+				// loading new
+				if (absIndex + bufferSize < diskItems.size())
+					buffer.push_back(loadBufferItem(diskItems[absIndex + bufferSize]));
 
-				bufferItem* pOld = buffer.front();
-				if (SUCCEEDED(pOld->threadReturn)) {
-					if (destructItem)
-						destructItem(pOld->item);
-					else
-						delete pOld->item;
+				// deleting old
+				if (absIndex > bufferSize) {
+					releaseBufferItem(buffer.front());
+					buffer.pop_front();
 				}
-				buffer.pop_front();
 			}
 		}
 
@@ -115,25 +106,18 @@ namespace WCMP {
 			std::advance(*active, -1);
 			absIndex--;
 
-			// ensuring the element has finished loading
-			if ((*active)->loadingThread)
-				(*active)->loadingThread->join();
-
 			// deleting and loading the edge elements
 			if (!smallTarget) {
+				// loading new
 				if (absIndex + bufferSize < diskItems.size()) {
-					buffer.push_front(new bufferItem{});
-					buffer.front()->loadingThread = new std::thread(&Buffer<T>::loadDiskItem, this, buffer.front(), diskItems[absIndex + bufferSize]);
+					buffer.push_front(loadBufferItem(diskItems[absIndex - bufferSize]));
 				}
 
-				bufferItem* pOld = buffer.back();
-				if (SUCCEEDED(pOld->threadReturn)) {
-					if (destructItem)
-						destructItem(pOld->item);
-					else
-						delete pOld->item;
+				// deleting old
+				if (absIndex < diskItems.size() - bufferSize) {
+					releaseBufferItem(buffer.back());
+					buffer.pop_back();
 				}
-				buffer.pop_back();
 			}
 		}
 
@@ -174,14 +158,12 @@ namespace WCMP {
 		// the number of elements to store in RAM at a time
 		USHORT bufferSize;
 		// the current element
-		typename std::list<bufferItem*>::iterator* active;
+		typename std::list<bufferItem*>::iterator active;
 		// the buffer of items surrounding active
 		std::list<bufferItem*> buffer;
 
 		// loads the element at the given path
 		T* (*loadItem)(std::wstring*);
-		// create a copy of the given item
-		T* (*copyItem)(T*);
 
 	private:
 		void (*destructItem)(T*);
@@ -191,13 +173,11 @@ namespace WCMP {
 		void clearDiskItems()
 		{
 			// clearing the loaded file paths
-			if (diskItems.size()) {
-				for (auto& e : diskItems)
-					delete e;
-				diskItems.clear();
+			for (auto& e : diskItems)
+				delete e;
 
-				absIndex = 0;
-			}
+			diskItems.clear();
+			absIndex = 0;
 		}
 
 		// empties buffer and resets active
@@ -242,10 +222,10 @@ namespace WCMP {
 						break;
 				}
 			}
-			active = new typename std::list<bufferItem*>::iterator(buffer.begin());
+			active = buffer.begin();
 		}
 
-		// loads an item from target into the buffer
+		// loads an item from target into the buffer, runs on a different thread
 		void loadDiskItem(bufferItem* npItem, std::wstring* path)
 		{
 			// loading the item from disk
@@ -265,7 +245,7 @@ namespace WCMP {
 				readyBufferItem(e);
 		}
 
-		// loads a new bufferItem into npItem from path
+		// creates a new bufferItem from path and returns it
 		bufferItem* loadBufferItem(std::wstring* path)
 		{
 			auto npItem = new bufferItem();
@@ -283,7 +263,7 @@ namespace WCMP {
 			}
 		}
 
-		// deletes a bufferItem object
+		// deletes pItem, a bufferItem object
 		void releaseBufferItem(bufferItem*& pItem)
 		{
 			// ensuring that the item can be deleted
@@ -303,6 +283,7 @@ namespace WCMP {
 
 		}
 
+		// copies pb
 		Buffer(const Buffer* pb)
 		{
 			target = pb->target;
@@ -314,17 +295,15 @@ namespace WCMP {
 
 			loadFileNames();
 
-			for (auto e : pb->buffer) {
-				readyBufferItem(e);
-				buffer.push_back(new bufferItem(copyItem(e->item), e->threadReturn));
-			}
+			for (int i = max(0, (int)pb->absIndex - bufferSize); i < min(diskItems.size(), absIndex + bufferSize + 1); i++)
+				buffer.push_back(loadBufferItem(diskItems[i]));
 
 			// getting active properly initialized
-			active = new typename std::list<bufferItem*>::iterator(buffer.begin());
+			active = buffer.begin();
 			if (smallTarget)
-				std::advance(*active, min(absIndex, bufferSize));
+				std::advance(active, min(absIndex, bufferSize));
 			else
-				std::advance(*active, absIndex);
+				std::advance(active, absIndex);
 		}
 	};
 

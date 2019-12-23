@@ -14,14 +14,15 @@ namespace WCMP {
 
 		~ParentComponent();
 
-		void MouseMove(POINT p);
-		void LDown(POINT p);
-		void LUp(POINT p);
-		void MouseLeave();
+		void MouseMove(POINT p) override;
+		void LDown(POINT p) override;
+		void LUp(POINT p) override;
+		void MouseLeave() override;
 
-		virtual void display(ID2D1HwndRenderTarget* pRenderTarget);
+		void resize(PRECT npRc) override;
+		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) override;
 
-		virtual BaseComponent* clone(PRECT nparentpRc);
+		virtual BaseComponent* clone(PRECT nparentpRc) override;
 
 	protected:
 		std::list<PBaseComponent> children;

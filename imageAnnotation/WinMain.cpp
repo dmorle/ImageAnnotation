@@ -5,7 +5,19 @@
 #define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
 #define TOD2D1RECTF(rc) D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom)
 
+namespace WFunc {	// Creating a namespace local to this file to handle widget component painting
+
+	HWND hwnd;
+
+	void paintSelf(PRECT pRc)
+	{
+		InvalidateRect(hwnd, pRc, TRUE);
+	}
+
+}
+
 namespace NCFunc{
+
 	HWND hwnd;
 
 	/**********************************
@@ -50,17 +62,6 @@ namespace NCFunc{
 	}
 }
 
-namespace WFunc{	// Creating a namespace local to this file to handle widget component painting
-
-	HWND hwnd;
-
-	void paintSelf(PRECT pRc)
-	{
-		InvalidateRect(hwnd, pRc, TRUE);
-	}
-
-}
-
 void MainWindow::savePalette(std::string path)
 {
 
@@ -99,8 +100,8 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 				pRc,
 				NULL,
 				WFunc::paintSelf,
-				std::string("C:/Users/%USERNAME%/Documents/line170 - images/"),
-				5
+				std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
+				50
 			)
 		);
 
@@ -590,10 +591,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
+		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &pFactory)))
 			return -1;  // Fail CreateWindowEx.
 
-		if (FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)))
+		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
 			return -1;
 		if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pWicFactory)))
 			return -1;

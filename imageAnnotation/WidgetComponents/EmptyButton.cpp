@@ -209,7 +209,7 @@ namespace WCMP {
 		if (!npRc)
 			npRc = parentpRc;
 
-		// TODO: resize to tempRc
+		// TODO: resize to npRc
 	}
 
 	void EmptyButton::display(ID2D1HwndRenderTarget* pRenderTarget)

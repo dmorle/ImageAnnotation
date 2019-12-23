@@ -16,7 +16,7 @@ namespace WCMP {
 	) :
 		BaseComponent(pRc, parentpRc),
 		InteractiveComponent(pRc, parentpRc, onClick, paintSelf),
-		Buffer(target, "", bufferSize, &LoadItem, &CopyItem, &ReleaseItem),
+		Buffer(target, "", bufferSize, &LoadItem, &ReleaseItem),
 		ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
 		this->pMouseLoc = NULL;
@@ -96,17 +96,16 @@ namespace WCMP {
 		if (!npRc)
 			npRc = parentpRc;
 		
-		// TODO: resize to tempRc
+		// TODO: resize to npRc
 	}
 
 	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
-		ID2D1SolidColorBrush* pBrush;
-		pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(0, 0, 0), &pBrush);
 		D2D1_RECT_F rc;
 		getGlobalRect(rc);
-		pRenderTarget->FillRectangle(rc, pBrush);
-		pBrush->Release();
+		ID2D1Bitmap* pBmp = getActiveItem();
+		D2D1_SIZE_F size = pBmp->GetSize();
+		pRenderTarget->DrawBitmap(pBmp, rc, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1_RECT_F{ 0, 0, size.width, size.height });
 	}
 
 	ID2D1Bitmap* ImageBuffer::LoadItem(std::wstring* path)
@@ -115,12 +114,6 @@ namespace WCMP {
 		if (SUCCEEDED(LoadBitmapFromFile(path->c_str(), &npBmp)))
 			return npBmp;
 		return NULL;
-	}
-
-	ID2D1Bitmap* ImageBuffer::CopyItem(ID2D1Bitmap* pBmp)
-	{
-		pBmp->AddRef();
-		return pBmp;
 	}
 
 	void ImageBuffer::ReleaseItem(ID2D1Bitmap* pBmp)

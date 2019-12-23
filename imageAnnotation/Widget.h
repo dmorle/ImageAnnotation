@@ -173,7 +173,7 @@ class Widget
 	// Contains all widget compoenents for the widget
 	std::vector<WCMP::BaseComponent*> components;
 
-	Widget* createSplit(PRECT pRc);
+	void createSplit(PRECT pRc);
 
 public:
 	Widget(LONG left, LONG right, LONG top, LONG bottom, MainWindow* mw);

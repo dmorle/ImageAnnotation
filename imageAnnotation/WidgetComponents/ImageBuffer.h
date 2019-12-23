@@ -56,7 +56,6 @@ namespace WCMP {
 		POINT* pMouseLoc;
 
 		static ID2D1Bitmap* LoadItem(std::wstring* path);
-		static ID2D1Bitmap* CopyItem(ID2D1Bitmap* pBmp);
 		static void ReleaseItem(ID2D1Bitmap* pBmp);
 
 		void m_MouseLeave();
