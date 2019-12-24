@@ -40,6 +40,8 @@ namespace WCMP {
 		this->zoom = pThis->zoom;
 		if (pThis->pTrans)
 			this->pTrans = new POINT(*pThis->pTrans);
+		else
+			this->pTrans = NULL;
 	}
 
 	ImageBuffer::~ImageBuffer()

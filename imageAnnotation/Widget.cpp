@@ -165,7 +165,7 @@ void Widget::render(ID2D1HwndRenderTarget* pRenderTarget)
 		e->display(pRenderTarget);
 }
 
-Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
+WIDGET_RESULT Widget::MouseMove(WPARAM& wparam, POINT& p)
 {
 	RECT updateRect = *pRc;
 
@@ -444,8 +444,12 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 		}
 
 		mw->RepaintRect(&updateRect);
-		return this;
+		return WR_KEEP;
 	}
+
+	if (!contains(p))
+		return WR_RELEASE;
+
 	if (edgeSpace >= p.x - pRc->left && pRc->left != 0) {
 		// left resize
 		SetCursor(mw->cursors.sizewe);
@@ -474,10 +478,10 @@ Widget* Widget::MouseMove(WPARAM& wparam, POINT& p)
 			e->MouseLeave();
 	}
 
-	return NULL;
+	return WR_SET;
 }
 
-Widget* Widget::LUp(WPARAM& wparam, POINT& p)
+WIDGET_RESULT Widget::LUp(WPARAM& wparam, POINT& p)
 {
 	if (widgetEdit) {
 		if (neighbors.size() != 0)
@@ -516,7 +520,7 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 
 		widgetEdit = FALSE;
 		mw->RepaintRect(pRc);
-		return NULL;
+		return WR_RELEASE;
 	}
 
 	// passing action to components
@@ -527,10 +531,10 @@ Widget* Widget::LUp(WPARAM& wparam, POINT& p)
 		if (e->contains(p))
 			e->LUp(p);
 
-	return NULL;
+	return WR_KEEP;
 }
 
-Widget* Widget::LDown(WPARAM& wparam, POINT& p)
+WIDGET_RESULT Widget::LDown(WPARAM& wparam, POINT& p)
 {
 	if (edgeSpace >= p.x - pRc->left && pRc->left != 0) {
 		// left resize
@@ -542,7 +546,7 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 				pRc->left == e->pRc->right
 				)
 				neighbors.push_back(e);
-		return this;
+		return WR_KEEP;
 	}
 	else if (edgeSpace >= p.y - pRc->top && pRc->top != 0) {
 		// top resize
@@ -554,7 +558,7 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 				pRc->top == e->pRc->bottom
 				)
 				neighbors.push_back(e);
-		return this;
+		return WR_KEEP;
 	}
 	else if (edgeSpace >= pRc->right - p.x && pRc->right != mw->pRenderTarget->GetSize().width) {
 		// right resize
@@ -566,7 +570,7 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 				pRc->right == e->pRc->left
 				)
 				neighbors.push_back(e);
-		return this;
+		return WR_KEEP;
 	}
 	else if (edgeSpace >= pRc->bottom - p.y && pRc->right != mw->pRenderTarget->GetSize().height) {
 		// bottom resize
@@ -578,12 +582,12 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 				pRc->bottom == e->pRc->top
 				)
 				neighbors.push_back(e);
-		return this;
+		return WR_KEEP;
 	}
 	if (p.y - pRc->bottom < p.x - pRc->right + 12 * edgeSpace) {
 		// merging or splitting widgets
 		widgetEdit = TRUE;
-		return this;
+		return WR_KEEP;
 	}
 
 	// passing action to components
@@ -594,7 +598,7 @@ Widget* Widget::LDown(WPARAM& wparam, POINT& p)
 		if (e->contains(p))
 			e->LDown(p);
 
-	return NULL;
+	return WR_KEEP;
 }
 
 BOOL Widget::contains(POINT p)

@@ -134,13 +134,14 @@ namespace WCMP {
 		}
 
 	protected:
-		Buffer(const Buffer<T>& B)
+		Buffer(Buffer<T> *pB)
 		{
-			this->target = B.target;
-			this->suffix = B.suffix;
-			this->bufferSize = B.bufferSize;
-			this->loadItem = B.loadItem;
-			for (auto e : B.diskItems)
+			this->target = pB->target;
+			this->suffix = pB->suffix;
+			this->bufferSize = pB->bufferSize;
+			this->loadItem = pB->loadItem;
+			this->destructItem = pB->destructItem;
+			for (auto e : pB->diskItems)
 				this->diskItems.push_back(new std::wstring(*e));
 
 			loadNewBuffer();

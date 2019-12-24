@@ -141,6 +141,13 @@ struct stdCursors
 	HCURSOR sizewe;
 };
 
+enum WIDGET_RESULT {
+	WR_RELEASE,	// release the current active widget
+	WR_KEEP,	// keep the current widget as active
+	WR_SET,     // set this widget as the active widget
+	WR_SKIP     // check for a set result
+};
+
 class Widget
 {
 	// basic widget stuff : parents of the widget
@@ -187,9 +194,9 @@ public:
 	void render(ID2D1HwndRenderTarget* pRenderTarget);
 
 	// actions the user can do
-	Widget* MouseMove(WPARAM& wparam, POINT& p);
-	Widget* LUp(WPARAM& wparam, POINT& p);
-	Widget* LDown(WPARAM& wparam, POINT& p);
+	WIDGET_RESULT MouseMove(WPARAM& wparam, POINT& p);
+	WIDGET_RESULT LUp(WPARAM& wparam, POINT& p);
+	WIDGET_RESULT LDown(WPARAM& wparam, POINT& p);
 
 	// determines if p is in this->rect
 	BOOL contains(POINT p);

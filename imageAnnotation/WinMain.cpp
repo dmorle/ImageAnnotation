@@ -105,7 +105,7 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 					NULL,
 					WFunc::paintSelf,
 					std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
-					50
+					10
 				)
 			);
 		}
@@ -418,12 +418,25 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
-	if (activeWidget)
-		activeWidget = activeWidget->MouseMove(wparam, p);
+	if (activeWidget) {
+		WIDGET_RESULT wr = activeWidget->MouseMove(wparam, p);
+		switch (wr) {
+		case WR_RELEASE:
+			activeWidget = NULL;
+			break;
+		case WR_SKIP:
+			for (auto& e : widgets)
+				if (e->MouseMove(wparam, p) == WR_SET) {
+					activeWidget = e;
+					break;
+				}
+			break;
+		}
+	}
 	else
 		for (auto& e : widgets)
-			if (e->contains(p)) {
-				activeWidget = e->MouseMove(wparam, p);
+			if (e->MouseMove(wparam, p) == WR_SET) {
+				activeWidget = e;
 				break;
 			}
 
@@ -442,7 +455,19 @@ void MainWindow::MouseLeave(WPARAM wparam, LPARAM lparam)
 {
 	if (activeWidget) {
 		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-		activeWidget = activeWidget->MouseMove(wparam, p);
+		WIDGET_RESULT wr = activeWidget->MouseMove(wparam, p);
+		switch (wr) {
+		case WR_RELEASE:
+			activeWidget = NULL;
+			break;
+		case WR_SKIP:
+			for (auto& e : widgets)
+				if (e->MouseMove(wparam, p) == WR_SET) {
+					activeWidget = e;
+					break;
+				}
+			break;
+		}
 	}
 }
 
@@ -450,12 +475,25 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 {
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 	
-	if (activeWidget)
-		activeWidget = activeWidget->LUp(wparam, p);
+	if (activeWidget) {
+		WIDGET_RESULT wr = activeWidget->LUp(wparam, p);
+		switch (wr) {
+		case WR_RELEASE:
+			activeWidget = NULL;
+			break;
+		case WR_SKIP:
+			for (auto& e : widgets)
+				if (e->LUp(wparam, p) == WR_SET) {
+					activeWidget = e;
+					break;
+				}
+			break;
+		}
+	}
 	else
 		for (auto& e : widgets)
-			if (e->contains(p)) {
-				activeWidget = e->LUp(wparam, p);
+			if (e->LUp(wparam, p) == WR_SET) {
+				activeWidget = e;
 				break;
 			}
 }
@@ -464,12 +502,25 @@ void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 	
-	if (activeWidget)
-		activeWidget = activeWidget->LDown(wparam, p);
+	if (activeWidget) {
+		WIDGET_RESULT wr = activeWidget->LDown(wparam, p);
+		switch (wr) {
+		case WR_RELEASE:
+			activeWidget = NULL;
+			break;
+		case WR_SKIP:
+			for (auto& e : widgets)
+				if (e->LDown(wparam, p) == WR_SET) {
+					activeWidget = e;
+					break;
+				}
+			break;
+		}
+	}
 	else
 		for (auto& e : widgets)
-			if (e->contains(p)) {
-				activeWidget = e->LDown(wparam, p);
+			if (e->LDown(wparam, p) == WR_SET) {
+				activeWidget = e;
 				break;
 			}
 }
