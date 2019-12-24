@@ -7,14 +7,23 @@ namespace WCMP {
 	InteractiveComponent::InteractiveComponent(
 		D2D1_RECT_F* pRc,
 		PRECT parentpRc,
+		ResizeBehaviour* pRB,
 		void (*onClick)(),
 		void (*paintSelf)(PRECT)
 	) :
-		BaseComponent(pRc, parentpRc)
+		BaseComponent(pRc, parentpRc, pRB)
 	{
+		this->state = STATE::PASSIVE;
 		this->onClick = onClick;
 		this->paintSelf = paintSelf;
-		this->state = STATE::PASSIVE;
+	}
+
+	InteractiveComponent::InteractiveComponent(InteractiveComponent* pThis, PRECT npRc)
+		: BaseComponent(pThis, npRc)
+	{
+		state = STATE::PASSIVE;
+		onClick = pThis->onClick;
+		paintSelf = pThis->paintSelf;
 	}
 
 	void InteractiveComponent::MouseMove(POINT p)

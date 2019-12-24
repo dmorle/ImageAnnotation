@@ -2,9 +2,6 @@
 
 
 
-#define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
-#define TOD2D1RECTF(rc) D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom)
-
 namespace WFunc {	// Creating a namespace local to this file to handle widget component painting
 
 	HWND hwnd;
@@ -76,34 +73,42 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 {
 	{
 		// creating a test widget
-		PRECT pRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
-		Widget* npWidget = new Widget(pRc, this);
+		PRECT WpRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
+		Widget* npWidget = new Widget(WpRc, this);
 
-		// creating a test empty button
-		npWidget->addComponent(
-			new WCMP::EmptyButton(
-				pRenderTarget,
-				new D2D1_RECT_F{ 10, 10, 30, 30 },
-				pRc,
-				NULL,
-				WFunc::paintSelf,
-				this->palette
-			)
-		);
+		{
+			// creating a test empty button
+			D2D1_RECT_F* pRc = new D2D1_RECT_F{ 10, 10, 30, 30 };
+			npWidget->addComponent(
+				new WCMP::EmptyButton(
+					pRenderTarget,
+					pRc,
+					WpRc,
+					RESIZE_STATIC_SIZE(pRc, WpRc),
+					NULL,
+					WFunc::paintSelf,
+					this->palette
+				)
+			);
+		}
 
-		// testing imageBuffer
-		npWidget->addComponent(
-			new WCMP::ImageBuffer(
-				pRenderTarget,
-				pWicFactory,
-				new D2D1_RECT_F{ 30, 30, 100, 100 },
-				pRc,
-				NULL,
-				WFunc::paintSelf,
-				std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
-				50
-			)
-		);
+		{
+			// testing imageBuffer
+			D2D1_RECT_F* pRc = new D2D1_RECT_F{ 30, 30, 100, 100 };
+			npWidget->addComponent(
+				new WCMP::ImageBuffer(
+					pRenderTarget,
+					pWicFactory,
+					pRc,
+					WpRc,
+					RESIZE_STATIC_SIZE(pRc, WpRc),
+					NULL,
+					WFunc::paintSelf,
+					std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
+					50
+				)
+			);
+		}
 
 		// adding the widget to the window
 		widgets.push_back(npWidget);

@@ -4,8 +4,17 @@
 
 namespace WCMP {
 
-	ParentComponent::ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc)
-		: BaseComponent(pRc, parentpRc) {}
+	ParentComponent::ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc, ResizeBehaviour* pRB)
+		: BaseComponent(pRc, parentpRc, pRB) {}
+
+	ParentComponent::ParentComponent(ParentComponent* pThis, PRECT npRc)
+		: BaseComponent(pThis, npRc)
+	{
+		pRB = new ResizeBehaviour(pThis->pRB);
+		for (auto e : children)
+			if (e)
+				children.push_back(e->clone(npRc));
+	}
 
 	ParentComponent::~ParentComponent()
 	{
@@ -53,30 +62,16 @@ namespace WCMP {
 			(*it)->MouseLeave();
 	}
 
-	void ParentComponent::resize(PRECT npRc)
-	{
-		if (!npRc)
-			npRc = parentpRc;
-
-		// TODO: resize to npRc
-	}
-
 	void ParentComponent::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
-		for (auto it = children.end(); it != children.begin(); it--)
-			(*it)->display(pRenderTarget);
+		if (IsValidRect())
+			for (auto it = children.end(); it != children.begin(); it--)
+				(*it)->display(pRenderTarget);
 	}
 
-	BaseComponent* ParentComponent::clone(PRECT nparentpRc)
+	BaseComponent* ParentComponent::clone(PRECT npRc)
 	{
-		ParentComponent* npCmp = new ParentComponent(pRc, nparentpRc);
-
-		npCmp->pRc = new D2D1_RECT_F(*pRc);
-		for (auto e : children)
-			if (e)
-				npCmp->children.push_back(e->clone(nparentpRc));
-
-		return npCmp;
+		return new ParentComponent(this, npRc);
 	}
 
 	void ParentComponent::activateElement(std::list<PBaseComponent>::iterator it)

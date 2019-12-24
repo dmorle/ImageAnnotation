@@ -9,13 +9,14 @@ namespace WCMP {
 		IWICImagingFactory* pWicFactory,
 		D2D1_RECT_F* pRc,
 		PRECT parentpRc,
+		ResizeBehaviour* pRB,
 		void (*onClick)(),
 		void (*paintSelf)(PRECT),
 		std::string target,
 		UINT bufferSize
 	) :
-		BaseComponent(pRc, parentpRc),
-		InteractiveComponent(pRc, parentpRc, onClick, paintSelf),
+		BaseComponent(pRc, parentpRc, pRB),
+		InteractiveComponent(pRc, parentpRc, pRB, onClick, paintSelf),
 		Buffer(target, "", bufferSize, &LoadItem, &ReleaseItem),
 		ImageBaseComponent(pRenderTarget, pWicFactory)
 	{
@@ -27,16 +28,13 @@ namespace WCMP {
 
 	ImageBuffer::ImageBuffer(
 		ImageBuffer* pThis,
-		PRECT parentpRc
+		PRECT npRc
 	) :
-		BaseComponent(NULL, NULL),
-		InteractiveComponent(NULL, NULL, onClick, pThis->paintSelf),
+		BaseComponent(pThis, npRc),
+		InteractiveComponent(pThis, npRc),
 		Buffer(pThis),
 		ImageBaseComponent()
 	{
-		this->pRc = new D2D1_RECT_F(*pThis->pRc);
-		this->parentpRc = parentpRc;
-
 		this->pMouseLoc = NULL;
 		
 		this->zoom = pThis->zoom;
@@ -91,21 +89,15 @@ namespace WCMP {
 
 	}
 
-	void ImageBuffer::resize(PRECT npRc)
-	{
-		if (!npRc)
-			npRc = parentpRc;
-		
-		// TODO: resize to npRc
-	}
-
 	void ImageBuffer::display(ID2D1HwndRenderTarget* pRenderTarget)
 	{
-		D2D1_RECT_F rc;
-		getGlobalRect(rc);
-		ID2D1Bitmap* pBmp = getActiveItem();
-		D2D1_SIZE_F size = pBmp->GetSize();
-		pRenderTarget->DrawBitmap(pBmp, rc, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1_RECT_F{ 0, 0, size.width, size.height });
+		if (IsValidRect()) {
+			D2D1_RECT_F rc;
+			getGlobalRect(rc);
+			ID2D1Bitmap* pBmp = getActiveItem();
+			D2D1_SIZE_F size = pBmp->GetSize();
+			pRenderTarget->DrawBitmap(pBmp, rc, 1, D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1_RECT_F{ 0, 0, size.width, size.height });
+		}
 	}
 
 	ID2D1Bitmap* ImageBuffer::LoadItem(std::wstring* path)

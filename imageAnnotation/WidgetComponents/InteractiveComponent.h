@@ -31,6 +31,7 @@ namespace WCMP {
 		InteractiveComponent(
 			D2D1_RECT_F* pRc,
 			PRECT parentpRc,
+			ResizeBehaviour* pRB,
 			void (*onClick)(),
 			void (*paintSelf)(PRECT)
 		);
@@ -41,6 +42,8 @@ namespace WCMP {
 		void MouseLeave() override;
 
 	protected:
+		InteractiveComponent(InteractiveComponent* pThis, PRECT npRc);
+
 		enum class STATE state;
 
 		void (*onClick)();

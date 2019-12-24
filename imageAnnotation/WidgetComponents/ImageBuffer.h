@@ -19,6 +19,7 @@ namespace WCMP {
 			IWICImagingFactory* pWicFactory,
 			D2D1_RECT_F* pRc,
 			PRECT parentpRc,
+			ResizeBehaviour* pRB,
 			void (*onClick)(),
 			void (*paintSelf)(PRECT),
 			std::string target,
@@ -34,17 +35,12 @@ namespace WCMP {
 
 		virtual void MouseWheel(POINT p, WORD lOrder);
 
-		// temporary, this will be implimented by derived classes
-		void resize(PRECT npRc) override;
 		virtual void display(ID2D1HwndRenderTarget* pRenderTarget) override;
 
 		virtual BaseComponent* clone(PRECT nparentpRc) override;
 
 	protected:
-		ImageBuffer(
-			ImageBuffer* pThis,
-			PRECT parentpRc
-		);
+		ImageBuffer(ImageBuffer* pThis, PRECT npRc);
 
 		// the current zoom level for the image
 		FLOAT zoom;
