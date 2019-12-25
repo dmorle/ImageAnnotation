@@ -43,6 +43,9 @@
     <ClCompile Include="WidgetComponents\EmptyButton.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
+    <ClCompile Include="ResizeBehaviour.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Widget.h">
@@ -95,6 +98,9 @@
     </ClInclude>
     <ClInclude Include="WidgetComponents\EmptyButton.h">
       <Filter>Header Files\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ResizeBehaviour.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

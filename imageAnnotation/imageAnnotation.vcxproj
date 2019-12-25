@@ -132,6 +132,7 @@
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
+    <ClCompile Include="ResizeBehaviour.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="WidgetComponents\BaseComponent.cpp" />
     <ClCompile Include="WidgetComponents\EmptyButton.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="NCComponents\NCCmp.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
+    <ClInclude Include="ResizeBehaviour.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WidgetComponents\BaseComponent.h" />
     <ClInclude Include="WidgetComponents\Buffer.h" />

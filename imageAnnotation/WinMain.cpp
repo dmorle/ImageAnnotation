@@ -30,17 +30,15 @@ namespace NCFunc{
 
 	void onMaxClick()
 	{
-		PostMessage(hwnd, WM_SIZE, SIZE_MAXIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
-	}
-
-	void onRestoreDownClick()
-	{
-		PostMessage(hwnd, WM_SIZE, SIZE_RESTORED, 0); // TODO: check if LPARAM needs to be set for this message
+		if (IsMaximized(hwnd))
+			PostMessage(hwnd, WM_SYSCOMMAND, SC_RESTORE, 0);
+		else
+			PostMessage(hwnd, WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 	}
 
 	void onMinClick()
 	{
-		PostMessage(hwnd, WM_SIZE, SIZE_MINIMIZED, 0); // TODO: check if LPARAM needs to be set for this message
+		PostMessage(hwnd, WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	}
 
 	void onFileClick()
@@ -362,7 +360,7 @@ void MainWindow::DiscardGraphicsResources()
 void MainWindow::Paint()
 {
 	HRESULT hr = CreateGraphicsResources();
-	if (SUCCEEDED(hr) && widgets.size() == 0)
+	if (SUCCEEDED(hr) && !widgets.size())
 		Resize();
 	if (SUCCEEDED(hr))
 	{
@@ -399,8 +397,6 @@ void MainWindow::Resize()
 
 	if (pRenderTarget != NULL)
 	{
-		D2D1_SIZE_F prev = pRenderTarget->GetSize();
-
 		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
