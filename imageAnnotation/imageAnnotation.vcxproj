@@ -140,6 +140,7 @@
     <ClCompile Include="WidgetComponents\ImageBuffer.cpp" />
     <ClCompile Include="WidgetComponents\InteractiveComponent.cpp" />
     <ClCompile Include="WidgetComponents\ParentComponent.cpp" />
+    <ClCompile Include="WidgetLayouts\BaseWidgetLayout.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +151,7 @@
     <ClInclude Include="NCComponents\NCCmp.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
-    <ClInclude Include="ResizeBehaviour.h" />
+    <ClInclude Include="Resizable.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="WidgetComponents\BaseComponent.h" />
     <ClInclude Include="WidgetComponents\Buffer.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="WidgetComponents\InteractiveComponent.h" />
     <ClInclude Include="WidgetComponents\ParentComponent.h" />
     <ClInclude Include="WidgetComponents\WidgetCmp.h" />
+    <ClInclude Include="WidgetLayouts\BaseWidgetLayout.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

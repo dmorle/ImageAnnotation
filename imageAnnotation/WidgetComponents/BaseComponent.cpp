@@ -4,7 +4,7 @@
 
 namespace WCMP {
 
-	BaseComponent::BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc, ResizeBehaviour* pRB)
+	BaseComponent::BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc, Resizable* pRB)
 	{
 		this->pRc = pRc;
 		this->parentpRc = parentpRc;
@@ -19,7 +19,7 @@ namespace WCMP {
 		this->pRc = new D2D1_RECT_F(*pThis->pRc);
 		this->parentpRc = npRc;
 		if (pThis->pRB)
-			this->pRB = new ResizeBehaviour(pThis->pRB);
+			this->pRB = new Resizable(pThis->pRB);
 		else
 			this->pRB = RESIZE_DEFAULT(pRc, npRc);
 	}

@@ -31,7 +31,7 @@ namespace WCMP {
 		InteractiveComponent(
 			D2D1_RECT_F* pRc,
 			PRECT parentpRc,
-			ResizeBehaviour* pRB,
+			Resizable* pRB,
 			void (*onClick)(),
 			void (*paintSelf)(PRECT)
 		);

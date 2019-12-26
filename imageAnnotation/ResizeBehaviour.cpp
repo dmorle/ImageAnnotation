@@ -2,7 +2,7 @@
 
 
 
-ResizeBehaviour::ResizeBehaviour(
+Resizable::Resizable(
 	BOOL StaticLeftMargin,
 	BOOL StaticRightMargin,
 	BOOL StaticTopMargin,
@@ -40,7 +40,7 @@ ResizeBehaviour::ResizeBehaviour(
 	BProp = BMarg / parentRcSize.height;
 }
 
-ResizeBehaviour::ResizeBehaviour(
+Resizable::Resizable(
 	BOOL StaticLeftMargin,
 	BOOL StaticRightMargin,
 	BOOL StaticTopMargin,
@@ -78,7 +78,7 @@ ResizeBehaviour::ResizeBehaviour(
 	BProp = BMarg / parentRcSize.height;
 }
 
-ResizeBehaviour::ResizeBehaviour(
+Resizable::Resizable(
 	BOOL StaticLeftMargin,
 	BOOL StaticRightMargin,
 	BOOL StaticTopMargin,
@@ -116,7 +116,7 @@ ResizeBehaviour::ResizeBehaviour(
 	BProp = BMarg / parentRcSize.height;
 }
 
-ResizeBehaviour::ResizeBehaviour(
+Resizable::Resizable(
 	BOOL StaticLeftMargin,
 	BOOL StaticRightMargin,
 	BOOL StaticTopMargin,
@@ -154,7 +154,7 @@ ResizeBehaviour::ResizeBehaviour(
 	BProp = BMarg / parentRcSize.height;
 }
 
-ResizeBehaviour::ResizeBehaviour(ResizeBehaviour* pThis)
+Resizable::Resizable(ResizeBehaviour* pThis)
 {
 	StaticLeftMargin = pThis->StaticLeftMargin;
 	StaticRightMargin = pThis->StaticRightMargin;

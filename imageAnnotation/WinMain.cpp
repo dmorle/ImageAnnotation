@@ -72,7 +72,7 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 	{
 		// creating a test widget
 		PRECT WpRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
-		Widget* npWidget = new Widget(WpRc, this);
+		Widget* npWidget = new Widget(WpRc, RESIZE_STATIC_SIZE_LT(WpRc), this);
 
 		{
 			// creating a test empty button
@@ -82,7 +82,7 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 					pRenderTarget,
 					pRc,
 					WpRc,
-					RESIZE_STATIC_SIZE(pRc, WpRc),
+					RESIZE_STATIC_SIZE_LT(pRc, WpRc),
 					NULL,
 					WFunc::paintSelf,
 					this->palette
@@ -99,7 +99,7 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 					pWicFactory,
 					pRc,
 					WpRc,
-					RESIZE_STATIC_SIZE(pRc, WpRc),
+					RESIZE_STATIC_SIZE_LT(pRc, WpRc),
 					NULL,
 					WFunc::paintSelf,
 					std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
@@ -114,7 +114,7 @@ void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
 }
 
 // Recalculate drawing layout when the size of the window changes.
-void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
+void MainWindow::CalculateLayout()
 {
 	if (pRenderTarget != NULL)
 	{
@@ -126,7 +126,9 @@ void MainWindow::CalculateLayout(D2D1_SIZE_F prev)
 
 		else {
 			// resize current layout
-			widgets[0]->resize(0, 0, size.width, size.height);
+			D2D1_RECT_F nRc{ 0, 0, size.width, size.height };
+			for (auto& e : widgets)
+				e->resize(&nRc);
 		}
 	}
 }
@@ -400,10 +402,10 @@ void MainWindow::Resize()
 		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
-		D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+		D2D1_SIZE_U size = D2D1_SIZE_U{ (UINT32)rc.right, (UINT32)rc.bottom };
 
 		pRenderTarget->Resize(size);
-		CalculateLayout(prev);
+		CalculateLayout();
 		InvalidateRect(m_hwnd, NULL, FALSE);
 	}
 }
@@ -657,7 +659,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 
 		// Creating the widget componenetss
 		WFunc::hwnd = m_hwnd;
-		
+
 		return 0;
 
 	case WM_DESTROY:

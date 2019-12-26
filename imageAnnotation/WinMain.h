@@ -33,7 +33,7 @@ class MainWindow : public BaseWindow<MainWindow>
 
 	void	CreateDefaultLayout(D2D1_SIZE_F size);
 
-	void    CalculateLayout(D2D1_SIZE_F prev);
+	void    CalculateLayout();
 	void	CreateNCButtons();
 	void	DiscardNCButtons();
 	HRESULT CreateGraphicsResources();

@@ -6,7 +6,7 @@
 #include <d2d1.h>
 #pragma comment(lib, "d2d1")
 
-#include "../ResizeBehaviour.h"
+#include "../Resizable.h"
 
 #ifndef SAFERELEASE
 #define SAFERELEASE
@@ -29,7 +29,7 @@ namespace WCMP {
 	class BaseComponent
 	{
 	public:
-		BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc, ResizeBehaviour* pRB);
+		BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc, Resizable* pRB);
 		BaseComponent(BaseComponent* pThis, PRECT npRc);
 
 		virtual ~BaseComponent();
@@ -50,7 +50,7 @@ namespace WCMP {
 		D2D1_RECT_F* pRc;
 		PRECT parentpRc;
 
-		ResizeBehaviour* pRB;
+		Resizable* pRB;
 
 		void getGlobalRect(RECT& nrc);
 		void getGlobalRect(D2D1_RECT_F& nrc);
