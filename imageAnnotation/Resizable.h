@@ -18,6 +18,8 @@
 #define RESIZE_STATIC_SIZE_RT(pRc, pParent) new Resizable(FALSE, TRUE , TRUE , FALSE, TRUE , TRUE , FALSE, pRc, pParent)
 #define RESIZE_STATIC_SIZE_RB(pRc, pParent) new Resizable(FALSE, FALSE, TRUE , TRUE , TRUE , TRUE , FALSE, pRc, pParent)
 
+#define RESIZE_STATIC_MARG(pRc, pParent)    new Resizable(TRUE , TRUE , TRUE , TRUE , FALSE, FALSE, FALSE, pRc, pParent)
+
 #define RESIZE_STATIC_MARG_LT(pRc, pParent) new Resizable(TRUE , TRUE , FALSE, FALSE, FALSE, FALSE, FALSE, pRc, pParent)
 #define RESIZE_STATIC_MARG_LB(pRc, pParent) new Resizable(TRUE , FALSE, FALSE, TRUE , FALSE, FALSE, FALSE, pRc, pParent)
 #define RESIZE_STATIC_MARG_RT(pRc, pParent) new Resizable(FALSE, TRUE , TRUE , FALSE, FALSE, FALSE, FALSE, pRc, pParent)

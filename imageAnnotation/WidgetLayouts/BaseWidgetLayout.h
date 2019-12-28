@@ -7,6 +7,7 @@
 class BaseWidgetLayout :
 	public Widget, public Resizable
 {
+protected:
 	BaseWidgetLayout(PRECT pRc, MainWindow* mw, Resizable* pRB);
 };
 

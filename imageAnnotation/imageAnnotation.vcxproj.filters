@@ -43,11 +43,14 @@
     <ClCompile Include="WidgetComponents\EmptyButton.cpp">
       <Filter>Source Files\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="ResizeBehaviour.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WidgetLayouts\BaseWidgetLayout.cpp">
       <Filter>Source Files\WidgetLayouts</Filter>
+    </ClCompile>
+    <ClCompile Include="WidgetLayouts\ImageWidget.cpp">
+      <Filter>Source Files\WidgetLayouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Resizable.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="Resizable.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetLayouts\WidgetLayouts.h">
+      <Filter>Header Files\WidgetLayouts</Filter>
+    </ClInclude>
+    <ClInclude Include="WidgetLayouts\ImageWidget.h">
+      <Filter>Header Files\WidgetLayouts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
