@@ -1,4 +1,4 @@
-#include "ResizeBehaviour.h"
+#include "Resizable.h"
 
 
 
@@ -154,7 +154,7 @@ Resizable::Resizable(
 	BProp = BMarg / parentRcSize.height;
 }
 
-Resizable::Resizable(ResizeBehaviour* pThis)
+Resizable::Resizable(Resizable* pThis)
 {
 	StaticLeftMargin = pThis->StaticLeftMargin;
 	StaticRightMargin = pThis->StaticRightMargin;
@@ -174,7 +174,7 @@ Resizable::Resizable(ResizeBehaviour* pThis)
 	BProp = pThis->BProp;
 }
 
-void ResizeBehaviour::getCmpRect(PRECT npRc, PRECT pRc)
+void Resizable::getCmpRect(PRECT npRc, PRECT pRc)
 {
 	if (!StaticWidth && !StaticHeight) { // Static margin or aspect ratio behaviour
 		D2D1_SIZE_F nRcSize{ npRc->right - npRc->left, npRc->bottom - npRc->top };
@@ -305,7 +305,7 @@ void ResizeBehaviour::getCmpRect(PRECT npRc, PRECT pRc)
 	}
 }
 
-void ResizeBehaviour::getCmpRect(PRECT npRc, D2D1_RECT_F* pRc)
+void Resizable::getCmpRect(PRECT npRc, D2D1_RECT_F* pRc)
 {
 	if (!StaticWidth && !StaticHeight) { // Static margin or aspect ratio behaviour
 		D2D1_SIZE_F nRcSize{ npRc->right - npRc->left, npRc->bottom - npRc->top };
@@ -436,7 +436,7 @@ void ResizeBehaviour::getCmpRect(PRECT npRc, D2D1_RECT_F* pRc)
 	}
 }
 
-void ResizeBehaviour::getCmpRect(D2D1_RECT_F* npRc, PRECT pRc)
+void Resizable::getCmpRect(D2D1_RECT_F* npRc, PRECT pRc)
 {
 	if (!StaticWidth && !StaticHeight) { // Static margin or aspect ratio behaviour
 		D2D1_SIZE_F nRcSize{ npRc->right - npRc->left, npRc->bottom - npRc->top };
@@ -567,7 +567,7 @@ void ResizeBehaviour::getCmpRect(D2D1_RECT_F* npRc, PRECT pRc)
 	}
 }
 
-void ResizeBehaviour::getCmpRect(D2D1_RECT_F* npRc, D2D1_RECT_F* pRc)
+void Resizable::getCmpRect(D2D1_RECT_F* npRc, D2D1_RECT_F* pRc)
 {
 	if (!StaticWidth && !StaticHeight) { // Static margin or aspect ratio behaviour
 		D2D1_SIZE_F nRcSize{ npRc->right - npRc->left, npRc->bottom - npRc->top };
