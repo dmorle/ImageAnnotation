@@ -49,6 +49,9 @@
     <ClCompile Include="Resizable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Container.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Widget.h">
@@ -108,11 +111,11 @@
     <ClInclude Include="Panel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetLayouts\WidgetLayouts.h">
-      <Filter>Header Files\WidgetLayouts</Filter>
+    <ClInclude Include="Parameters.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetLayouts\ImageWidget.h">
-      <Filter>Header Files\WidgetLayouts</Filter>
+    <ClInclude Include="Container.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

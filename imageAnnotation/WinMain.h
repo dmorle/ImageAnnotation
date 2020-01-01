@@ -6,25 +6,14 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-	friend class Widget;
-
-	ID2D1Factory			*pFactory;
-	IWICImagingFactory      *pWicFactory;
-	ID2D1HwndRenderTarget	*pRenderTarget;
-
 	LONG left_off = 0;
 	LONG top_off = 27;
 	LONG right_off = 0;
 	LONG bottom_off = 0;
 
 	BOOL isMax = FALSE;
-	
-	appPalette	palette;
-	stdBrushes	brushes;
-	stdCursors	cursors;
 
-	std::vector<Widget*> widgets;
-	Widget* activeWidget = NULL;
+	Panel* cPanel;
 
 	std::vector<NCCMP::NCButton*> ncComponents;
 
