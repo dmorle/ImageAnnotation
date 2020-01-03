@@ -1,22 +1,23 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include <windows.h>
-#include <windowsx.h>
-#include <windef.h>
-#include <d2d1.h>
-#pragma comment(lib, "d2d1")
+#ifndef WIDGETS_H
+#include "../Parameters.h"
+#include "WidgetComponents.h"
+#endif
 
 #include <vector>
-#include "Parameters.h"
 
-class Panel
+class WidgetPanel;
+
+class Panel :
+	public Parameters
 {
 public:
 	virtual ~Panel();
 
 	// determines if p is in this->rect
-	BOOL contains(const POINT& p);
+	BOOL contains(const POINT& p, BOOL localCrds = FALSE);
 
 	// determines if the panel if contained within its parent
 	BOOL isValid();
@@ -37,6 +38,9 @@ public:
 	void transX(LONG dx);
 	void transY(LONG dy);
 
+	// handles the start of widget editing (splitting and merging)
+	virtual void widgetEdit(WidgetPanel* pWidget) = 0;
+
 	// displays the panel
 	virtual void display() = 0;
 
@@ -54,6 +58,8 @@ public:
 	virtual BYTE getPanelMaliability() = 0;
 
 protected:
+	Panel();
+
 	// copies the contents of pThis
 	Panel(Panel* pThis, PRECT npRc);
 
@@ -72,9 +78,25 @@ protected:
 	LONG minWidth;
 	LONG minHeight;
 
-	// gets the coordinates of the rectangle in global coordinates
-	// initializes npRc with the global coordinates
+	// give npRc in panel coordinates
+	// initializes npRc with the global coordinates of the rectangle
 	void getGlobalRect(PRECT npRc);
+
+	// give npP in panel coordinates
+	// initializes npP with the global coordinates of the point
+	void getGlobalPoint(PPOINT npP);
+
+	// give npRc in global coordinates
+	// initializes npRc with the panel coordinates of the rectangle
+	void getLocalRect(PRECT npRc);
+
+	// give npP in global coordinates
+	// initializes npP with the panel coordinate of the point
+	void getLocalPoint(PPOINT npP);
 };
+
+#ifndef WIDGETS_H
+#include "WidgetPanel.h"
+#endif
 
 #endif

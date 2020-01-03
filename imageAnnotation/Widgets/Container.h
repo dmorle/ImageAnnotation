@@ -1,16 +1,20 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
+#ifndef WIDGETS_H
 #include "Panel.h"
+#endif
 
 class Container :
 	public Panel
 {
 public:
+	Container(Panel* pParent, PRECT npRc);
+
 	~Container();
 
 	// append this->cmp (The components of the panel)
-	BOOL addPanel(Panel* npPanel);
+	void addPanel(Panel* npPanel);
 
 	void MouseMove(const WPARAM& wparam, const POINT& p) override;
 	void LDown(const WPARAM& wparam, const POINT& p) override;
@@ -18,6 +22,8 @@ public:
 
 	void resizeX(LONG left, LONG right) override;
 	void resizeY(LONG top, LONG bottom) override;
+
+	void widgetEdit(WidgetPanel* pWidget) override;
 
 	void display() override;
 
@@ -31,23 +37,19 @@ private:
 		HORIZONTAL
 	};
 
-	typedef struct {
+	typedef struct _resizeInfo {
 		Panel* p1;
 		Panel* p2;
-	}_resizeInfo, *_pResizeInfo;
+	} resizeInfo, *pResizeInfo;
 
 	// the orintation of component panels
 	PANEL_ORIENTATION orientation;
 
 	// contains all child components of the panel
 	std::vector<Panel*> cmp;
-	
-	void m_MouseMove(const WPARAM& wparam, const POINT& p);
-	void m_LDown(const WPARAM& wparam, const POINT& p);
-	void m_LUp(const WPARAM& wparam, const POINT& p);
 
 	// flags for how to handle user inputs
-	static _pResizeInfo pResizingInfo;
+	static pResizeInfo pResizingInfo;
 	static BOOL f_widgetEdit;
 };
 

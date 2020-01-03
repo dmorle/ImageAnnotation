@@ -1,10 +1,12 @@
 #ifndef RESIZEABLE_H
 #define RESIZEABLE_H
 
+#ifndef PARAMETERS_H
 #include <windows.h>
 #include <windowsx.h>
 #include <d2d1.h>
 #pragma comment(lib, "d2d1")
+#endif
 
 #define TOD2DRECTF(rc)  D2D1_RECT_F{ rc.left, rc.top, rc.right, rc.bottom }
 #define TORECT(rc)      RECT       { rc.left, rc.top, rc.right, rc.bottom }

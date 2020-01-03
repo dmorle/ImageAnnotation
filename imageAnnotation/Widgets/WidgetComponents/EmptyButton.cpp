@@ -36,9 +36,9 @@ namespace WCMP {
 	{
 		back         = NULL;
 		back_passive = NULL;
-		pRenderTarget->CreateSolidColorBrush(palette[appPalette::PASSIVE   ], &back_active );
-		pRenderTarget->CreateSolidColorBrush(palette[appPalette::ACTIVE    ], &back_pressed);
-		pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT_COLOR], &comp        );
+		pRenderTarget->CreateSolidColorBrush(pPalette->passive, &back_active );
+		pRenderTarget->CreateSolidColorBrush(pPalette->active , &back_pressed);
+		pRenderTarget->CreateSolidColorBrush(pPalette->text   , &comp        );
 		comp_passive = NULL;
 		comp_active  = NULL;
 		comp_pressed = NULL;
@@ -170,7 +170,7 @@ namespace WCMP {
 		ID2D1HwndRenderTarget* pRenderTarget,
 		D2D1_RECT_F* pRc,
 		PRECT parentpRc,
-		ResizeBehaviour* pRB,
+		Resizable* pRB,
 		void (*onClick)(),
 		void (*paintSelf)(PRECT),
 		appPalette palette
@@ -178,14 +178,14 @@ namespace WCMP {
 		BaseComponent(pRc, parentpRc, pRB),
 		InteractiveComponent(pRc, parentpRc, pRB, onClick, paintSelf)
 	{
-		this->pRB = new ResizeBehaviour(pRB);
+		this->pRB = new Resizable(pRB);
 		this->pGs = new GRAPHICSTRUCT(pRenderTarget, palette);
 	}
 
 	EmptyButton::EmptyButton(EmptyButton* pThis, PRECT npRc)
 		: BaseComponent(pThis, npRc), InteractiveComponent(pThis, npRc)
 	{
-		this->pRB = new ResizeBehaviour(pThis->pRB);
+		this->pRB = new Resizable(pThis->pRB);
 		this->pGs = new GRAPHICSTRUCT(pThis->pGs);
 	}
 

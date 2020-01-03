@@ -1,6 +1,13 @@
 #include "Panel.h"
+#include <cassert>
 
 
+
+Panel::Panel()
+{
+	this->pParent = NULL;
+	this->pRc = NULL;
+}
 
 Panel::Panel(Panel* pThis, PRECT npRc)
 {
@@ -17,15 +24,29 @@ Panel::~Panel()
 		delete pRc;
 }
 
-BOOL Panel::contains(const POINT& p)
+BOOL Panel::contains(const POINT& p, BOOL localCrds)
 {
-	if (
-		p.x >= pRc->left && p.x < pRc->right &&
-		p.y >= pRc->top && p.y < pRc->bottom
-		)
-		return TRUE;
+	if (localCrds) {
+		if (
+			p.x >= pRc->left && p.x < pRc->right &&
+			p.y >= pRc->top && p.y < pRc->bottom
+			)
+			return TRUE;
 
-	return FALSE;
+		return FALSE;
+	}
+	else {
+		POINT np(p);
+		getLocalPoint(&np);
+
+		if (
+			np.x >= pRc->left && np.x < pRc->right &&
+			np.y >= pRc->top && np.y < pRc->bottom
+			)
+			return TRUE;
+
+		return FALSE;
+	}
 }
 
 BOOL Panel::isValid()
@@ -103,5 +124,48 @@ LONG Panel::getMinHeight()
 
 void Panel::getGlobalRect(PRECT npRc)
 {
+	assert(npRc);
 
+	npRc->left += pRc->left;
+	npRc->top += pRc->top;
+	npRc->right += pRc->left;
+	npRc->bottom += pRc->top;
+
+	if (pParent)
+		pParent->getGlobalRect(npRc);
+}
+
+void Panel::getGlobalPoint(PPOINT npP)
+{
+	assert(npP);
+
+	npP->x += pRc->left;
+	npP->y += pRc->top;
+
+	if (pParent)
+		pParent->getGlobalPoint(npP);
+}
+
+void Panel::getLocalRect(PRECT npRc)
+{
+	assert(npRc);
+
+	npRc->left -= pRc->left;
+	npRc->top -= pRc->top;
+	npRc->right -= pRc->left;
+	npRc->bottom -= pRc->top;
+
+	if (pParent)
+		pParent->getLocalRect(npRc);
+}
+
+void Panel::getLocalPoint(PPOINT npP)
+{
+	assert(npP);
+
+	npP->x -= pRc->left;
+	npP->y -= pRc->top;
+
+	if (pParent)
+		pParent->getLocalPoint(npP);
 }

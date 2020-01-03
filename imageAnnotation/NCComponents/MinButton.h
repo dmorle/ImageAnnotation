@@ -1,7 +1,9 @@
 #ifndef MINBUTTON_H
 #define MINBUTTON_H
 
+#ifndef NCCMP_H
 #include "NCButton.h"
+#endif
 
 namespace NCCMP {
 

@@ -1,7 +1,10 @@
 #ifndef PARENTCOMPONENT_H
 #define PARENTCOMPONENT_H
 
+#ifndef WIDGETCMP_H
 #include "BaseComponent.h"
+#endif
+
 #include <list>
 
 namespace WCMP {
@@ -10,7 +13,7 @@ namespace WCMP {
 		public BaseComponent
 	{
 	public:
-		ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc, ResizeBehaviour* pRB);
+		ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc, Resizable* pRB);
 
 		~ParentComponent();
 

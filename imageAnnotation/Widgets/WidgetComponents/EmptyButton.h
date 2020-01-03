@@ -1,16 +1,18 @@
 #ifndef EMPTYBUTTON_H
 #define EMPTYBUTTON_H
 
+#ifndef WIDGETCMP_H
+#include "../../Parameters.h"
 #include "InteractiveComponent.h"
-
-typedef struct appPalette appPalette;
-#include "../Widget.h"
+#endif
 
 namespace WCMP {
 
 	typedef struct GRAPHICSTRUCT GRAPHICSTRUCT;
 	typedef GRAPHICSTRUCT* PGRAPHICSTRUCT;
-	struct GRAPHICSTRUCT {
+	struct GRAPHICSTRUCT :
+		public Parameters
+	{
 		ID2D1SolidColorBrush* back;
 		ID2D1SolidColorBrush* back_passive;
 		ID2D1SolidColorBrush* back_active;
@@ -83,7 +85,7 @@ namespace WCMP {
 			ID2D1HwndRenderTarget* pRenderTarget,
 			D2D1_RECT_F* pRc,
 			PRECT parentpRc,
-			ResizeBehaviour* pRB,
+			Resizable* pRB,
 			void (*onClick)(),
 			void (*paintSelf)(PRECT),
 			appPalette palette

@@ -1,10 +1,11 @@
 #ifndef BASEWIN_H
 #define BASEWIN_H
 
-#include <windows.h>
+#include "Parameters.h"
 
 template <class DERIVED_TYPE>
 class BaseWindow
+	: public Parameters
 {
 public:
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

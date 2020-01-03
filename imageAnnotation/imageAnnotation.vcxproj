@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>Default</LanguageStandard>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -126,45 +127,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Container.cpp" />
     <ClCompile Include="NCComponents\CloseButton.cpp" />
     <ClCompile Include="NCComponents\MaxButton.cpp" />
     <ClCompile Include="NCComponents\MinButton.cpp" />
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
-    <ClCompile Include="Panel.cpp" />
-    <ClCompile Include="Resizable.cpp" />
-    <ClCompile Include="Widget.cpp" />
-    <ClCompile Include="WidgetComponents\BaseComponent.cpp" />
-    <ClCompile Include="WidgetComponents\EmptyButton.cpp" />
-    <ClCompile Include="WidgetComponents\ImageBaseComponent.cpp" />
-    <ClCompile Include="WidgetComponents\ImageBuffer.cpp" />
-    <ClCompile Include="WidgetComponents\InteractiveComponent.cpp" />
-    <ClCompile Include="WidgetComponents\ParentComponent.cpp" />
+    <ClCompile Include="Parameters.cpp" />
+    <ClCompile Include="Widgets\Container.cpp" />
+    <ClCompile Include="Widgets\Panel.cpp" />
+    <ClCompile Include="Widgets\WidgetPanel.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\BaseComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\EmptyButton.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\ImageBaseComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\ImageBuffer.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\InteractiveComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\ParentComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\Resizable.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
-    <ClInclude Include="Container.h" />
+    <ClInclude Include="NCComponents.h" />
     <ClInclude Include="NCComponents\CloseButton.h" />
     <ClInclude Include="NCComponents\MaxButton.h" />
+    <ClInclude Include="NCComponents\MinButton.h" />
     <ClInclude Include="NCComponents\NCButton.h" />
-    <ClInclude Include="NCComponents\NCCmp.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
-    <ClInclude Include="Panel.h" />
     <ClInclude Include="Parameters.h" />
-    <ClInclude Include="Resizable.h" />
-    <ClInclude Include="Widget.h" />
-    <ClInclude Include="WidgetComponents\BaseComponent.h" />
-    <ClInclude Include="WidgetComponents\Buffer.h" />
-    <ClInclude Include="WidgetComponents\EmptyButton.h" />
-    <ClInclude Include="WidgetComponents\ImageBaseComponent.h" />
-    <ClInclude Include="WidgetComponents\ImageBuffer.h" />
-    <ClInclude Include="WidgetComponents\InteractiveComponent.h" />
-    <ClInclude Include="WidgetComponents\ParentComponent.h" />
-    <ClInclude Include="WidgetComponents\WidgetCmp.h" />
+    <ClInclude Include="Widgets.h" />
+    <ClInclude Include="Widgets\Container.h" />
+    <ClInclude Include="Widgets\Panel.h" />
+    <ClInclude Include="Widgets\WidgetPanel.h" />
+    <ClInclude Include="Widgets\WidgetComponents.h" />
+    <ClInclude Include="Widgets\WidgetComponents\BaseComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\Buffer.h" />
+    <ClInclude Include="Widgets\WidgetComponents\EmptyButton.h" />
+    <ClInclude Include="Widgets\WidgetComponents\ImageBaseComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\ImageBuffer.h" />
+    <ClInclude Include="Widgets\WidgetComponents\InteractiveComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\ParentComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\Resizable.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

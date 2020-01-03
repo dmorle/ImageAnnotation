@@ -1,7 +1,9 @@
 #ifndef CLOSEBUTTON_H
 #define CLOSEBUTTON_H
 
+#ifndef NCCMP_H
 #include "NCButton.h"
+#endif
 
 namespace NCCMP {
 

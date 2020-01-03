@@ -4,13 +4,13 @@
 
 namespace WCMP {
 
-	ParentComponent::ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc, ResizeBehaviour* pRB)
+	ParentComponent::ParentComponent(D2D1_RECT_F* pRc, PRECT parentpRc, Resizable* pRB)
 		: BaseComponent(pRc, parentpRc, pRB) {}
 
 	ParentComponent::ParentComponent(ParentComponent* pThis, PRECT npRc)
 		: BaseComponent(pThis, npRc)
 	{
-		pRB = new ResizeBehaviour(pThis->pRB);
+		pRB = new Resizable(pThis->pRB);
 		for (auto e : children)
 			if (e)
 				children.push_back(e->clone(npRc));

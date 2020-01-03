@@ -1,7 +1,9 @@
 #ifndef MAXBUTTON_H
 #define MAXBUTTON_H
 
+#ifndef NCCMP_H
 #include "NCButton.h"
+#endif
 
 namespace NCCMP {
 

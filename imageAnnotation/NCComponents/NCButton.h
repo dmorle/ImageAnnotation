@@ -1,8 +1,11 @@
 #ifndef NCBUTTON_H
 #define NCBUTTON_H
 
-#include <Windows.h>
+#ifndef NCCMP_H
+#include "../Parameters.h"
+#include <windows.h>
 #include <wingdi.h>
+#endif
 
 class MainWindow;
 
@@ -45,7 +48,8 @@ namespace NCCMP {
 		COLORREF crf_comp_pressed;	// color for components when pressed
 	};
 
-	class NCButton
+	class NCButton :
+		public Parameters
 	{
 	public:
 		NCButton(

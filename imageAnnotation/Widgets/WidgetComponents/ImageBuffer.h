@@ -1,9 +1,11 @@
 #ifndef IMAGEBUFFER_H
 #define IMAGEBUFFER_H
 
+#ifndef WIDGETCMP_H
 #include "InteractiveComponent.h"
 #include "ImageBaseComponent.h"
 #include "Buffer.h"
+#endif
 
 #include <list>
 #include <string>
@@ -19,7 +21,7 @@ namespace WCMP {
 			IWICImagingFactory* pWicFactory,
 			D2D1_RECT_F* pRc,
 			PRECT parentpRc,
-			ResizeBehaviour* pRB,
+			Resizable* pRB,
 			void (*onClick)(),
 			void (*paintSelf)(PRECT),
 			std::string target,

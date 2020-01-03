@@ -1,11 +1,17 @@
 #include "Container.h"
-#include <stdlib.h>
 #include <cassert>
 
 
 
-Container::_pResizeInfo Container::pResizingInfo = NULL;
-auto Container::f_widgetEdit = FALSE;
+Container::pResizeInfo Container::pResizingInfo = NULL;
+BOOL Container::f_widgetEdit = FALSE;
+
+Container::Container(Panel* pParent, PRECT npRc)
+{
+	this->pParent = pParent;
+	this->pRc = npRc;
+	this->orientation = PANEL_ORIENTATION::NONE;
+}
 
 Container::~Container()
 {
@@ -17,10 +23,18 @@ Container::~Container()
 		delete pResizingInfo;
 }
 
-BOOL Container::addPanel(Panel* npPanel)
+void Container::addPanel(Panel* npPanel)
 {
 	// TODO : determine an orientation and append the panel components
-	// the return state should be whether the function succeeded
+	this->cmp.push_back(npPanel);
+	if (orientation == PANEL_ORIENTATION::NONE) {
+		if (
+			!( (pRc->right - pRc->left) - (npPanel->getRight() - npPanel->getLeft()) )
+			)
+			this->orientation = PANEL_ORIENTATION::VERTICAL;
+		else
+			this->orientation = PANEL_ORIENTATION::HORIZONTAL;
+	}
 }
 
 void Container::MouseMove(const WPARAM& wparam, const POINT& p)
@@ -35,7 +49,7 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 				// min width for p1
 				LONG nloc = pResizingInfo->p1->getLeft() + pResizingInfo->p1->getMinWidth();
 
-				pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft, nloc);
+				pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), nloc);
 				pResizingInfo->p2->resizeX(nloc, pResizingInfo->p2->getRight());
 			}
 			else if (pResizingInfo->p2->getRight() - p.y > pResizingInfo->p2->getMinWidth()) {
@@ -92,6 +106,8 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 
 void Container::LDown(const WPARAM& wparam, const POINT& p)
 {
+	assert(orientation != PANEL_ORIENTATION::NONE);
+
 	if (!contains(p) || onBorder(p))
 		pParent->LDown(wparam, p);
 
@@ -116,13 +132,13 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 		}
 		if (topPanel) {
 			assert(bottomPanel);
-			pResizingInfo = new _resizeInfo{ topPanel, bottomPanel };
+			pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
 			return;
 		}
 	}
 	else if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
-		Panel* leftPanel;
-		Panel* rightPanel;
+		Panel* leftPanel = NULL;
+		Panel* rightPanel = NULL;
 		for (auto& e : cmp) {
 			if (
 				!leftPanel &&
@@ -140,7 +156,7 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 		}
 		if (leftPanel) {
 			assert(rightPanel);
-			pResizingInfo = new _resizeInfo{ leftPanel, rightPanel };
+			pResizingInfo = new resizeInfo{ leftPanel, rightPanel };
 			return;
 		}
 	}
@@ -153,7 +169,7 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 void Container::LUp(const WPARAM& wparam, const POINT& p)
 {
 	if (pResizingInfo) {
-
+		// TODO: release the resources used for panel resizing
 	}
 	else if (f_widgetEdit) {
 
@@ -229,28 +245,119 @@ void Container::resizeX(LONG left, LONG right)
 					if (e1->getLeft() >= e->getRight())
 						pPanels.push_back(e1);
 
+				// adjusting the e and pPanels
 				if (e->getMinWidth() <= e->getRight() - e->getLeft() + dWidth) {
-					// last resize needed, resize to dWidth
+					// last resize needed, resize by dWidth
+					e->resizeX(e->getLeft(), e->getRight() + dWidth);
+					for (auto& e1 : pPanels)
+						e1->transX(dWidth);
 
-					// TODO: resize e and translate all pPanels
+					break;
 				}
 				else {
 					// resize e to the minWidth and update dWidth
+					dWidth += e->getMinWidth();
+					e->resizeX(e->getLeft(), e->getLeft() + e->getMinWidth());
+					for (auto& e1 : pPanels)
+						e1->transX(e->getMinWidth());
 				}
 			}
 		}
 	}
 	else {
 		// vertical orientation => trivial resizing
-		for (auto& e : cmp) {
+		for (auto& e : cmp)
 			e->resizeX(left, right);
-		}
 	}
 }
 
 void Container::resizeY(LONG top, LONG bottom)
 {
-	BYTE* pMalArr = (BYTE*)_alloca(sizeof(BYTE) * cmp.size());
+	assert(orientation != PANEL_ORIENTATION::NONE);
+
+	if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+		// vertical orientation
+		LONG dHeight = (bottom - top) - (pRc->bottom - pRc->top);
+
+		if (dHeight > 0) {
+			// increase the size of the panel with the lowest maliability
+
+			// finding the panel with lowest maliability
+			Panel* pLowMalPanel = cmp[0];
+			for (auto& e : cmp)
+				if (e->getPanelMaliability() < pLowMalPanel->getPanelMaliability())
+					pLowMalPanel = e;
+
+			// getting all elements right of the above element
+			std::vector<Panel*> pPanels;
+			for (auto& e : cmp)
+				if (e->getTop() >= pLowMalPanel->getBottom())
+					pPanels.push_back(e);
+
+			// adjusting all components
+			pLowMalPanel->resizeY(pLowMalPanel->getTop(), pLowMalPanel->getBottom() + dHeight);
+			for (auto& e : pPanels)
+				e->transY(dHeight);
+		}
+		else if (dHeight < 0) {
+			// take size away backwards through the panel maliabilities
+
+			// reading the maliability values from cmp into pMalArr
+			BYTE* pMalArr = (BYTE*)_alloca(sizeof(BYTE) * cmp.size());
+			for (int i = 0; i < cmp.size(); i++)
+				pMalArr[i] = cmp[i]->getPanelMaliability();
+
+			// insertion sort DSU using pMalArr as key (high -> low)
+			for (BYTE i = 1; i < cmp.size(); i++)
+				for (BYTE j = i; j > 0; j--)
+					if (pMalArr[j] > pMalArr[j - 1]) {
+						BYTE tempMal = pMalArr[j];
+						pMalArr[j] = pMalArr[j - 1];
+						pMalArr[j - 1] = tempMal;
+
+						Panel* tempPanel = cmp[j];
+						cmp[j] = cmp[j - 1];
+						cmp[j - 1] = tempPanel;
+					}
+					else
+						break;
+
+			// resizing the components
+			for (auto& e : cmp) {
+				// getting all elements right of e
+				std::vector<Panel*> pPanels;
+				for (auto& e1 : cmp)
+					if (e1->getTop() >= e->getBottom())
+						pPanels.push_back(e1);
+
+				// adjusting the e and pPanels
+				if (e->getMinHeight() <= e->getBottom() - e->getTop() + dHeight) {
+					// last resize needed, resize by dWidth
+					e->resizeY(e->getTop(), e->getBottom() + dHeight);
+					for (auto& e1 : pPanels)
+						e1->transY(dHeight);
+
+					break;
+				}
+				else {
+					// resize e to the minWidth and update dWidth
+					dHeight += e->getMinHeight();
+					e->resizeY(e->getTop(), e->getTop() + e->getMinHeight());
+					for (auto& e1 : pPanels)
+						e1->transY(e->getMinHeight());
+				}
+			}
+		}
+	}
+	else {
+		// horizontal orientation => trivial resizing
+		for (auto& e : cmp)
+			e->resizeX(top, bottom);
+	}
+}
+
+void Container::widgetEdit(WidgetPanel* pWidget)
+{
 }
 
 void Container::display()
@@ -274,19 +381,4 @@ BYTE Container::getPanelMaliability()
 			pMal = npMal;
 	}
 	return pMal;
-}
-
-void Container::m_MouseMove(const WPARAM& wparam, const POINT& p)
-{
-	
-}
-
-void Container::m_LDown(const WPARAM& wparam, const POINT& p)
-{
-	
-}
-
-void Container::m_LUp(const WPARAM& wparam, const POINT& p)
-{
-	
 }

@@ -1,4 +1,5 @@
 #include "WinMain.h"
+#include <cassert>
 
 
 
@@ -67,70 +68,12 @@ void MainWindow::loadPalette(std::string path)
 
 }
 
-void MainWindow::CreateDefaultLayout(D2D1_SIZE_F size)
+void MainWindow::CreateDefaultLayout(D2D1_SIZE_U size)
 {
-	{
-		// creating a test widget
-		PRECT WpRc = new RECT{ 0, 0, (LONG)size.width, (LONG)size.height };
-		Widget* npWidget = new Widget(WpRc, RESIZE_STATIC_SIZE_LT(WpRc), this);
+	Container* widgetContainer = new Container(NULL, new RECT{ 0, 0, (LONG)size.width, (LONG)size.height });
+	widgetContainer->addPanel(new WidgetPanel(widgetContainer, new RECT{ 0, 0, (LONG)size.width, (LONG)size.height }, 1));
 
-		{
-			// creating a test empty button
-			D2D1_RECT_F* pRc = new D2D1_RECT_F{ 10, 10, 30, 30 };
-			npWidget->addComponent(
-				new WCMP::EmptyButton(
-					pRenderTarget,
-					pRc,
-					WpRc,
-					RESIZE_STATIC_SIZE_LT(pRc, WpRc),
-					NULL,
-					WFunc::paintSelf,
-					this->palette
-				)
-			);
-		}
-
-		{
-			// testing imageBuffer
-			D2D1_RECT_F* pRc = new D2D1_RECT_F{ 30, 30, 100, 100 };
-			npWidget->addComponent(
-				new WCMP::ImageBuffer(
-					pRenderTarget,
-					pWicFactory,
-					pRc,
-					WpRc,
-					RESIZE_STATIC_SIZE_LT(pRc, WpRc),
-					NULL,
-					WFunc::paintSelf,
-					std::string("C:\\Users\\dmorl\\Documents\\line170-images\\"),
-					10
-				)
-			);
-		}
-
-		// adding the widget to the window
-		widgets.push_back(npWidget);
-	}
-}
-
-// Recalculate drawing layout when the size of the window changes.
-void MainWindow::CalculateLayout()
-{
-	if (pRenderTarget != NULL)
-	{
-		D2D1_SIZE_F size = pRenderTarget->GetSize();
-
-		if (!widgets.size()) {
-			CreateDefaultLayout(size);
-		}
-
-		else {
-			// resize current layout
-			D2D1_RECT_F nRc{ 0, 0, size.width, size.height };
-			for (auto& e : widgets)
-				e->resize(&nRc);
-		}
-	}
+	pAP = widgetContainer;
 }
 
 void MainWindow::CreateNCButtons()
@@ -151,10 +94,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::NCTextButton(
 				(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -178,10 +121,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -205,10 +148,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -233,10 +176,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::CloseButton(
 				(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -260,10 +203,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::MaxButton(
 				(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -287,10 +230,10 @@ void MainWindow::CreateNCButtons()
 		ncComponents.push_back(new
 			NCCMP::MinButton(
 				(COLORREF)NULL,
-				TOCOLORREF(palette[appPalette::WIDGET_BACK]),
-				TOCOLORREF(palette[appPalette::PASSIVE]),
-				TOCOLORREF(palette[appPalette::ACTIVE]),
-				TOCOLORREF(palette[appPalette::TEXT_COLOR]),
+				TOCOLORREF(pPalette->widgetBack),
+				TOCOLORREF(pPalette->passive),
+				TOCOLORREF(pPalette->active),
+				TOCOLORREF(pPalette->text),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -307,14 +250,18 @@ void MainWindow::DiscardNCButtons()
 
 HRESULT MainWindow::CreateGraphicsResources()
 {
-	if (!cursors.arrow)
-		cursors.arrow = LoadCursor(NULL, IDC_ARROW);
+	if (!pPalette)
+		pPalette = new appPalette();
 
-	if (!cursors.sizens)
-		cursors.sizens = LoadCursor(NULL, IDC_SIZENS);
+	if (!pCursors)
+		pCursors = new stdCursors();
 
-	if (!cursors.sizewe)
-		cursors.sizewe = LoadCursor(NULL, IDC_SIZEWE);
+	if (!pCursors->arrow)
+		pCursors->arrow = LoadCursor(NULL, IDC_ARROW);
+	if (!pCursors->sizens)
+		pCursors->sizens = LoadCursor(NULL, IDC_SIZENS);
+	if (!pCursors->sizewe)
+		pCursors->sizewe = LoadCursor(NULL, IDC_SIZEWE);
 
 	HRESULT hr = S_OK;
 	if (pRenderTarget == NULL)
@@ -330,54 +277,74 @@ HRESULT MainWindow::CreateGraphicsResources()
 			&pRenderTarget);
 	}
 
+	if (!pBrushes)
+		pBrushes = new stdBrushes();
+
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::BACKGROUND], &brushes.background);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->background, &pBrushes->background);
 
 	if (SUCCEEDED(hr)) {
-		D2D1_COLOR_F delColor = palette[appPalette::BACKGROUND];
+		D2D1_COLOR_F delColor = pPalette->background;
 		delColor.a = 0.3f;
-		hr = pRenderTarget->CreateSolidColorBrush(delColor, &brushes.preDeletion);
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->preDeletion);
 	}
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::WIDGET_BACK], &brushes.widgetBack);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetBack, &pBrushes->widgetBack);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::PASSIVE], &brushes.passive);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->passive, &pBrushes->passive);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::ACTIVE], &brushes.active);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->active, &pBrushes->active);
 
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(palette[appPalette::TEXT_COLOR], &brushes.text);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->text, &pBrushes->text);
 	return hr;
 }
 
 void MainWindow::DiscardGraphicsResources()
 {
 	SafeRelease(&pRenderTarget);
-	brushes.release();
+	pBrushes->release();
+}
+
+LRESULT MainWindow::onCreate()
+{
+	if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &pFactory)))
+		return -1;  // Fail CreateWindowEx.
+
+	if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
+		return -1;
+	if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pWicFactory)))
+		return -1;
+
+	if (FAILED(CreateGraphicsResources()))
+		return -1;
+
+	// creating the non client components
+	NCFunc::hwnd = m_hwnd;
+	CreateNCButtons();
+
+	// Creating the widget componenetss
+	WFunc::hwnd = m_hwnd;
+
+	InvalidateRect(m_hwnd, NULL, FALSE);
+
+	return 0;
 }
 
 void MainWindow::Paint()
 {
 	HRESULT hr = CreateGraphicsResources();
-	if (SUCCEEDED(hr) && !widgets.size())
-		Resize();
 	if (SUCCEEDED(hr))
 	{
 		PAINTSTRUCT ps;
 		BeginPaint(m_hwnd, &ps);
-
 		pRenderTarget->BeginDraw();
 
-		pRenderTarget->Clear(palette[appPalette::BACKGROUND]);
-
-		for (auto& e : widgets)
-			e->render(pRenderTarget);
-
-		if (activeWidget)
-			activeWidget->render(pRenderTarget);
+		pRenderTarget->Clear(pPalette->background);
+		pAP->display();
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -404,39 +371,71 @@ void MainWindow::Resize()
 
 		D2D1_SIZE_U size = D2D1_SIZE_U{ (UINT32)rc.right, (UINT32)rc.bottom };
 
+		if (!pAP)
+			CreateDefaultLayout(size);
+
 		pRenderTarget->Resize(size);
-		CalculateLayout();
+
+		pAP->resizeX(0, size.width);
+		pAP->resizeY(0, size.height);
+
 		InvalidateRect(m_hwnd, NULL, FALSE);
 	}
 }
 
 void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 {
-	SetCursor(cursors.arrow);
+	SetCursor(pCursors->arrow);
 
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
-	if (activeWidget) {
-		WIDGET_RESULT wr = activeWidget->MouseMove(wparam, p);
-		switch (wr) {
-		case WR_RELEASE:
-			activeWidget = NULL;
+	// client region code
+	if (resizingInfo == resizeInfo::NONE) {
+		// TODO: figure out a way to handle top resizing
+		if (
+			p.x < edgeSpace ||
+			p.x > pRenderTarget->GetSize().width - edgeSpace
+			)
+			SetCursor(pCursors->sizewe);
+		else if (
+			p.y > pRenderTarget->GetSize().height - edgeSpace
+			)
+			SetCursor(pCursors->sizens);
+		else
+			pAP->MouseMove(wparam, p);
+	}
+	else {
+		RECT rc;
+		BOOL result = GetWindowRect(m_hwnd, &rc);
+		assert(!result);
+		SIZE size{ rc.right - rc.left, rc.bottom - rc.top };
+
+		LONG nDim;
+		switch (resizingInfo) {
+		case resizeInfo::LEFT:
+			nDim = max(size.cx - p.x, pAP->getMinWidth());
+			pAP->resizeX(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
 			break;
-		case WR_SKIP:
-			for (auto& e : widgets)
-				if (e->MouseMove(wparam, p) == WR_SET) {
-					activeWidget = e;
-					break;
-				}
+		case resizeInfo::TOP:
+			nDim = max(size.cy - p.y, pAP->getMinHeight());
+			pAP->resizeY(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
+			break;
+		case resizeInfo::RIGHT:
+			nDim = max(p.x, pAP->getMinWidth());
+			pAP->resizeX(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
+			break;
+		case resizeInfo::BOTTOM:
+			nDim = max(p.y, pAP->getMinHeight());
+			pAP->resizeY(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
 			break;
 		}
 	}
-	else
-		for (auto& e : widgets)
-			if (e->MouseMove(wparam, p) == WR_SET) {
-				activeWidget = e;
-				break;
-			}
+	
+	// non client region code
 
 	BOOL redraw = FALSE;
 
@@ -449,78 +448,72 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 			SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-void MainWindow::MouseLeave(WPARAM wparam, LPARAM lparam)
-{
-	if (activeWidget) {
-		POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-		WIDGET_RESULT wr = activeWidget->MouseMove(wparam, p);
-		switch (wr) {
-		case WR_RELEASE:
-			activeWidget = NULL;
-			break;
-		case WR_SKIP:
-			for (auto& e : widgets)
-				if (e->MouseMove(wparam, p) == WR_SET) {
-					activeWidget = e;
-					break;
-				}
-			break;
-		}
-	}
-}
-
 void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 {
-	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 	
-	if (activeWidget) {
-		WIDGET_RESULT wr = activeWidget->LUp(wparam, p);
-		switch (wr) {
-		case WR_RELEASE:
-			activeWidget = NULL;
+	if (resizingInfo == resizeInfo::NONE) {
+		SetCursor(pCursors->arrow);
+		pAP->LUp(wparam, p);
+	}
+	else {
+		RECT rc;
+		BOOL result = GetWindowRect(m_hwnd, &rc);
+		assert(!result);
+		SIZE size{ rc.right - rc.left, rc.bottom - rc.top };
+
+		LONG nDim;
+		switch (resizingInfo) {
+		case resizeInfo::LEFT:
+			nDim = max(size.cx - p.x, pAP->getMinWidth());
+			pAP->resizeX(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
 			break;
-		case WR_SKIP:
-			for (auto& e : widgets)
-				if (e->LUp(wparam, p) == WR_SET) {
-					activeWidget = e;
-					break;
-				}
+		case resizeInfo::TOP:
+			nDim = max(size.cy - p.y, pAP->getMinHeight());
+			pAP->resizeY(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
+			break;
+		case resizeInfo::RIGHT:
+			nDim = max(p.x, pAP->getMinWidth());
+			pAP->resizeX(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
+			break;
+		case resizeInfo::BOTTOM:
+			nDim = max(p.y, pAP->getMinHeight());
+			pAP->resizeY(0, nDim);
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
 			break;
 		}
+
+		resizingInfo = resizeInfo::NONE;
 	}
-	else
-		for (auto& e : widgets)
-			if (e->LUp(wparam, p) == WR_SET) {
-				activeWidget = e;
-				break;
-			}
 }
 
 void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-	
-	if (activeWidget) {
-		WIDGET_RESULT wr = activeWidget->LDown(wparam, p);
-		switch (wr) {
-		case WR_RELEASE:
-			activeWidget = NULL;
-			break;
-		case WR_SKIP:
-			for (auto& e : widgets)
-				if (e->LDown(wparam, p) == WR_SET) {
-					activeWidget = e;
-					break;
-				}
-			break;
-		}
+
+	// checking for window resizing
+	// TODO: figure out a way to handle top resizing
+	if (p.x < edgeSpace) {
+		SetCursor(pCursors->sizewe);
+		resizingInfo = resizeInfo::LEFT;
 	}
-	else
-		for (auto& e : widgets)
-			if (e->LDown(wparam, p) == WR_SET) {
-				activeWidget = e;
-				break;
-			}
+	else if (p.x > pRenderTarget->GetSize().width - edgeSpace) {
+		SetCursor(pCursors->sizens);
+		resizingInfo = resizeInfo::RIGHT;
+	}
+	else if (p.y > pRenderTarget->GetSize().height - edgeSpace) {
+		SetCursor(pCursors->sizewe);
+		resizingInfo = resizeInfo::BOTTOM;
+	}
+
+	// normal functionality
+	else {
+		SetCursor(pCursors->arrow);
+		pAP->LDown(wparam, p);
+	}
 }
 
 void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
@@ -554,7 +547,7 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		HBITMAP hbmp = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
 		HBITMAP holdbmp = (HBITMAP)SelectObject(hbuffer, hbmp);
 
-		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(palette[appPalette::	BACKGROUND]));
+		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(pPalette->background));
 		FillRect(hbuffer, &rc, hbr);
 		DeleteObject(hbr);
 
@@ -645,22 +638,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
-		if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_MULTI_THREADED, &pFactory)))
-			return -1;  // Fail CreateWindowEx.
-
-		if (FAILED(CoInitializeEx(NULL, COINIT_MULTITHREADED)))
-			return -1;
-		if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pWicFactory)))
-			return -1;
-
-		// creating the non client components
-		NCFunc::hwnd = m_hwnd;
-		CreateNCButtons();
-
-		// Creating the widget componenetss
-		WFunc::hwnd = m_hwnd;
-
-		return 0;
+		return onCreate();
 
 	case WM_DESTROY:
 		DiscardGraphicsResources();
@@ -681,10 +659,6 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wparam, LPARAM lparam)
 
 	case WM_MOUSEMOVE:
 		MouseMove(wparam, lparam);
-		return 0;
-
-	case WM_MOUSELEAVE:
-		MouseLeave(wparam, lparam);
 		return 0;
 
 	case WM_LBUTTONUP:

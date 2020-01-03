@@ -1,18 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="WidgetComponents\BaseComponent.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="WidgetComponents\InteractiveComponent.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="WidgetComponents\ParentComponent.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,46 +22,46 @@
     <ClCompile Include="NCComponents\RestoreDownButton.cpp">
       <Filter>Source Files\NCComponents</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetComponents\ImageBaseComponent.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
+    <ClCompile Include="Widgets\Container.cpp">
+      <Filter>Source Files\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetComponents\ImageBuffer.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
+    <ClCompile Include="Widgets\Panel.cpp">
+      <Filter>Source Files\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="WidgetComponents\EmptyButton.cpp">
-      <Filter>Source Files\WidgetComponents</Filter>
+    <ClCompile Include="Widgets\WidgetComponents\BaseComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Panel.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Widgets\WidgetComponents\EmptyButton.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Resizable.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Widgets\WidgetComponents\ImageBaseComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Container.cpp">
+    <ClCompile Include="Widgets\WidgetComponents\ImageBuffer.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\InteractiveComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\ParentComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\Resizable.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetPanel.cpp">
+      <Filter>Source Files\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="Parameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Widget.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WinMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="basewin.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\BaseComponent.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\WidgetCmp.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\ParentComponent.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\InteractiveComponent.h">
-      <Filter>Header Files\WidgetComponents</Filter>
     </ClInclude>
     <ClInclude Include="NCComponents\CloseButton.h">
       <Filter>Header Files\NCComponents</Filter>
@@ -84,38 +72,59 @@
     <ClInclude Include="NCComponents\NCButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
-    <ClInclude Include="NCComponents\NCCmp.h">
-      <Filter>Header Files\NCComponents</Filter>
-    </ClInclude>
     <ClInclude Include="NCComponents\NCTextButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
     <ClInclude Include="NCComponents\RestoreDownButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
-    <ClInclude Include="WidgetComponents\ImageBaseComponent.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\ImageBuffer.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\Buffer.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="WidgetComponents\EmptyButton.h">
-      <Filter>Header Files\WidgetComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="Resizable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Panel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Parameters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Container.h">
+    <ClInclude Include="Widgets\Container.h">
+      <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\Panel.h">
+      <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents.h">
+      <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\BaseComponent.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\Buffer.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\EmptyButton.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\ImageBaseComponent.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\ImageBuffer.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\InteractiveComponent.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\ParentComponent.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\Resizable.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetPanel.h">
+      <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NCComponents\MinButton.h">
+      <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,9 +133,6 @@
     </Filter>
     <Filter Include="Header Files\NCComponents">
       <UniqueIdentifier>{8ef9c73a-3cd8-449d-bb31-2d6e90d78ff7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\WidgetComponents">
-      <UniqueIdentifier>{5b3037b2-1b49-48cd-9941-711933870c40}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{c4724c7c-4a16-4aec-9879-b13e33b61253}</UniqueIdentifier>
@@ -137,8 +143,17 @@
     <Filter Include="Source Files\NCComponents">
       <UniqueIdentifier>{6876db69-6866-4340-8b1c-061936af381f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\WidgetComponents">
-      <UniqueIdentifier>{99c7160e-daee-4892-9063-5b196511d332}</UniqueIdentifier>
+    <Filter Include="Source Files\Widgets">
+      <UniqueIdentifier>{567000bf-f807-4601-aaed-a5ab2985198a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Widgets\WidgetComponents">
+      <UniqueIdentifier>{864f4fe7-9b9e-4afd-a34f-fed212ec0057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Widgets">
+      <UniqueIdentifier>{7650d751-0052-4963-8607-c9e46f46268e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Widgets\WidgetComponents">
+      <UniqueIdentifier>{f86713cc-b043-4450-a66d-1c159df993c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

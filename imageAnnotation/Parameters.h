@@ -1,55 +1,56 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-namespace {
-	// private structures / logic
-	struct _appPalette
+
+#include <windows.h>
+#include <windowsx.h>
+#include <wincodec.h>
+#include <d2d1.h>
+#pragma comment(lib, "d2d1")
+
+#include <wingdi.h>
+
+#include <vector>
+#include <string>
+#include <string.h>
+
+#ifndef SAFERELEASE
+#define SAFERELEASE
+
+template <class T> void SafeRelease(T** ppT)
+{
+	if (*ppT)
 	{
-		typedef int PALETTE_COLOR;
+		(*ppT)->Release();
+		*ppT = NULL;
+	}
+}
 
-		enum {
-			BACKGROUND,
-			WIDGET_BACK,
-			PASSIVE,
-			ACTIVE,
-			TEXT_COLOR
-		};
+#endif
 
-		_appPalette() :
-			background(0.0f, 0.0f, 0.6f),
-			widgetBack(0.15f, 0.15f, 0.15f),
-			passive(0.3f, 0.3f, 0.3f),
-			active(0.4f, 0.4f, 0.4f),
-			text(1.0f, 1.0f, 1.0f)
-		{}
+#define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
 
-		D2D1::ColorF& operator [](PALETTE_COLOR arg)
-		{
-			switch (arg) {
-			case BACKGROUND:
-				return background;
-			case WIDGET_BACK:
-				return widgetBack;
-			case PASSIVE:
-				return passive;
-			case ACTIVE:
-				return active;
-			case TEXT_COLOR:
-				return text;
-			}
-		}
+class Panel;
+class MainWindow;
 
-	private:
+class Parameters {
+public:
+
+	// contains all the colors which will be used by the program
+	typedef struct _appPalette
+	{
+		_appPalette();
 
 		D2D1::ColorF background;
 		D2D1::ColorF widgetBack;
 		D2D1::ColorF passive;
 		D2D1::ColorF active;
 		D2D1::ColorF text;
+	}
+	appPalette;
 
-	};
-
-	struct _stdBrushes
+	// Contains all the brushes which will be used by the program
+	typedef struct _stdBrushes
 	{
 		ID2D1SolidColorBrush* background;
 		ID2D1SolidColorBrush* preDeletion;
@@ -58,53 +59,34 @@ namespace {
 		ID2D1SolidColorBrush* active;
 		ID2D1SolidColorBrush* text;
 
-		_stdBrushes() :
-			background(NULL),
-			preDeletion(NULL),
-			widgetBack(NULL),
-			passive(NULL),
-			active(NULL),
-			text(NULL)
-		{}
+		_stdBrushes();
+		void release();
+	}
+	stdBrushes;
 
-		void release() {
-			SafeRelease(&background);
-			SafeRelease(&widgetBack);
-			SafeRelease(&passive);
-			SafeRelease(&active);
-			SafeRelease(&text);
-		}
-	};
-
-	struct _stdCursors
+	// contains all cursors which will be used by the program
+	typedef struct _stdCursors
 	{
 		HCURSOR arrow;
 		HCURSOR sizens;
 		HCURSOR sizewe;
-	};
-}
+	}
+	stdCursors;
 
-typedef struct _appPalette appPalette;   // contains all the colors which will be used by the program
-typedef struct _stdBrushes stdBrushes;   // Contains all the brushes which will be used by the program
-typedef struct _stdCursors stdCursors;   // contains all cursors which will be used by the program
+	static ID2D1Factory* pFactory;
+	static IWICImagingFactory* pWicFactory;
+	static ID2D1HwndRenderTarget* pRenderTarget;
 
-stdBrushes noBrushes; // NULL brush
+	static appPalette* pPalette;
+	static stdBrushes* pBrushes;
+	static stdCursors* pCursors;
 
-ID2D1Factory* pFactory;
-IWICImagingFactory* pWicFactory;
-ID2D1HwndRenderTarget* pRenderTarget;
+	// pointer to the active panel
+	static Panel* pAP;
 
-appPalette palette;
-stdBrushes brushes;
-stdCursors cursors;
-
-// pointer to the active panel
-Panel* pAP;
-
-// basic widget dimensions
-FLOAT edgeSpace = 2;
-FLOAT minSize = edgeSpace * 12;
-
-#include "WinMain.h"
+	// basic panel dimensions
+	const FLOAT edgeSpace = 2;
+	const FLOAT minSize = 12 * edgeSpace;
+};
 
 #endif

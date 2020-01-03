@@ -1,8 +1,9 @@
 #ifndef IMAGEBASECOMPONENT_H
 #define IMAGEBASECOMPONENT_H
 
+#ifndef WIDGETCMP_H
 #include "BaseComponent.h"
-#include <wincodec.h>
+#endif
 
 namespace WCMP {
 

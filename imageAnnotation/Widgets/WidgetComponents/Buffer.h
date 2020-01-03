@@ -3,7 +3,10 @@
 
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 
+#ifndef PARAMETERS_H
 #include <Windows.h>
+#endif
+
 #include <list>
 #include <vector>
 #include <iterator>

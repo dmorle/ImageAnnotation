@@ -1,7 +1,9 @@
 #ifndef RESTOREDOWNBUTTON_H
 #define RESTOREDOWNBUTTON_H
 
+#ifndef NCCMP_H
 #include "NCButton.h"
+#endif
 
 namespace NCCMP {
 

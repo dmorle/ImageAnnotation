@@ -1,7 +1,9 @@
 #ifndef INTERACTIVECOMPONENT_H
 #define INTERACTIVECOMPONENT_H
 
+#ifndef WIDGETCMP_H
 #include "BaseComponent.h"
+#endif
 
 #ifndef StateUpdateFunc
 

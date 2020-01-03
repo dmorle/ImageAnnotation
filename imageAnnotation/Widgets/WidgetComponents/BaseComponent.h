@@ -1,32 +1,15 @@
 #ifndef BASECOMPONENT_H
 #define BASECOMPONENT_H
 
-#include <windows.h>
-#include <windowsx.h>
-#include <d2d1.h>
-#pragma comment(lib, "d2d1")
-
-#include "../Resizable.h"
-
-#ifndef SAFERELEASE
-#define SAFERELEASE
-
-template <class T> void SafeRelease(T** ppT)
-{
-	if (*ppT)
-	{
-		(*ppT)->Release();
-		*ppT = NULL;
-	}
-}
-
+#ifndef WIDGETCMP_H
+#include "../../Parameters.h"
+#include "Resizable.h"
 #endif
-
-#define TOCOLORREF(c) RGB(c.r * 255, c.g * 255, c.b * 255)
 
 namespace WCMP {
 
-	class BaseComponent
+	class BaseComponent :
+		public Parameters
 	{
 	public:
 		BaseComponent(D2D1_RECT_F* pRc, PRECT parentpRc, Resizable* pRB);
