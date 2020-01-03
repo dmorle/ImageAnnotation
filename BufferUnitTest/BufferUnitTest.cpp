@@ -27,7 +27,7 @@ namespace BufferUnitTest
 	{
 	public:
 		stringBuffer(std::string target, std::string suffix, USHORT bufferSize)
-			: Buffer(target, suffix, bufferSize, &loadTextFile, &copyString) {}
+			: Buffer(target, suffix, bufferSize, &loadTextFile) {}
 
 	private:
 		static std::string* loadTextFile(std::wstring* pwpath)
