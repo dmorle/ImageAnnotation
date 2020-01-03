@@ -18,28 +18,33 @@ public:
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	enum class resizeInfo {
-		NONE,
-		LEFT,
-		TOP,
-		RIGHT,
-		BOTTOM
-	};
+	typedef struct _resizeInfo {
+		enum resizeEdge {
+			LEFT,
+			TOP,
+			RIGHT,
+			BOTTOM
+		};
+
+		resizeEdge edge;
+		LONG edgeDist;
+	} resizeInfo;
 
 	LONG left_off = 0;
 	LONG top_off = 27;
 	LONG right_off = 0;
 	LONG bottom_off = 0;
 
-	BOOL       isMax = FALSE;
-	resizeInfo resizingInfo = resizeInfo::NONE;
+	BOOL        isMax = FALSE;
+	resizeInfo* pResizingInfo = NULL;
+	Panel*      pMainPanel = NULL;
 
 	std::vector<NCCMP::NCButton*> ncComponents;
 
 	void	savePalette(std::string);
 	void	loadPalette(std::string);
 
-	void	CreateDefaultLayout(D2D1_SIZE_U size);
+	void	CreateDefaultLayout(LONG width, LONG height);
 
 	void	CreateNCButtons();
 	void	DiscardNCButtons();
@@ -50,15 +55,15 @@ private:
 	void    Paint();
 	void    Resize();
 	void	MouseMove(WPARAM, LPARAM);
-	void	LUp(WPARAM, LPARAM);
 	void	LDown(WPARAM, LPARAM);
-	void	RUp(WPARAM, LPARAM);
+	void	LUp(WPARAM, LPARAM);
 	void	RDown(WPARAM, LPARAM);
+	void	RUp(WPARAM, LPARAM);
 
 	void	ncPaint(WPARAM, LPARAM);
 	void	ncMoveMove(WPARAM, LPARAM);
-	void	ncLUp(WPARAM, LPARAM);
 	void	ncLDown(WPARAM, LPARAM);
+	void	ncLUp(WPARAM, LPARAM);
 
 	void	RepaintRect(PRECT pRc, BOOL erase = TRUE);
 };

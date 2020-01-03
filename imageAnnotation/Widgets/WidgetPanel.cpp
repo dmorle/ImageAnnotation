@@ -3,8 +3,8 @@
 
 
 
-WidgetPanel::WidgetPanel(Panel* pParent, PRECT pRc, BYTE pMal)
-	: Panel(pParent, pRc)
+WidgetPanel::WidgetPanel(Panel* pParent, PRECT npRc, BYTE pMal, LONG minWidth, LONG minHeight)
+	: Panel(pParent, npRc, pMal, minWidth, minHeight)
 {}
 
 WidgetPanel::~WidgetPanel()
@@ -91,31 +91,27 @@ void WidgetPanel::widgetEdit(WidgetPanel* pWidget)
 
 void WidgetPanel::display()
 {
-	D2D1_RECT_F r
+	RECT rc
 	{
 		pRc->left + edgeSpace,
 		pRc->top + edgeSpace,
 		pRc->right - edgeSpace,
 		pRc->bottom - edgeSpace
 	};
-	pRenderTarget->FillRectangle(r, pBrushes->widgetBack);
+	pParent->getGlobalRect(&rc);
+
+	pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->widgetBack);
 
 	for (int i = 0; i < 3; i++)
 		pRenderTarget->DrawLine(
-			{ r.right - 2 * edgeSpace * (i + 2), r.bottom - 2 * edgeSpace },
-			{ r.right - 2 * edgeSpace, r.bottom - 2 * edgeSpace * (i + 2) },
+			{ (FLOAT)(rc.right - 2 * edgeSpace * (i + 2)), (FLOAT)(rc.bottom - 2 * edgeSpace) },
+			{ (FLOAT)(rc.right - 2 * edgeSpace), (FLOAT)(rc.bottom - 2 * edgeSpace * (i + 2)) },
 			pBrushes->active
 		);
 
 	/*
 		Displaying the widget components for a standard widget
 	*/
-	D2D1_RECT_F rc{
-		pRc->left,
-		pRc->top,
-		pRc->right,
-		pRc->bottom
-	};
 	for (auto& e : cmp)
 		e->display(pRenderTarget);
 }

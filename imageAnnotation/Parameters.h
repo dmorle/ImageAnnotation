@@ -85,8 +85,8 @@ public:
 	static Panel* pAP;
 
 	// basic panel dimensions
-	const FLOAT edgeSpace = 2;
-	const FLOAT minSize = 12 * edgeSpace;
+	const LONG edgeSpace = 2;
+	const LONG minSize = 12 * edgeSpace;
 };
 
 #endif

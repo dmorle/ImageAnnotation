@@ -58,7 +58,8 @@ public:
 	virtual BYTE getPanelMaliability() = 0;
 
 protected:
-	Panel();
+	// creates a Panel from scratch
+	Panel(Panel* pParent, PRECT npRc, BYTE pMal, LONG minWidth, LONG minHeight);
 
 	// copies the contents of pThis
 	Panel(Panel* pThis, PRECT npRc);
@@ -78,6 +79,7 @@ protected:
 	LONG minWidth;
 	LONG minHeight;
 
+public:
 	// give npRc in panel coordinates
 	// initializes npRc with the global coordinates of the rectangle
 	void getGlobalRect(PRECT npRc);

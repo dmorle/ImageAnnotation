@@ -9,7 +9,7 @@ class WidgetPanel :
 	public Panel
 {
 public:
-	WidgetPanel(Panel* pParent, PRECT pRc, BYTE pMal);
+	WidgetPanel(Panel* pParent, PRECT pRc, BYTE pMal, LONG minWidth, LONG minHeight);
 
 	~WidgetPanel();
 

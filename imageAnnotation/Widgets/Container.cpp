@@ -7,9 +7,8 @@ Container::pResizeInfo Container::pResizingInfo = NULL;
 BOOL Container::f_widgetEdit = FALSE;
 
 Container::Container(Panel* pParent, PRECT npRc)
+	: Panel(pParent, npRc, 0, 0, 0)
 {
-	this->pParent = pParent;
-	this->pRc = npRc;
 	this->orientation = PANEL_ORIENTATION::NONE;
 }
 
@@ -25,16 +24,46 @@ Container::~Container()
 
 void Container::addPanel(Panel* npPanel)
 {
-	// TODO : determine an orientation and append the panel components
-	this->cmp.push_back(npPanel);
-	if (orientation == PANEL_ORIENTATION::NONE) {
-		if (
-			!( (pRc->right - pRc->left) - (npPanel->getRight() - npPanel->getLeft()) )
-			)
+	switch (orientation) {
+	case PANEL_ORIENTATION::NONE:
+		if (!((pRc->right - pRc->left) -
+			(npPanel->getRight() - npPanel->getLeft())))
 			this->orientation = PANEL_ORIENTATION::VERTICAL;
 		else
 			this->orientation = PANEL_ORIENTATION::HORIZONTAL;
+
+		minWidth = npPanel->getMinWidth();
+		minHeight = npPanel->getMinHeight();
+		break;
+	case PANEL_ORIENTATION::HORIZONTAL:
+		if (!((pRc->bottom - pRc->top) -
+			(npPanel->getBottom() - npPanel->getTop()))) {
+			minWidth += npPanel->getMinWidth();
+			minHeight = max(minHeight, npPanel->getMinHeight());
+		}
+		else if (cmp.size() == 1) {
+			orientation = PANEL_ORIENTATION::VERTICAL;
+			minWidth = max(minWidth, npPanel->getMinWidth());
+			minHeight += npPanel->getMinHeight();
+		}
+		else
+			return;
+		break;
+	case PANEL_ORIENTATION::VERTICAL:
+		if (!((pRc->right - pRc->left) -
+			(npPanel->getRight() - npPanel->getLeft()))) {
+			minWidth = max(minWidth, npPanel->getMinWidth());
+			minHeight += npPanel->getMinHeight();
+		}
+		else if (cmp.size() == 1) {
+			orientation = PANEL_ORIENTATION::HORIZONTAL;
+			minWidth += npPanel->getMinWidth();
+			minHeight = max(minHeight, npPanel->getMinHeight());
+		}
+		break;
 	}
+
+	this->cmp.push_back(npPanel);
 }
 
 void Container::MouseMove(const WPARAM& wparam, const POINT& p)
@@ -94,7 +123,8 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 	}
 	else {
 		if (!contains(p))
-			pParent->MouseMove(wparam, p);
+			if (pParent)
+				pParent->MouseMove(wparam, p);
 
 		else {
 			for (auto& e : cmp)
@@ -109,7 +139,8 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 	assert(orientation != PANEL_ORIENTATION::NONE);
 
 	if (!contains(p) || onBorder(p))
-		pParent->LDown(wparam, p);
+		if (pParent)
+			pParent->LDown(wparam, p);
 
 	// checking for a resize event
 	if (orientation == PANEL_ORIENTATION::VERTICAL) {
@@ -176,7 +207,8 @@ void Container::LUp(const WPARAM& wparam, const POINT& p)
 	}
 	else {
 		if (!contains(p))
-			pParent->LUp(wparam, p);
+			if (pParent)
+				pParent->LUp(wparam, p);
 
 		// TODO: check for border or panel resizing
 
@@ -198,19 +230,19 @@ void Container::resizeX(LONG left, LONG right)
 			// increase the size of the panel with the lowest maliability
 
 			// finding the panel with lowest maliability
-			Panel* pLowMalPanel = cmp[0];
+			Panel* pHighMalPanel = cmp[0];
 			for (auto& e : cmp)
-				if (e->getPanelMaliability() < pLowMalPanel->getPanelMaliability())
-					pLowMalPanel = e;
+				if (e->getPanelMaliability() > pHighMalPanel->getPanelMaliability())
+					pHighMalPanel = e;
 
 			// getting all elements right of the above element
 			std::vector<Panel*> pPanels;
 			for (auto& e : cmp)
-				if (e->getLeft() >= pLowMalPanel->getRight())
+				if (e->getLeft() >= pHighMalPanel->getRight())
 					pPanels.push_back(e);
 
 			// adjusting all components
-			pLowMalPanel->resizeX(pLowMalPanel->getLeft(), pLowMalPanel->getRight() + dWidth);
+			pHighMalPanel->resizeX(pHighMalPanel->getLeft(), pHighMalPanel->getRight() + dWidth);
 			for (auto& e : pPanels)
 				e->transX(dWidth);
 		}
@@ -239,13 +271,13 @@ void Container::resizeX(LONG left, LONG right)
 
 			// resizing the components
 			for (auto& e : cmp) {
-				// getting all elements right of e
+				// getting all panels right of e
 				std::vector<Panel*> pPanels;
 				for (auto& e1 : cmp)
 					if (e1->getLeft() >= e->getRight())
 						pPanels.push_back(e1);
 
-				// adjusting the e and pPanels
+				// adjusting e and pPanels
 				if (e->getMinWidth() <= e->getRight() - e->getLeft() + dWidth) {
 					// last resize needed, resize by dWidth
 					e->resizeX(e->getLeft(), e->getRight() + dWidth);
@@ -256,10 +288,11 @@ void Container::resizeX(LONG left, LONG right)
 				}
 				else {
 					// resize e to the minWidth and update dWidth
-					dWidth += e->getMinWidth();
+					LONG ddWidth = e->getMinWidth() - e->getRight() + e->getLeft();
+					dWidth -= ddWidth;
 					e->resizeX(e->getLeft(), e->getLeft() + e->getMinWidth());
 					for (auto& e1 : pPanels)
-						e1->transX(e->getMinWidth());
+						e1->transX(ddWidth);
 				}
 			}
 		}
@@ -267,15 +300,18 @@ void Container::resizeX(LONG left, LONG right)
 	else {
 		// vertical orientation => trivial resizing
 		for (auto& e : cmp)
-			e->resizeX(left, right);
+			e->resizeX(0, right - left);
 	}
+
+	pRc->left = left;
+	pRc->right = right;
 }
 
 void Container::resizeY(LONG top, LONG bottom)
 {
 	assert(orientation != PANEL_ORIENTATION::NONE);
 
-	if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+	if (orientation == PANEL_ORIENTATION::VERTICAL) {
 		// vertical orientation
 		LONG dHeight = (bottom - top) - (pRc->bottom - pRc->top);
 
@@ -283,19 +319,19 @@ void Container::resizeY(LONG top, LONG bottom)
 			// increase the size of the panel with the lowest maliability
 
 			// finding the panel with lowest maliability
-			Panel* pLowMalPanel = cmp[0];
+			Panel* pHighMalPanel = cmp[0];
 			for (auto& e : cmp)
-				if (e->getPanelMaliability() < pLowMalPanel->getPanelMaliability())
-					pLowMalPanel = e;
+				if (e->getPanelMaliability() > pHighMalPanel->getPanelMaliability())
+					pHighMalPanel = e;
 
 			// getting all elements right of the above element
 			std::vector<Panel*> pPanels;
 			for (auto& e : cmp)
-				if (e->getTop() >= pLowMalPanel->getBottom())
+				if (e->getTop() >= pHighMalPanel->getBottom())
 					pPanels.push_back(e);
 
 			// adjusting all components
-			pLowMalPanel->resizeY(pLowMalPanel->getTop(), pLowMalPanel->getBottom() + dHeight);
+			pHighMalPanel->resizeY(pHighMalPanel->getTop(), pHighMalPanel->getBottom() + dHeight);
 			for (auto& e : pPanels)
 				e->transY(dHeight);
 		}
@@ -341,10 +377,11 @@ void Container::resizeY(LONG top, LONG bottom)
 				}
 				else {
 					// resize e to the minWidth and update dWidth
-					dHeight += e->getMinHeight();
+					LONG ddHeight = e->getMinHeight() - e->getBottom() + e->getTop();
+					dHeight -= ddHeight;
 					e->resizeY(e->getTop(), e->getTop() + e->getMinHeight());
 					for (auto& e1 : pPanels)
-						e1->transY(e->getMinHeight());
+						e1->transY(ddHeight);
 				}
 			}
 		}
@@ -352,8 +389,11 @@ void Container::resizeY(LONG top, LONG bottom)
 	else {
 		// horizontal orientation => trivial resizing
 		for (auto& e : cmp)
-			e->resizeX(top, bottom);
+			e->resizeY(0, bottom - top);
 	}
+
+	pRc->top = top;
+	pRc->bottom = bottom;
 }
 
 void Container::widgetEdit(WidgetPanel* pWidget)
@@ -377,7 +417,7 @@ BYTE Container::getPanelMaliability()
 	pMal = cmp[0]->getPanelMaliability();
 	for (auto& e : cmp) {
 		BYTE npMal = e->getPanelMaliability();
-		if (npMal > pMal)
+		if (npMal < pMal)
 			pMal = npMal;
 	}
 	return pMal;

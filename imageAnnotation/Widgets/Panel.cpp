@@ -3,10 +3,13 @@
 
 
 
-Panel::Panel()
+Panel::Panel(Panel* pParent, PRECT npRc, BYTE pMal, LONG minWidth, LONG minHeight)
 {
-	this->pParent = NULL;
-	this->pRc = NULL;
+	this->pParent = pParent;
+	this->pRc = npRc;
+	this->pMal = pMal;
+	this->minWidth = minWidth;
+	this->minHeight = minHeight;
 }
 
 Panel::Panel(Panel* pThis, PRECT npRc)

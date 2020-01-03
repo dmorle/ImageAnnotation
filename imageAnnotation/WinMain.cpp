@@ -68,12 +68,22 @@ void MainWindow::loadPalette(std::string path)
 
 }
 
-void MainWindow::CreateDefaultLayout(D2D1_SIZE_U size)
+void MainWindow::CreateDefaultLayout(LONG width, LONG height)
 {
-	Container* widgetContainer = new Container(NULL, new RECT{ 0, 0, (LONG)size.width, (LONG)size.height });
-	widgetContainer->addPanel(new WidgetPanel(widgetContainer, new RECT{ 0, 0, (LONG)size.width, (LONG)size.height }, 1));
+	Container* widgetContainer = new Container(NULL, new RECT{ edgeSpace, edgeSpace, width - edgeSpace, height - edgeSpace - top_off });
 
-	pAP = widgetContainer;
+	width -= 2 * edgeSpace;
+	height -= 2 * edgeSpace + top_off;
+
+	widgetContainer->addPanel(new WidgetPanel(widgetContainer, new RECT{ 0, 0, width - 600, height }, 1, 300, 100));
+
+	Container* rightContainer = new Container(widgetContainer, new RECT{ width - 600, 0, width, height });
+	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 0, 600, 300 }, 2, 300, 100));
+	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 300, 600, height }, 3, 200, 100));
+
+	widgetContainer->addPanel(rightContainer);
+
+	pAP = pMainPanel = widgetContainer;
 }
 
 void MainWindow::CreateNCButtons()
@@ -274,7 +284,8 @@ HRESULT MainWindow::CreateGraphicsResources()
 		hr = pFactory->CreateHwndRenderTarget(
 			D2D1::RenderTargetProperties(),
 			D2D1::HwndRenderTargetProperties(m_hwnd, size),
-			&pRenderTarget);
+			&pRenderTarget
+		);
 	}
 
 	if (!pBrushes)
@@ -344,7 +355,7 @@ void MainWindow::Paint()
 		pRenderTarget->BeginDraw();
 
 		pRenderTarget->Clear(pPalette->background);
-		pAP->display();
+		pMainPanel->display();
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -359,7 +370,8 @@ void MainWindow::Resize()
 {
 	RECT rect;
 	HRGN rgn;
-	GetWindowRect(m_hwnd, &rect);
+	BOOL result = GetWindowRect(m_hwnd, &rect);
+	assert(result);
 	rgn = CreateRectRgn(0, 0, rect.right, rect.bottom);
 	SetWindowRgn(m_hwnd, rgn, TRUE);
 	DeleteObject(rgn);
@@ -369,15 +381,15 @@ void MainWindow::Resize()
 		D2D1_RECT_L rc;
 		GetClientRect(m_hwnd, &rc);
 
-		D2D1_SIZE_U size = D2D1_SIZE_U{ (UINT32)rc.right, (UINT32)rc.bottom };
+		D2D1_SIZE_U size{ (UINT32)rc.right, (UINT32)rc.bottom };
 
 		if (!pAP)
-			CreateDefaultLayout(size);
+			CreateDefaultLayout(rc.right, rc.bottom);
 
 		pRenderTarget->Resize(size);
 
-		pAP->resizeX(0, size.width);
-		pAP->resizeY(0, size.height);
+		pMainPanel->resizeX(edgeSpace, rc.right - edgeSpace);
+		pMainPanel->resizeY(edgeSpace, rc.bottom - edgeSpace);
 
 		InvalidateRect(m_hwnd, NULL, FALSE);
 	}
@@ -390,15 +402,15 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
 	// client region code
-	if (resizingInfo == resizeInfo::NONE) {
+	if (!pResizingInfo) {
 		// TODO: figure out a way to handle top resizing
 		if (
-			p.x < edgeSpace ||
-			p.x > pRenderTarget->GetSize().width - edgeSpace
+			p.x <= 2 * edgeSpace ||
+			p.x >= pRenderTarget->GetSize().width - 2 * edgeSpace
 			)
 			SetCursor(pCursors->sizewe);
 		else if (
-			p.y > pRenderTarget->GetSize().height - edgeSpace
+			p.y >= pRenderTarget->GetSize().height - 2 * edgeSpace
 			)
 			SetCursor(pCursors->sizens);
 		else
@@ -407,30 +419,26 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 	else {
 		RECT rc;
 		BOOL result = GetWindowRect(m_hwnd, &rc);
-		assert(!result);
+		assert(result);
 		SIZE size{ rc.right - rc.left, rc.bottom - rc.top };
 
 		LONG nDim;
-		switch (resizingInfo) {
+		switch (pResizingInfo->edge) {
 		case resizeInfo::LEFT:
-			nDim = max(size.cx - p.x, pAP->getMinWidth());
-			pAP->resizeX(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
+			nDim = max(size.cx - p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			SetWindowPos(m_hwnd, NULL, rc.right - nDim, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::TOP:
-			nDim = max(size.cy - p.y, pAP->getMinHeight());
-			pAP->resizeY(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
+			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			SetWindowPos(m_hwnd, NULL, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
 			break;
 		case resizeInfo::RIGHT:
-			nDim = max(p.x, pAP->getMinWidth());
-			pAP->resizeX(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
+			nDim = max(p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			SetWindowPos(m_hwnd, NULL, rc.left, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::BOTTOM:
-			nDim = max(p.y, pAP->getMinHeight());
-			pAP->resizeY(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
+			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			SetWindowPos(m_hwnd, NULL, rc.left, rc.top, size.cx, nDim, NULL);
 			break;
 		}
 	}
@@ -448,65 +456,26 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 			SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
-{
-	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
-	
-	if (resizingInfo == resizeInfo::NONE) {
-		SetCursor(pCursors->arrow);
-		pAP->LUp(wparam, p);
-	}
-	else {
-		RECT rc;
-		BOOL result = GetWindowRect(m_hwnd, &rc);
-		assert(!result);
-		SIZE size{ rc.right - rc.left, rc.bottom - rc.top };
-
-		LONG nDim;
-		switch (resizingInfo) {
-		case resizeInfo::LEFT:
-			nDim = max(size.cx - p.x, pAP->getMinWidth());
-			pAP->resizeX(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
-			break;
-		case resizeInfo::TOP:
-			nDim = max(size.cy - p.y, pAP->getMinHeight());
-			pAP->resizeY(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
-			break;
-		case resizeInfo::RIGHT:
-			nDim = max(p.x, pAP->getMinWidth());
-			pAP->resizeX(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
-			break;
-		case resizeInfo::BOTTOM:
-			nDim = max(p.y, pAP->getMinHeight());
-			pAP->resizeY(0, nDim);
-			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
-			break;
-		}
-
-		resizingInfo = resizeInfo::NONE;
-	}
-}
-
 void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 {
 	POINT p{ GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
 	// checking for window resizing
 	// TODO: figure out a way to handle top resizing
-	if (p.x < edgeSpace) {
+	if (p.x <= 2 * edgeSpace) {
+		pResizingInfo = new resizeInfo{ resizeInfo::LEFT, p.x };
+		SetCapture(m_hwnd);
 		SetCursor(pCursors->sizewe);
-		resizingInfo = resizeInfo::LEFT;
 	}
-	else if (p.x > pRenderTarget->GetSize().width - edgeSpace) {
+	else if (p.x >= pRenderTarget->GetSize().width - 2 * edgeSpace) {
+		pResizingInfo = new resizeInfo{ resizeInfo::RIGHT, (LONG)pRenderTarget->GetSize().width - p.x };
+		SetCapture(m_hwnd);
+		SetCursor(pCursors->sizewe);
+	}
+	else if (p.y >= pRenderTarget->GetSize().height - 2 * edgeSpace) {
+		pResizingInfo = new resizeInfo{ resizeInfo::BOTTOM, (LONG)pRenderTarget->GetSize().height + top_off - p.y };
+		SetCapture(m_hwnd);
 		SetCursor(pCursors->sizens);
-		resizingInfo = resizeInfo::RIGHT;
-	}
-	else if (p.y > pRenderTarget->GetSize().height - edgeSpace) {
-		SetCursor(pCursors->sizewe);
-		resizingInfo = resizeInfo::BOTTOM;
 	}
 
 	// normal functionality
@@ -516,11 +485,51 @@ void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 	}
 }
 
-void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
+void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 {
+	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
+	
+	if (!pResizingInfo) {
+		SetCursor(pCursors->arrow);
+		pAP->LUp(wparam, p);
+	}
+	else {
+		RECT rc;
+		BOOL result = GetWindowRect(m_hwnd, &rc);
+		assert(result);
+		SIZE size{ rc.right - rc.left, rc.bottom - rc.top };
+
+		LONG nDim;
+		switch (pResizingInfo->edge) {
+		case resizeInfo::LEFT:
+			nDim = max(size.cx - p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
+			break;
+		case resizeInfo::TOP:
+			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
+			break;
+		case resizeInfo::RIGHT:
+			nDim = max(p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
+			break;
+		case resizeInfo::BOTTOM:
+			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
+			break;
+		}
+
+		delete pResizingInfo;
+		pResizingInfo = NULL;
+		ReleaseCapture();
+	}
 }
 
 void MainWindow::RDown(WPARAM wparam, LPARAM lparam)
+{
+}
+
+void MainWindow::RUp(WPARAM wparam, LPARAM lparam)
 {
 }
 
@@ -591,11 +600,6 @@ void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
 		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
 }
 
-void MainWindow::RepaintRect(PRECT pRc, BOOL erase)
-{
-	InvalidateRect(m_hwnd, pRc, erase);
-}
-
 void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
 {
 	RECT rcWin;
@@ -608,6 +612,11 @@ void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
 
 	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
 		SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+}
+
+void MainWindow::RepaintRect(PRECT pRc, BOOL erase)
+{
+	InvalidateRect(m_hwnd, pRc, erase);
 }
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
