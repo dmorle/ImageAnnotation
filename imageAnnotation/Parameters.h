@@ -87,6 +87,8 @@ public:
 	// basic panel dimensions
 	const LONG edgeSpace = 2;
 	const LONG minSize = 12 * edgeSpace;
+
+	static BOOL fullPaint;
 };
 
 #endif

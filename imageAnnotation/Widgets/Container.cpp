@@ -68,69 +68,119 @@ void Container::addPanel(Panel* npPanel)
 
 void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 {
+	POINT np(p);
+	getLocalPoint(&np);
+	// np is now in local coordinates
+
 	if (pResizingInfo) {
 		assert(orientation != PANEL_ORIENTATION::NONE);
 
+		LONG nloc;
 		if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
 			// horizontal orientation
+			SetCursor(pCursors->sizewe);
 
-			if (p.y - pResizingInfo->p1->getLeft() < pResizingInfo->p1->getMinWidth()) {
+			if (np.x - pResizingInfo->p1->getLeft() < pResizingInfo->p1->getMinWidth())
 				// min width for p1
-				LONG nloc = pResizingInfo->p1->getLeft() + pResizingInfo->p1->getMinWidth();
-
-				pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), nloc);
-				pResizingInfo->p2->resizeX(nloc, pResizingInfo->p2->getRight());
-			}
-			else if (pResizingInfo->p2->getRight() - p.y > pResizingInfo->p2->getMinWidth()) {
+				nloc = pResizingInfo->p1->getLeft() + pResizingInfo->p1->getMinWidth();
+			else if (pResizingInfo->p2->getRight() - np.x < pResizingInfo->p2->getMinWidth())
 				// min width for p2
-				LONG nloc = pResizingInfo->p2->getRight() - pResizingInfo->p2->getMinWidth();
-
-				pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), nloc);
-				pResizingInfo->p2->resizeX(nloc, pResizingInfo->p2->getRight());
-			}
-			else {
+				nloc = pResizingInfo->p2->getRight() - pResizingInfo->p2->getMinWidth();
+			else
 				// regular resizing
-				pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), p.x);
-				pResizingInfo->p2->resizeX(p.x, pResizingInfo->p2->getRight());
-			}
+				nloc = np.x;
+
+			pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), nloc);
+			pResizingInfo->p2->resizeX(nloc, pResizingInfo->p2->getRight());
 		}
 		else {
 			// vertical orientation
+			SetCursor(pCursors->sizens);
 
-			if (p.x - pResizingInfo->p1->getTop() < pResizingInfo->p1->getMinHeight()) {
-				// min width for p1
-				LONG nloc = pResizingInfo->p1->getTop() + pResizingInfo->p1->getMinHeight();
-
-				pResizingInfo->p1->resizeY(pResizingInfo->p1->getTop(), nloc);
-				pResizingInfo->p2->resizeY(nloc, pResizingInfo->p2->getBottom());
-			}
-			else if (pResizingInfo->p2->getBottom() - p.y > pResizingInfo->p2->getMinHeight()) {
-				// min width for p2
-				LONG nloc = pResizingInfo->p2->getBottom() - pResizingInfo->p2->getMinHeight();
-
-				pResizingInfo->p1->resizeY(pResizingInfo->p1->getTop(), nloc);
-				pResizingInfo->p2->resizeY(nloc, pResizingInfo->p2->getBottom());
-			}
-			else {
+			if (np.y - pResizingInfo->p1->getTop() < pResizingInfo->p1->getMinHeight())
+				// min height for p1
+				nloc = pResizingInfo->p1->getTop() + pResizingInfo->p1->getMinHeight();
+			else if (pResizingInfo->p2->getBottom() - np.y < pResizingInfo->p2->getMinHeight())
+				// min height for p2
+				nloc = pResizingInfo->p2->getBottom() - pResizingInfo->p2->getMinHeight();
+			else
 				// regular resizing
-				pResizingInfo->p1->resizeY(pResizingInfo->p1->getTop(), p.y);
-				pResizingInfo->p2->resizeY(p.y, pResizingInfo->p2->getBottom());
-			}
+				nloc = np.y;
+
+			pResizingInfo->p1->resizeY(pResizingInfo->p1->getTop(), nloc);
+			pResizingInfo->p2->resizeY(nloc, pResizingInfo->p2->getBottom());
 		}
+		
+		RECT nRc(*pRc);
+		if (pParent)
+			pParent->getGlobalRect(&nRc);
+
+		InvalidateRect(NULL, &nRc, FALSE);
 	}
 	else if (f_widgetEdit) {
 		// TODO: come up with a widget splitting / merging system to work with the new widget system
 	}
 	else {
-		if (!contains(p))
-			if (pParent)
+		if (!contains(p) || onBorder(p))
+			if (pParent) {
+				pAP = pParent;
 				pParent->MouseMove(wparam, p);
+				return;
+			}
 
-		else {
-			for (auto& e : cmp)
-				if (e->contains(p))
-					e->MouseMove(wparam, p);
+		// checking for a resize event
+		if (orientation == PANEL_ORIENTATION::VERTICAL) {
+			Panel* topPanel = NULL;
+			Panel* bottomPanel = NULL;
+			for (auto& e : cmp) {
+				if (
+					!bottomPanel &&
+					e->getTop() - edgeSpace < np.y &&
+					e->getTop() + edgeSpace > np.y
+					)
+					bottomPanel = e;
+				else if (topPanel)
+					break;	// both panels have been found
+				if (
+					e->getBottom() - edgeSpace < np.y &&
+					e->getBottom() + edgeSpace > np.y
+					)
+					topPanel = e;
+			}
+			if (topPanel) {
+				assert(bottomPanel);
+				SetCursor(pCursors->sizens);
+			}
 		}
+		else {
+			Panel* leftPanel = NULL;
+			Panel* rightPanel = NULL;
+			for (auto& e : cmp) {
+				if (
+					!rightPanel &&
+					e->getLeft() - edgeSpace < np.x &&
+					e->getLeft() + edgeSpace > np.x
+					)
+					rightPanel = e;
+				else if (leftPanel)
+					break;
+				if (
+					e->getRight() - edgeSpace < np.x &&
+					e->getRight() + edgeSpace > np.x
+					)
+					leftPanel = e;
+			}
+			if (leftPanel) {
+				assert(rightPanel);
+				SetCursor(pCursors->sizewe);
+			}
+		}
+
+		for (auto& e : cmp)
+			if (e->contains(np, TRUE) && !e->onBorder(np, TRUE)) {
+				pAP = e;
+				e->MouseMove(wparam, p);
+			}
 	}
 }
 
@@ -138,9 +188,16 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 {
 	assert(orientation != PANEL_ORIENTATION::NONE);
 
-	if (!contains(p) || onBorder(p))
-		if (pParent)
+	if (!contains(p))
+		if (pParent) {
+			pAP = pParent;
 			pParent->LDown(wparam, p);
+			return;
+		}
+
+	POINT np(p);
+	getLocalPoint(&np);
+	// np is now in local coordinates
 
 	// checking for a resize event
 	if (orientation == PANEL_ORIENTATION::VERTICAL) {
@@ -148,67 +205,121 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 		Panel* bottomPanel = NULL;
 		for (auto& e : cmp) {
 			if (
-				!topPanel &&
-				e->getTop() - edgeSpace < p.y &&
-				e->getTop() + edgeSpace > p.y
-				)
-				topPanel = e;
-			else if (bottomPanel)
-				break;	// both panels have been found
-			if (
-				e->getBottom() - edgeSpace < p.y &&
-				e->getBottom() + edgeSpace > p.y
+				!bottomPanel &&
+				e->getTop() - edgeSpace < np.y &&
+				e->getTop() + edgeSpace > np.y
 				)
 				bottomPanel = e;
+			else if (topPanel)
+				break;	// both panels have been found
+			if (
+				e->getBottom() - edgeSpace < np.y &&
+				e->getBottom() + edgeSpace > np.y
+				)
+				topPanel = e;
 		}
 		if (topPanel) {
 			assert(bottomPanel);
+			SetCursor(pCursors->sizens);
 			pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
 			return;
 		}
 	}
-	else if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+	else {
 		Panel* leftPanel = NULL;
 		Panel* rightPanel = NULL;
 		for (auto& e : cmp) {
 			if (
-				!leftPanel &&
-				e->getLeft() - edgeSpace < p.x &&
-				e->getLeft() + edgeSpace > p.x
-				)
-				leftPanel = e;
-			else if (rightPanel)
-				break;
-			if (
-				e->getRight() - edgeSpace < p.x &&
-				e->getRight() + edgeSpace > p.x
+				!rightPanel &&
+				e->getLeft() - edgeSpace < np.x &&
+				e->getLeft() + edgeSpace > np.x
 				)
 				rightPanel = e;
+			else if (leftPanel)
+				break;
+			if (
+				e->getRight() - edgeSpace < np.x &&
+				e->getRight() + edgeSpace > np.x
+				)
+				leftPanel = e;
 		}
 		if (leftPanel) {
 			assert(rightPanel);
+			SetCursor(pCursors->sizewe);
 			pResizingInfo = new resizeInfo{ leftPanel, rightPanel };
 			return;
 		}
 	}
 
 	for (auto& e : cmp)
-		if (e->contains(p))
+		if (e->contains(np, TRUE))
 			e->LDown(wparam, p);
 }
 
 void Container::LUp(const WPARAM& wparam, const POINT& p)
 {
+	POINT np(p);
+	getLocalPoint(&np);
+	// np is now in local coordinates
+
 	if (pResizingInfo) {
-		// TODO: release the resources used for panel resizing
+		assert(orientation != PANEL_ORIENTATION::NONE);
+
+		LONG nloc;
+		if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+			// horizontal orientation
+			SetCursor(pCursors->sizewe);
+
+			if (np.x - pResizingInfo->p1->getLeft() < pResizingInfo->p1->getMinWidth())
+				// min width for p1
+				nloc = pResizingInfo->p1->getLeft() + pResizingInfo->p1->getMinWidth();
+			else if (pResizingInfo->p2->getRight() - np.x < pResizingInfo->p2->getMinWidth())
+				// min width for p2
+				nloc = pResizingInfo->p2->getRight() - pResizingInfo->p2->getMinWidth();
+			else
+				// regular resizing
+				nloc = np.x;
+
+			pResizingInfo->p1->resizeX(pResizingInfo->p1->getLeft(), nloc);
+			pResizingInfo->p2->resizeX(nloc, pResizingInfo->p2->getRight());
+		}
+		else {
+			// vertical orientation
+			SetCursor(pCursors->sizens);
+
+			if (np.y - pResizingInfo->p1->getTop() < pResizingInfo->p1->getMinHeight())
+				// min height for p1
+				nloc = pResizingInfo->p1->getTop() + pResizingInfo->p1->getMinHeight();
+			else if (pResizingInfo->p2->getBottom() - np.y < pResizingInfo->p2->getMinHeight())
+				// min height for p2
+				nloc = pResizingInfo->p2->getBottom() - pResizingInfo->p2->getMinHeight();
+			else
+				// regular resizing
+				nloc = np.y;
+
+			pResizingInfo->p1->resizeY(pResizingInfo->p1->getTop(), nloc);
+			pResizingInfo->p2->resizeY(nloc, pResizingInfo->p2->getBottom());
+		}
+
+		RECT nRc(*pRc);
+		if (pParent)
+			pParent->getGlobalRect(&nRc);
+
+		InvalidateRect(NULL, &nRc, FALSE);
+
+		delete pResizingInfo;
+		pResizingInfo = NULL;
 	}
 	else if (f_widgetEdit) {
 
 	}
 	else {
 		if (!contains(p))
-			if (pParent)
+			if (pParent) {
+				pAP = pParent;
 				pParent->LUp(wparam, p);
+				return;
+			}
 
 		// TODO: check for border or panel resizing
 

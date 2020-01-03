@@ -19,27 +19,28 @@ WidgetPanel* WidgetPanel::operator>>(WCMP::BaseComponent* npCmp)
 	return this;
 }
 
-BYTE WidgetPanel::getPanelMaliability()
-{
-	return pMal;
-}
-
 void WidgetPanel::MouseMove(const WPARAM& wparam, const POINT& p)
 {
-	if (!contains(p))
+	POINT np(p);
+	pParent->getLocalPoint(&np);
+	// np is now in pParent coordinates
+
+	if (!contains(np, TRUE) || onBorder(np, TRUE)) {
+		pAP = pParent;
 		pParent->MouseMove(wparam, p);
+		return;
+	}
 
-	else {
-		// passing action to components
-		POINT np(p);
-		getLocalPoint(&np);
+	// passing action to components
+	np.x -= pRc->left;
+	np.y -= pRc->top;
+	// np is now in local coordinates
 
-		for (auto& e : cmp) {
-			if (e->contains(np))
-				e->MouseMove(np);
-			else
-				e->MouseLeave();
-		}
+	for (auto& e : cmp) {
+		if (e->contains(np))
+			e->MouseMove(np);
+		else
+			e->MouseLeave();
 	}
 }
 
@@ -91,6 +92,12 @@ void WidgetPanel::widgetEdit(WidgetPanel* pWidget)
 
 void WidgetPanel::display()
 {
+	if (!fullPaint) {
+		RECT r(*pRc);
+		pParent->getGlobalRect(&r);
+		pRenderTarget->FillRectangle(TOD2DRECTF(r), pBrushes->background);
+	}
+
 	RECT rc
 	{
 		pRc->left + edgeSpace,
@@ -114,4 +121,9 @@ void WidgetPanel::display()
 	*/
 	for (auto& e : cmp)
 		e->display(pRenderTarget);
+}
+
+BYTE WidgetPanel::getPanelMaliability()
+{
+	return pMal;
 }

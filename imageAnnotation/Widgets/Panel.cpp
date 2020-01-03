@@ -38,18 +38,17 @@ BOOL Panel::contains(const POINT& p, BOOL localCrds)
 
 		return FALSE;
 	}
-	else {
-		POINT np(p);
-		getLocalPoint(&np);
+	POINT np(p);
+	if (pParent)
+		pParent->getLocalPoint(&np);
 
-		if (
-			np.x >= pRc->left && np.x < pRc->right &&
-			np.y >= pRc->top && np.y < pRc->bottom
-			)
-			return TRUE;
+	if (
+		np.x >= pRc->left && np.x < pRc->right &&
+		np.y >= pRc->top && np.y < pRc->bottom
+		)
+		return TRUE;
 
-		return FALSE;
-	}
+	return FALSE;
 }
 
 BOOL Panel::isValid()
@@ -70,13 +69,28 @@ BOOL Panel::isValid()
 	return FALSE;
 }
 
-BOOL Panel::onBorder(const POINT& p)
+BOOL Panel::onBorder(const POINT& p, BOOL localCrds)
 {
+	if (localCrds) {
+		if (
+			p.x < pRc->left + edgeSpace ||	// check left
+			p.y < pRc->top + edgeSpace ||   // check top
+			p.x > pRc->right - edgeSpace || // check right
+			p.y > pRc->bottom - edgeSpace   // check bottom
+			)
+			return TRUE;
+
+		return FALSE;
+	}
+	POINT np(p);
+	if (pParent)
+		pParent->getLocalPoint(&np);
+
 	if (
-		p.x < pRc->left + edgeSpace ||	// check left
-		p.y < pRc->top + edgeSpace ||   // check top
-		p.x > pRc->right - edgeSpace || // check right
-		p.y > pRc->bottom - edgeSpace   // check bottom
+		np.x < pRc->left + edgeSpace ||  // check left
+		np.y < pRc->top + edgeSpace ||   // check top
+		np.x > pRc->right - edgeSpace || // check right
+		np.y > pRc->bottom - edgeSpace   // check bottom
 		)
 		return TRUE;
 

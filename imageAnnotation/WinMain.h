@@ -35,11 +35,13 @@ private:
 	LONG right_off = 0;
 	LONG bottom_off = 0;
 
+	LONG minNCWidth;
+
 	BOOL        isMax = FALSE;
 	resizeInfo* pResizingInfo = NULL;
 	Panel*      pMainPanel = NULL;
 
-	std::vector<NCCMP::NCButton*> ncComponents;
+	std::vector<NCCMP::NCButton*> ncCmp;
 
 	void	savePalette(std::string);
 	void	loadPalette(std::string);

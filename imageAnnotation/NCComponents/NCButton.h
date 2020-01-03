@@ -79,6 +79,8 @@ namespace NCCMP {
 		void mousemove(POINT p);
 		BOOL mouseleave();
 
+		void setTrans(LONG dist);
+
 		virtual void display(HDC hdc);
 
 	protected:

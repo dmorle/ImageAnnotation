@@ -158,6 +158,13 @@ namespace NCCMP {
 		return FALSE;
 	}
 
+	void NCButton::setTrans(LONG dist)
+	{
+		LONG size = rc.right - rc.left;
+		rc.left = dist + edgeSpace;
+		rc.right = rc.left + size;
+	}
+
 	void NCButton::display(HDC hdc)
 	{
 		HBRUSH hbr = pAssets->getBack(state);

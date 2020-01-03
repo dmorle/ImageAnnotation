@@ -8,8 +8,8 @@
 #pragma comment(lib, "d2d1")
 #endif
 
-#define TOD2DRECTF(rc)  D2D1_RECT_F{ (FLOAT)rc.left, (FLOAT)rc.top, (FLOAT)rc.right, (FLOAT)rc.bottom }
-#define TORECT(rc)      RECT       { (LONG) rc.left, (LONG) rc.top, (LONG) rc.right, (LONG) rc.bottom }
+#define TOD2DRECTF(rc)  D2D1_RECT_F{ (FLOAT)(rc).left, (FLOAT)(rc).top, (FLOAT)(rc).right, (FLOAT)(rc).bottom }
+#define TORECT(rc)      RECT       { (LONG) (rc).left, (LONG) (rc).top, (LONG) (rc).right, (LONG) (rc).bottom }
 
 #define RESIZE_DEFAULT(pRc, pParent)        new Resizable(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, pRc, pParent)
 #define RESIZE_FULL(pParent)                new Resizable(TRUE , TRUE , TRUE , TRUE , FALSE, FALSE, FALSE, pParent, pParent)

@@ -24,7 +24,7 @@ public:
 
 	// determines if p is on the border of the panel
 	// this function will only work if the paint is contained within the panel
-	BOOL onBorder(const POINT& p);
+	BOOL onBorder(const POINT& p, BOOL localCrds = FALSE);
 
 	virtual void MouseMove(const WPARAM& wparam, const POINT& p) = 0;
 	virtual void LDown(const WPARAM& wparam, const POINT& p) = 0;

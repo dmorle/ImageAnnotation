@@ -9,7 +9,7 @@ namespace WFunc {	// Creating a namespace local to this file to handle widget co
 
 	void paintSelf(PRECT pRc)
 	{
-		InvalidateRect(hwnd, pRc, TRUE);
+		InvalidateRect(hwnd, pRc, FALSE);
 	}
 
 }
@@ -95,13 +95,13 @@ void MainWindow::CreateNCButtons()
 		// creating the File button
 
 		RECT rc{
-			51,
-			2,
-			99,
+			50 + edgeSpace,
+			edgeSpace,
+			100 - edgeSpace,
 			top_off
 		};
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -122,13 +122,13 @@ void MainWindow::CreateNCButtons()
 		// creating the Edit button
 
 		RECT rc{
-			101,
-			2,
-			149,
+			100 + edgeSpace,
+			edgeSpace,
+			150 - edgeSpace,
 			top_off
 		};
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -149,13 +149,13 @@ void MainWindow::CreateNCButtons()
 		// creating the Preferences button
 
 		RECT rc{
-			151,
-			2,
-			249,
+			150 + edgeSpace,
+			edgeSpace,
+			250 - edgeSpace,
 			top_off
 		};
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -176,14 +176,14 @@ void MainWindow::CreateNCButtons()
 		// creating the close button
 
 		RECT rc{
-			rcWin.right - rcWin.left - 49,
-			2,
-			rcWin.right - rcWin.left - 2,
+			rcWin.right - rcWin.left - 50 + edgeSpace,
+			edgeSpace,
+			rcWin.right - rcWin.left - 2 * edgeSpace,
 			top_off
 		};
 
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::CloseButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -203,14 +203,14 @@ void MainWindow::CreateNCButtons()
 		// creating the max button
 
 		RECT rc{
-			rcWin.right - rcWin.left - 99,
-			2,
-			rcWin.right - rcWin.left - 51,
+			rcWin.right - rcWin.left - 100 + edgeSpace,
+			edgeSpace,
+			rcWin.right - rcWin.left - 50 - edgeSpace,
 			top_off
 		};
 
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::MaxButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -230,14 +230,14 @@ void MainWindow::CreateNCButtons()
 		// creating the min button
 
 		RECT rc{
-			rcWin.right - rcWin.left - 149,
-			2,
-			rcWin.right - rcWin.left - 101,
+			rcWin.right - rcWin.left - 150 + edgeSpace,
+			edgeSpace,
+			rcWin.right - rcWin.left - 100 - edgeSpace,
 			top_off
 		};
 
 
-		ncComponents.push_back(new
+		ncCmp.push_back(new
 			NCCMP::MinButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->widgetBack),
@@ -252,6 +252,11 @@ void MainWindow::CreateNCButtons()
 			)
 		);
 	}
+
+	minNCWidth =
+		150 + // min + max + close
+		50 +  // free space
+		250;  // file + edit + preferences
 }
 
 void MainWindow::DiscardNCButtons()
@@ -341,7 +346,6 @@ LRESULT MainWindow::onCreate()
 	WFunc::hwnd = m_hwnd;
 
 	InvalidateRect(m_hwnd, NULL, FALSE);
-
 	return 0;
 }
 
@@ -354,8 +358,13 @@ void MainWindow::Paint()
 		BeginPaint(m_hwnd, &ps);
 		pRenderTarget->BeginDraw();
 
-		pRenderTarget->Clear(pPalette->background);
-		pMainPanel->display();
+		if (fullPaint) {
+			pRenderTarget->Clear(pPalette->background);
+			pMainPanel->display();
+			fullPaint = FALSE;
+		}
+		else
+			pAP->display();
 
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -391,6 +400,10 @@ void MainWindow::Resize()
 		pMainPanel->resizeX(edgeSpace, rc.right - edgeSpace);
 		pMainPanel->resizeY(edgeSpace, rc.bottom - edgeSpace);
 
+		for (int i = 3; i < 6; i++)
+			ncCmp[i]->setTrans(rc.right - 50 * (i - 2));
+
+		fullPaint = TRUE;
 		InvalidateRect(m_hwnd, NULL, FALSE);
 	}
 }
@@ -425,29 +438,43 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 		LONG nDim;
 		switch (pResizingInfo->edge) {
 		case resizeInfo::LEFT:
-			nDim = max(size.cx - p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			nDim = max(
+				minNCWidth,
+				max(
+					size.cx - p.x + pResizingInfo->edgeDist,
+					pMainPanel->getMinWidth() + 2 * edgeSpace
+				)
+			);
 			SetWindowPos(m_hwnd, NULL, rc.right - nDim, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::TOP:
-			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight() + top_off + 2 * edgeSpace);
 			SetWindowPos(m_hwnd, NULL, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
 			break;
 		case resizeInfo::RIGHT:
-			nDim = max(p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			nDim = max(
+				minNCWidth,
+				max(
+					p.x + pResizingInfo->edgeDist,
+					pMainPanel->getMinWidth() + 2 * edgeSpace
+				)
+			);
 			SetWindowPos(m_hwnd, NULL, rc.left, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::BOTTOM:
-			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight() + top_off + 2 * edgeSpace);
 			SetWindowPos(m_hwnd, NULL, rc.left, rc.top, size.cx, nDim, NULL);
 			break;
 		}
+
+		PostMessage(m_hwnd, WM_NCPAINT, 0, 0);
 	}
 	
 	// non client region code
 
 	BOOL redraw = FALSE;
 
-	for (auto e : ncComponents)
+	for (auto e : ncCmp)
 		if (e->mouseleave())
 			redraw = TRUE;
 
@@ -502,19 +529,31 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 		LONG nDim;
 		switch (pResizingInfo->edge) {
 		case resizeInfo::LEFT:
-			nDim = max(size.cx - p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			nDim = max(
+				minNCWidth,
+				max(
+					size.cx - p.x + pResizingInfo->edgeDist,
+					pMainPanel->getMinWidth() + 2 * edgeSpace
+				)
+			);
 			SetWindowPos(m_hwnd, HWND_TOP, rc.right - nDim, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::TOP:
-			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			nDim = max(size.cy - p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight() + top_off + 2 * edgeSpace);
 			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.bottom - nDim, size.cx, nDim, NULL);
 			break;
 		case resizeInfo::RIGHT:
-			nDim = max(p.x + pResizingInfo->edgeDist, pMainPanel->getMinWidth());
+			nDim = max(
+				minNCWidth,
+				max(
+					p.x + pResizingInfo->edgeDist,
+					pMainPanel->getMinWidth() + 2 * edgeSpace
+				)
+			);
 			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, nDim, size.cy, NULL);
 			break;
 		case resizeInfo::BOTTOM:
-			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight());
+			nDim = max(p.y + pResizingInfo->edgeDist, pMainPanel->getMinHeight() + top_off + 2 * edgeSpace);
 			SetWindowPos(m_hwnd, HWND_TOP, rc.left, rc.top, size.cx, nDim, NULL);
 			break;
 		}
@@ -522,6 +561,8 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 		delete pResizingInfo;
 		pResizingInfo = NULL;
 		ReleaseCapture();
+
+		PostMessage(m_hwnd, WM_NCPAINT, 0, 0);
 	}
 }
 
@@ -560,7 +601,7 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		FillRect(hbuffer, &rc, hbr);
 		DeleteObject(hbr);
 
-		for (auto e : ncComponents)
+		for (auto e : ncCmp)
 			e->display(hbuffer);
 		
 		BitBlt(hdc, 0, 0, rc.right, rc.bottom, hbuffer, 0, 0, SRCCOPY);
@@ -580,7 +621,7 @@ void MainWindow::ncMoveMove(WPARAM wparam, LPARAM lparam)
 
 	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
 
-	for (auto e : ncComponents)
+	for (auto e : ncCmp)
 		e->mousemove(p);
 
 	RedrawWindow(m_hwnd, NULL, NULL, RDW_INVALIDATE | RDW_FRAME | RDW_NOERASE | RDW_UPDATENOW);
@@ -593,7 +634,7 @@ void MainWindow::ncLDown(WPARAM wparam, LPARAM lparam)
 
 	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
 
-	for (auto e : ncComponents)
+	for (auto e : ncCmp)
 		e->LDown(p);
 
 	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,
@@ -607,7 +648,7 @@ void MainWindow::ncLUp(WPARAM wparam, LPARAM lparam)
 
 	POINT p{ GET_X_LPARAM(lparam) - rcWin.left, GET_Y_LPARAM(lparam) - rcWin.top };
 
-	for (auto e : ncComponents)
+	for (auto e : ncCmp)
 		e->LUp(p);
 
 	SetWindowPos(m_hwnd, 0, 0, 0, 0, 0,

@@ -12,6 +12,8 @@ Parameters::stdCursors* Parameters::pCursors = NULL;
 
 Panel* Parameters::pAP = NULL;
 
+BOOL Parameters::fullPaint = TRUE;
+
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),
 	widgetBack(0.15f, 0.15f, 0.15f),
