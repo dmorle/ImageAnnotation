@@ -2,16 +2,20 @@
 #define WIDGETPANEL_H
 
 #ifndef WIDGETS_H
-#include "Panel.h"
+#include "Container.h"
 #endif
 
 class WidgetPanel :
 	public Panel
 {
 public:
+	WidgetPanel(WidgetPanel* pThis, Panel* pParent, PRECT npRc);
+
 	WidgetPanel(Panel* pParent, PRECT pRc, BYTE pMal, LONG minWidth, LONG minHeight);
 
 	~WidgetPanel();
+
+	PANEL_ID getID() override;
 
 	WidgetPanel* operator>>(WCMP::BaseComponent* npCmp);
 
@@ -22,8 +26,6 @@ public:
 
 	void resizeX(LONG left, LONG right);
 	void resizeY(LONG top, LONG bottom);
-
-	void widgetEdit(WidgetPanel* pWidget) override;
 
 	void display() override;
 

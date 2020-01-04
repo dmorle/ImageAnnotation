@@ -73,6 +73,8 @@ public:
 	}
 	stdCursors;
 
+	static HWND hwnd;
+
 	static ID2D1Factory* pFactory;
 	static IWICImagingFactory* pWicFactory;
 	static ID2D1HwndRenderTarget* pRenderTarget;
@@ -86,9 +88,10 @@ public:
 
 	// basic panel dimensions
 	const LONG edgeSpace = 2;
-	const LONG minSize = 12 * edgeSpace;
 
+	// program flags
 	static BOOL fullPaint;
+	static BOOL passMouse;
 };
 
 #endif

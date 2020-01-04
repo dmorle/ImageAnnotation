@@ -8,6 +8,11 @@
 
 #include <vector>
 
+enum class PANEL_ID {
+	WIDGET_PANEL,
+	CONTAINER
+};
+
 class WidgetPanel;
 
 class Panel :
@@ -15,6 +20,9 @@ class Panel :
 {
 public:
 	virtual ~Panel();
+
+	// allows runtime determination of type
+	virtual PANEL_ID getID() = 0;
 
 	// determines if p is in this->rect
 	BOOL contains(const POINT& p, BOOL localCrds = FALSE);
@@ -37,9 +45,6 @@ public:
 	// translates the panel along the given dimension
 	void transX(LONG dx);
 	void transY(LONG dy);
-
-	// handles the start of widget editing (splitting and merging)
-	virtual void widgetEdit(WidgetPanel* pWidget) = 0;
 
 	// displays the panel
 	virtual void display() = 0;

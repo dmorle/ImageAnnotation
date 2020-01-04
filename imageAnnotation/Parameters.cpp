@@ -2,6 +2,8 @@
 
 
 
+HWND Parameters::hwnd = NULL;
+
 ID2D1Factory* Parameters::pFactory = NULL;
 IWICImagingFactory* Parameters::pWicFactory = NULL;
 ID2D1HwndRenderTarget* Parameters::pRenderTarget = NULL;
@@ -13,6 +15,7 @@ Parameters::stdCursors* Parameters::pCursors = NULL;
 Panel* Parameters::pAP = NULL;
 
 BOOL Parameters::fullPaint = TRUE;
+BOOL Parameters::passMouse = FALSE;
 
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),

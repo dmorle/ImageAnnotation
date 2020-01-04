@@ -3,13 +3,12 @@
 
 
 
-Container::pResizeInfo Container::pResizingInfo = NULL;
-BOOL Container::f_widgetEdit = FALSE;
-
 Container::Container(Panel* pParent, PRECT npRc)
 	: Panel(pParent, npRc, 0, 0, 0)
 {
 	this->orientation = PANEL_ORIENTATION::NONE;
+	this->pResizingInfo = NULL;
+	this->pWidgetEdit = NULL;
 }
 
 Container::~Container()
@@ -20,6 +19,14 @@ Container::~Container()
 
 	if (pResizingInfo)
 		delete pResizingInfo;
+
+	if (pWidgetEdit)
+		delete pWidgetEdit;
+}
+
+PANEL_ID Container::getID()
+{
+	return PANEL_ID::CONTAINER;
 }
 
 void Container::addPanel(Panel* npPanel)
@@ -64,6 +71,32 @@ void Container::addPanel(Panel* npPanel)
 	}
 
 	this->cmp.push_back(npPanel);
+}
+
+void Container::removePanel(USHORT index)
+{
+	if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+		// horizontal orientation
+		minWidth -= cmp[index]->getMinWidth();
+		delete cmp[index];
+		cmp.erase(cmp.begin() + index);
+
+		minHeight = cmp[0]->getMinHeight();
+		for (auto& e : cmp)
+			if (e->getMinHeight() > minHeight)
+				minHeight = e->getMinHeight();
+	}
+	else {
+		// vertical orientation
+		minHeight -= cmp[index]->getMinHeight();
+		delete cmp[index];
+		cmp.erase(cmp.begin() + index);
+
+		minWidth = cmp[0]->getMinWidth();
+		for (auto& e : cmp)
+			if (e->getMinWidth() > minWidth)
+				minWidth = e->getMinWidth();
+	}
 }
 
 void Container::MouseMove(const WPARAM& wparam, const POINT& p)
@@ -117,8 +150,236 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 
 		InvalidateRect(NULL, &nRc, FALSE);
 	}
-	else if (f_widgetEdit) {
-		// TODO: come up with a widget splitting / merging system to work with the new widget system
+	else if (pWidgetEdit) {
+		// checking for splits
+		if (
+			np.x < pWidgetEdit->pWidget->getRight() &&
+			np.y < pWidgetEdit->pWidget->getBottom()
+			) {
+			pWidgetEdit->merge = FALSE;
+
+			if (
+				np.x < pWidgetEdit->pWidget->getRight() - pWidgetEdit->pWidget->getMinWidth() &&
+				pWidgetEdit->pWidget->getRight() - pWidgetEdit->pWidget->getLeft() >= 2 * pWidgetEdit->pWidget->getMinWidth()
+				) {
+				// vertical split
+				LONG nDim = max(np.x, pWidgetEdit->pWidget->getLeft() + pWidgetEdit->pWidget->getMinWidth());
+				if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+					// vertical split with horizontal orientation
+					// resize pWidgetEdit->pWidget and add a duplicate to cmp
+					Panel* npP1 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						this,
+						new RECT{
+							pWidgetEdit->pWidget->getLeft(),
+							pWidgetEdit->pWidget->getTop(),
+							nDim,
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+					Panel* npP2 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						this,
+						new RECT{
+							nDim,
+							pWidgetEdit->pWidget->getTop(),
+							pWidgetEdit->pWidget->getRight(),
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+
+					pResizingInfo = new resizeInfo{ npP1, npP2 };
+					addPanel(npP1);
+					addPanel(npP2);
+
+					for (USHORT i = 0; i < cmp.size(); i++)
+						if (
+							cmp[i]->getLeft() == pWidgetEdit->pWidget->getLeft() &&
+							cmp[i]->getTop() == pWidgetEdit->pWidget->getTop() &&
+							cmp[i]->getRight() == pWidgetEdit->pWidget->getRight() &&
+							cmp[i]->getBottom() == pWidgetEdit->pWidget->getBottom()
+							) {
+							removePanel(i);
+							break;
+						}
+				}
+				else {
+					// vertical split with vertical orientation
+					// create a new Container to cmp with the split
+					Container* npContainer = new Container(
+						this,
+						new RECT{
+							pWidgetEdit->pWidget->getLeft(),
+							pWidgetEdit->pWidget->getTop(),
+							pWidgetEdit->pWidget->getRight(),
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+					Panel* npP1 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						npContainer,
+						new RECT{
+							0, // pWidgetEdit->pWidget->getLeft() should equal 0
+							0,
+							nDim,
+							pWidgetEdit->pWidget->getBottom() - pWidgetEdit->pWidget->getTop()
+						}
+					);
+					Panel* npP2 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						npContainer,
+						new RECT{
+							nDim,
+							0,
+							pWidgetEdit->pWidget->getRight(),
+							pWidgetEdit->pWidget->getBottom() - pWidgetEdit->pWidget->getTop()
+						}
+					);
+
+					pAP = npContainer;
+					npContainer->pResizingInfo = new resizeInfo{ npP1, npP2 };
+					npContainer->addPanel(npP1);
+					npContainer->addPanel(npP2);
+
+					for (USHORT i = 0; i < cmp.size(); i++)
+						if (
+							cmp[i]->getLeft() == pWidgetEdit->pWidget->getLeft() &&
+							cmp[i]->getTop() == pWidgetEdit->pWidget->getTop() &&
+							cmp[i]->getRight() == pWidgetEdit->pWidget->getRight() &&
+							cmp[i]->getBottom() == pWidgetEdit->pWidget->getBottom()
+							) {
+							removePanel(i);
+							break;
+						}
+
+					addPanel(npContainer);
+				}
+
+				delete pWidgetEdit;
+				pWidgetEdit = NULL;
+
+				SetCursor(pCursors->sizens);
+				SetCapture(hwnd);
+				passMouse = TRUE;
+
+				return;
+			}
+			else if (
+				np.y < pWidgetEdit->pWidget->getBottom() - pWidgetEdit->pWidget->getMinHeight() &&
+				pWidgetEdit->pWidget->getBottom() - pWidgetEdit->pWidget->getTop() >= 2 * pWidgetEdit->pWidget->getMinHeight()
+				) {
+				// horizontal split
+				LONG nDim = max(np.y, pWidgetEdit->pWidget->getTop() + pWidgetEdit->pWidget->getMinHeight());
+				if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+					// horizontal split with horizontal orientation
+					// resize pWidgetEdit->pWidget and add a duplicate to cmp
+					Container* npContainer = new Container(
+						this,
+						new RECT{
+							pWidgetEdit->pWidget->getLeft(),
+							pWidgetEdit->pWidget->getTop(),
+							pWidgetEdit->pWidget->getRight(),
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+					Panel* npP1 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						npContainer,
+						new RECT{
+							0,
+							0, // pWidgetEdit->pWidget->getTop() should equal 0
+							pWidgetEdit->pWidget->getRight() - pWidgetEdit->pWidget->getLeft(),
+							nDim
+						}
+					);
+					Panel* npP2 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						npContainer,
+						new RECT{
+							0,
+							nDim,
+							pWidgetEdit->pWidget->getRight() - pWidgetEdit->pWidget->getLeft(),
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+
+					pAP = npContainer;
+					npContainer->pResizingInfo = new resizeInfo{ npP1, npP2 };
+					npContainer->addPanel(npP1);
+					npContainer->addPanel(npP2);
+
+					for (int i = 0; i < cmp.size(); i++)
+						if (
+							cmp[i]->getLeft() == pWidgetEdit->pWidget->getLeft() &&
+							cmp[i]->getTop() == pWidgetEdit->pWidget->getTop() &&
+							cmp[i]->getRight() == pWidgetEdit->pWidget->getRight() &&
+							cmp[i]->getBottom() == pWidgetEdit->pWidget->getBottom()
+							) {
+
+							delete cmp[i];
+							cmp.erase(cmp.begin() + i);
+							break;
+						}
+
+					addPanel(npContainer);
+				}
+				else {
+					// horizontal split with vertical orientation
+					// create a new Container to cmp with the split
+					Panel* npP1 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						this,
+						new RECT{
+							pWidgetEdit->pWidget->getLeft(),
+							pWidgetEdit->pWidget->getTop(),
+							pWidgetEdit->pWidget->getRight(),
+							nDim
+						}
+					);
+					Panel* npP2 = new WidgetPanel(
+						pWidgetEdit->pWidget,
+						this,
+						new RECT{
+							pWidgetEdit->pWidget->getTop(),
+							nDim,
+							pWidgetEdit->pWidget->getRight(),
+							pWidgetEdit->pWidget->getBottom()
+						}
+					);
+
+					pResizingInfo = new resizeInfo{ npP1, npP2 };
+					addPanel(npP1);
+					addPanel(npP2);
+
+					for (int i = 0; i < cmp.size(); i++)
+						if (
+							cmp[i]->getLeft() == pWidgetEdit->pWidget->getLeft() &&
+							cmp[i]->getTop() == pWidgetEdit->pWidget->getTop() &&
+							cmp[i]->getRight() == pWidgetEdit->pWidget->getRight() &&
+							cmp[i]->getBottom() == pWidgetEdit->pWidget->getBottom()
+							) {
+							delete cmp[i];
+							cmp.erase(cmp.begin() + i);
+							break;
+						}
+				}
+
+				delete pWidgetEdit;
+				pWidgetEdit = NULL;
+
+				SetCursor(pCursors->sizewe);
+				SetCapture(hwnd);
+				passMouse = TRUE;
+
+				return;
+			}
+		}
+		else if (pWidgetEdit->pMergeCandidate && pWidgetEdit->pMergeCandidate->contains(np, TRUE))
+			pWidgetEdit->merge = TRUE;
+		else
+			pWidgetEdit->merge = FALSE;
+
+		InvalidateRect(NULL, pRc, FALSE);
 	}
 	else {
 		if (!contains(p) || onBorder(p))
@@ -129,30 +390,7 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 			}
 
 		// checking for a resize event
-		if (orientation == PANEL_ORIENTATION::VERTICAL) {
-			Panel* topPanel = NULL;
-			Panel* bottomPanel = NULL;
-			for (auto& e : cmp) {
-				if (
-					!bottomPanel &&
-					e->getTop() - edgeSpace < np.y &&
-					e->getTop() + edgeSpace > np.y
-					)
-					bottomPanel = e;
-				else if (topPanel)
-					break;	// both panels have been found
-				if (
-					e->getBottom() - edgeSpace < np.y &&
-					e->getBottom() + edgeSpace > np.y
-					)
-					topPanel = e;
-			}
-			if (topPanel) {
-				assert(bottomPanel);
-				SetCursor(pCursors->sizens);
-			}
-		}
-		else {
+		if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
 			Panel* leftPanel = NULL;
 			Panel* rightPanel = NULL;
 			for (auto& e : cmp) {
@@ -173,6 +411,29 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 			if (leftPanel) {
 				assert(rightPanel);
 				SetCursor(pCursors->sizewe);
+			}
+		}
+		else {
+			Panel* topPanel = NULL;
+			Panel* bottomPanel = NULL;
+			for (auto& e : cmp) {
+				if (
+					!bottomPanel &&
+					e->getTop() - edgeSpace < np.y &&
+					e->getTop() + edgeSpace > np.y
+					)
+					bottomPanel = e;
+				else if (topPanel)
+					break;	// both panels have been found
+				if (
+					e->getBottom() - edgeSpace < np.y &&
+					e->getBottom() + edgeSpace > np.y
+					)
+					topPanel = e;
+			}
+			if (topPanel) {
+				assert(bottomPanel);
+				SetCursor(pCursors->sizens);
 			}
 		}
 
@@ -200,32 +461,7 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 	// np is now in local coordinates
 
 	// checking for a resize event
-	if (orientation == PANEL_ORIENTATION::VERTICAL) {
-		Panel* topPanel = NULL;
-		Panel* bottomPanel = NULL;
-		for (auto& e : cmp) {
-			if (
-				!bottomPanel &&
-				e->getTop() - edgeSpace < np.y &&
-				e->getTop() + edgeSpace > np.y
-				)
-				bottomPanel = e;
-			else if (topPanel)
-				break;	// both panels have been found
-			if (
-				e->getBottom() - edgeSpace < np.y &&
-				e->getBottom() + edgeSpace > np.y
-				)
-				topPanel = e;
-		}
-		if (topPanel) {
-			assert(bottomPanel);
-			SetCursor(pCursors->sizens);
-			pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
-			return;
-		}
-	}
-	else {
+	if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
 		Panel* leftPanel = NULL;
 		Panel* rightPanel = NULL;
 		for (auto& e : cmp) {
@@ -247,6 +483,35 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 			assert(rightPanel);
 			SetCursor(pCursors->sizewe);
 			pResizingInfo = new resizeInfo{ leftPanel, rightPanel };
+			SetCapture(hwnd);
+			passMouse = TRUE;
+			return;
+		}
+	}
+	else {
+		Panel* topPanel = NULL;
+		Panel* bottomPanel = NULL;
+		for (auto& e : cmp) {
+			if (
+				!bottomPanel &&
+				e->getTop() - edgeSpace < np.y &&
+				e->getTop() + edgeSpace > np.y
+				)
+				bottomPanel = e;
+			else if (topPanel)
+				break;	// both panels have been found
+			if (
+				e->getBottom() - edgeSpace < np.y &&
+				e->getBottom() + edgeSpace > np.y
+				)
+				topPanel = e;
+		}
+		if (topPanel) {
+			assert(bottomPanel);
+			SetCursor(pCursors->sizens);
+			pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
+			SetCapture(hwnd);
+			passMouse = TRUE;
 			return;
 		}
 	}
@@ -309,9 +574,40 @@ void Container::LUp(const WPARAM& wparam, const POINT& p)
 
 		delete pResizingInfo;
 		pResizingInfo = NULL;
+		ReleaseCapture();
+		passMouse = FALSE;
 	}
-	else if (f_widgetEdit) {
+	else if (pWidgetEdit) {
+		if (pWidgetEdit->merge) {
+			if (orientation == PANEL_ORIENTATION::HORIZONTAL)
+				// horizontal orientation
+				pWidgetEdit->pWidget->resizeX(
+					pWidgetEdit->pWidget->getLeft(),
+					pWidgetEdit->pMergeCandidate->getRight()
+				);
+			else
+				// vertical orientation
+				pWidgetEdit->pWidget->resizeY(
+					pWidgetEdit->pWidget->getTop(),
+					pWidgetEdit->pMergeCandidate->getBottom()
+				);
 
+			for (USHORT i = 0; i < cmp.size(); i++)
+				if (
+					cmp[i]->getLeft() == pWidgetEdit->pMergeCandidate->getLeft() &&
+					cmp[i]->getTop() == pWidgetEdit->pMergeCandidate->getTop() &&
+					cmp[i]->getRight() == pWidgetEdit->pMergeCandidate->getRight() &&
+					cmp[i]->getBottom() == pWidgetEdit->pMergeCandidate->getBottom()
+					) {
+					removePanel(i);
+					break;
+				}
+		}
+
+		delete pWidgetEdit;
+		pWidgetEdit = NULL;
+
+		InvalidateRect(NULL, pRc, FALSE);
 	}
 	else {
 		if (!contains(p))
@@ -509,12 +805,52 @@ void Container::resizeY(LONG top, LONG bottom)
 
 void Container::widgetEdit(WidgetPanel* pWidget)
 {
+	assert(orientation != PANEL_ORIENTATION::NONE);
+
+	Panel* pMergeCandidate = NULL;
+	if (orientation == PANEL_ORIENTATION::HORIZONTAL) {
+		// horizontal orientation
+		for (auto& e : cmp)
+			if (e->getLeft() == pWidget->getRight()) {
+				pMergeCandidate = e;
+				break;
+			}
+	}
+	else {
+		// vertical orientation
+		for (auto& e : cmp)
+			if (e->getTop() == pWidget->getBottom()) {
+				pMergeCandidate = e;
+				break;
+			}
+	}
+
+	// Do not allow a merge into a Container panel
+	/*if (pMergeCandidate && pMergeCandidate->getID() != PANEL_ID::WIDGET_PANEL)
+		pMergeCandidate = NULL;*/
+
+	pWidgetEdit = new widgetEditInfo{
+		pWidget,
+		(WidgetPanel*)pMergeCandidate,
+		FALSE
+	};
 }
 
 void Container::display()
 {
 	for (auto& e : cmp)
 		e->display();
+
+	if (pWidgetEdit && pWidgetEdit->merge) {
+		RECT rc{
+			pWidgetEdit->pMergeCandidate->getLeft(),
+			pWidgetEdit->pMergeCandidate->getTop(),
+			pWidgetEdit->pMergeCandidate->getRight(),
+			pWidgetEdit->pMergeCandidate->getBottom()
+		};
+		getGlobalRect(&rc);
+		pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->preDeletion);
+	}
 }
 
 BYTE Container::getPanelMaliability()

@@ -13,8 +13,12 @@ public:
 
 	~Container();
 
+	PANEL_ID getID() override;
+
 	// append this->cmp (The components of the panel)
 	void addPanel(Panel* npPanel);
+
+	void removePanel(USHORT index);
 
 	void MouseMove(const WPARAM& wparam, const POINT& p) override;
 	void LDown(const WPARAM& wparam, const POINT& p) override;
@@ -23,7 +27,8 @@ public:
 	void resizeX(LONG left, LONG right) override;
 	void resizeY(LONG top, LONG bottom) override;
 
-	void widgetEdit(WidgetPanel* pWidget) override;
+	// handles the start of widget editing (splitting and merging)
+	void widgetEdit(WidgetPanel* pWidget);
 
 	void display() override;
 
@@ -40,7 +45,13 @@ private:
 	typedef struct _resizeInfo {
 		Panel* p1;
 		Panel* p2;
-	} resizeInfo, *pResizeInfo;
+	} resizeInfo, *PResizeInfo;
+
+	typedef struct _widgetEditInfo {
+		WidgetPanel* pWidget;
+		WidgetPanel* pMergeCandidate;
+		BOOL merge;
+	} widgetEditInfo, *PWidgetEditInfo;
 
 	// the orintation of component panels
 	PANEL_ORIENTATION orientation;
@@ -49,8 +60,8 @@ private:
 	std::vector<Panel*> cmp;
 
 	// flags for how to handle user inputs
-	static pResizeInfo pResizingInfo;
-	static BOOL f_widgetEdit;
+	PResizeInfo pResizingInfo;
+	PWidgetEditInfo pWidgetEdit;
 };
 
 #endif

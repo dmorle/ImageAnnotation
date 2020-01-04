@@ -75,11 +75,11 @@ void MainWindow::CreateDefaultLayout(LONG width, LONG height)
 	width -= 2 * edgeSpace;
 	height -= 2 * edgeSpace + top_off;
 
-	widgetContainer->addPanel(new WidgetPanel(widgetContainer, new RECT{ 0, 0, width - 600, height }, 1, 300, 100));
+	widgetContainer->addPanel(new WidgetPanel(widgetContainer, new RECT{ 0, 0, width - 600, height }, 1, 50, 25));
 
 	Container* rightContainer = new Container(widgetContainer, new RECT{ width - 600, 0, width, height });
-	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 0, 600, 300 }, 2, 300, 100));
-	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 300, 600, height }, 3, 200, 100));
+	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 0, 600, 300 }, 2, 50, 25));
+	rightContainer->addPanel(new WidgetPanel(rightContainer, new RECT{ 0, 300, 600, height }, 3, 50, 25));
 
 	widgetContainer->addPanel(rightContainer);
 
@@ -338,6 +338,8 @@ LRESULT MainWindow::onCreate()
 	if (FAILED(CreateGraphicsResources()))
 		return -1;
 
+	hwnd = m_hwnd;
+
 	// creating the non client components
 	NCFunc::hwnd = m_hwnd;
 	CreateNCButtons();
@@ -417,17 +419,21 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 	// client region code
 	if (!pResizingInfo) {
 		// TODO: figure out a way to handle top resizing
-		if (
-			p.x <= 2 * edgeSpace ||
-			p.x >= pRenderTarget->GetSize().width - 2 * edgeSpace
-			)
-			SetCursor(pCursors->sizewe);
-		else if (
-			p.y >= pRenderTarget->GetSize().height - 2 * edgeSpace
-			)
-			SetCursor(pCursors->sizens);
-		else
+		if (passMouse)
 			pAP->MouseMove(wparam, p);
+		else {
+			if (
+				p.x <= 2 * edgeSpace ||
+				p.x >= pRenderTarget->GetSize().width - 2 * edgeSpace
+				)
+				SetCursor(pCursors->sizewe);
+			else if (
+				p.y >= pRenderTarget->GetSize().height - 2 * edgeSpace
+				)
+				SetCursor(pCursors->sizens);
+			else
+				pAP->MouseMove(wparam, p);
+		}
 	}
 	else {
 		RECT rc;
@@ -467,7 +473,7 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 			break;
 		}
 
-		PostMessage(m_hwnd, WM_NCPAINT, 0, 0);
+		PostMessage(m_hwnd, WM_NCACTIVATE, 0, 0);
 	}
 	
 	// non client region code
@@ -562,7 +568,7 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 		pResizingInfo = NULL;
 		ReleaseCapture();
 
-		PostMessage(m_hwnd, WM_NCPAINT, 0, 0);
+		PostMessage(m_hwnd, WM_NCACTIVATE, 0, 0);
 	}
 }
 
