@@ -1,7 +1,7 @@
-#ifndef EMPTYBUTTON_H
-#define EMPTYBUTTON_H
+#ifndef WCMP_EMPTY_BUTTON_H
+#define WCMP_EMPTY_BUTTON_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "../../Parameters.h"
 #include "InteractiveComponent.h"
 #endif

@@ -8,11 +8,6 @@
 
 #include <vector>
 
-enum class PANEL_ID {
-	WIDGET_PANEL,
-	CONTAINER
-};
-
 class WidgetPanel;
 
 class Panel :
@@ -20,9 +15,6 @@ class Panel :
 {
 public:
 	virtual ~Panel();
-
-	// allows runtime determination of type
-	virtual PANEL_ID getID() = 0;
 
 	// determines if p is in this->rect
 	BOOL contains(const POINT& p, BOOL localCrds = FALSE);

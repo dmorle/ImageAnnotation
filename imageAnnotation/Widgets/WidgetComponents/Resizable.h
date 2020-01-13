@@ -1,5 +1,5 @@
-#ifndef RESIZEABLE_H
-#define RESIZEABLE_H
+#ifndef WCMP_RESIZEABLE_H
+#define WCMP_RESIZEABLE_H
 
 #ifndef PARAMETERS_H
 #include <windows.h>

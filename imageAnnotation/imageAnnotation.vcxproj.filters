@@ -55,12 +55,15 @@
     <ClCompile Include="Parameters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Overlays\BaseOverlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="basewin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NCComponents\CloseButton.h">
@@ -126,6 +129,21 @@
     <ClInclude Include="NCComponents\MinButton.h">
       <Filter>Header Files\NCComponents</Filter>
     </ClInclude>
+    <ClInclude Include="basewin.h">
+      <Filter>Header Files\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\BaseOverlay.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents\BaseComponent.h">
+      <Filter>Header Files\Overlays\OverlayComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -154,6 +172,18 @@
     </Filter>
     <Filter Include="Header Files\Widgets\WidgetComponents">
       <UniqueIdentifier>{f86713cc-b043-4450-a66d-1c159df993c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Overlays">
+      <UniqueIdentifier>{39d15706-4a26-4bed-ae96-9c145f25a826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Overlays">
+      <UniqueIdentifier>{325ef4e5-34bc-4de3-ba1a-22dec3c097f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Overlays\OverlayComponents">
+      <UniqueIdentifier>{239592d5-9bf8-4608-ba74-1a5b0cb44284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Overlays\OverlayComponents">
+      <UniqueIdentifier>{348bc588-1fb7-4282-be82-422a18709288}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

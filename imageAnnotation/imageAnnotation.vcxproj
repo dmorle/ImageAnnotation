@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>MSVCRTD.lib;Windowscodecs.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MSVCRTD.lib;Windowscodecs.lib;Dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,6 +133,8 @@
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
+    <ClCompile Include="Overlays\BaseOverlay.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="Widgets\Container.cpp" />
     <ClCompile Include="Widgets\Panel.cpp" />
@@ -155,6 +157,10 @@
     <ClInclude Include="NCComponents\NCButton.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
+    <ClInclude Include="Overlays.h" />
+    <ClInclude Include="Overlays\BaseOverlay.h" />
+    <ClInclude Include="Overlays\OverlayComponents.h" />
+    <ClInclude Include="Overlays\OverlayComponents\BaseComponent.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="Widgets.h" />
     <ClInclude Include="Widgets\Container.h" />

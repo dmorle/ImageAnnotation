@@ -1,7 +1,7 @@
-#ifndef INTERACTIVECOMPONENT_H
-#define INTERACTIVECOMPONENT_H
+#ifndef WCMP_INTERACTIVE_COMPONENT_H
+#define WCMP_INTERACTIVE_COMPONENT_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "BaseComponent.h"
 #endif
 

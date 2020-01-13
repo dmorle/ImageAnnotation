@@ -15,8 +15,6 @@ public:
 
 	~WidgetPanel();
 
-	PANEL_ID getID() override;
-
 	WidgetPanel* operator>>(WCMP::BaseComponent* npCmp);
 
 	// actions the user can do

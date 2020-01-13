@@ -1,7 +1,7 @@
-#ifndef PARENTCOMPONENT_H
-#define PARENTCOMPONENT_H
+#ifndef WCMP_PARENT_COMPONENT_H
+#define WCMP_PARENT_COMPONENT_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "BaseComponent.h"
 #endif
 

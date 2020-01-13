@@ -23,11 +23,6 @@ WidgetPanel::~WidgetPanel()
 			delete e;
 }
 
-PANEL_ID WidgetPanel::getID()
-{
-	return PANEL_ID::WIDGET_PANEL;
-}
-
 WidgetPanel* WidgetPanel::operator>>(WCMP::BaseComponent* npCmp)
 {
 	cmp.push_back(npCmp);
@@ -74,7 +69,7 @@ void WidgetPanel::LDown(const WPARAM& wparam, const POINT& p)
 
 	// widget edit check
 	// widget edit region extends 10 * edgeSpace into the widget
-	if (np.y > (np.x - pRc->right - pRc->bottom + 20 * edgeSpace)) {
+	if (np.y > (pRc->right + pRc->bottom - 20 * edgeSpace - np.x)) {
 		pAP = pParent;
 		((Container*)pParent)->widgetEdit(this);
 		return;

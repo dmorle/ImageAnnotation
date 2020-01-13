@@ -1,5 +1,5 @@
-#ifndef WIDGETCMP_H
-#define WIDGETCMP_H
+#ifndef WIDGET_CMP_H
+#define WIDGET_CMP_H
 
 #include "../Parameters.h"
 

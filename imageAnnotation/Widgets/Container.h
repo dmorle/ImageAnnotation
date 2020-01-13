@@ -13,8 +13,6 @@ public:
 
 	~Container();
 
-	PANEL_ID getID() override;
-
 	// append this->cmp (The components of the panel)
 	void addPanel(Panel* npPanel);
 

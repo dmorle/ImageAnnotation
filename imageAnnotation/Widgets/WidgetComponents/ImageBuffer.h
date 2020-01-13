@@ -1,7 +1,7 @@
-#ifndef IMAGEBUFFER_H
-#define IMAGEBUFFER_H
+#ifndef WCMP_IMAGE_BUFFER_H
+#define WCMP_IMAGE_BUFFER_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "InteractiveComponent.h"
 #include "ImageBaseComponent.h"
 #include "Buffer.h"

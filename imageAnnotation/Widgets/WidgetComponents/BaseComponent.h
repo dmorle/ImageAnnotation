@@ -1,7 +1,7 @@
-#ifndef BASECOMPONENT_H
-#define BASECOMPONENT_H
+#ifndef WCMP_BASE_COMPONENT_H
+#define WCMP_BASE_COMPONENT_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "../../Parameters.h"
 #include "Resizable.h"
 #endif

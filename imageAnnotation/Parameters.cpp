@@ -5,8 +5,11 @@
 HWND Parameters::hwnd = NULL;
 
 ID2D1Factory* Parameters::pFactory = NULL;
+IDWriteFactory* Parameters::pDWriteFactory = NULL;
 IWICImagingFactory* Parameters::pWicFactory = NULL;
 ID2D1HwndRenderTarget* Parameters::pRenderTarget = NULL;
+
+IDWriteTextFormat* Parameters::pTextFormat = NULL;
 
 Parameters::appPalette* Parameters::pPalette = NULL;
 Parameters::stdBrushes* Parameters::pBrushes = NULL;
@@ -16,6 +19,9 @@ Panel* Parameters::pAP = NULL;
 
 BOOL Parameters::fullPaint = TRUE;
 BOOL Parameters::passMouse = FALSE;
+
+std::vector<BaseOverlay*> Parameters::activeOverlays = std::vector<BaseOverlay*>();
+std::vector<BaseOverlay*> Parameters::inActiveOverlays = std::vector<BaseOverlay*>();
 
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),

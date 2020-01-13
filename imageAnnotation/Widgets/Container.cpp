@@ -24,11 +24,6 @@ Container::~Container()
 		delete pWidgetEdit;
 }
 
-PANEL_ID Container::getID()
-{
-	return PANEL_ID::CONTAINER;
-}
-
 void Container::addPanel(Panel* npPanel)
 {
 	switch (orientation) {
@@ -608,6 +603,9 @@ void Container::LUp(const WPARAM& wparam, const POINT& p)
 		pWidgetEdit = NULL;
 
 		InvalidateRect(NULL, pRc, FALSE);
+
+		ReleaseCapture();
+		passMouse = FALSE;
 	}
 	else {
 		if (!contains(p))
@@ -834,6 +832,9 @@ void Container::widgetEdit(WidgetPanel* pWidget)
 		(WidgetPanel*)pMergeCandidate,
 		FALSE
 	};
+
+	SetCapture(hwnd);
+	passMouse = TRUE;
 }
 
 void Container::display()

@@ -6,6 +6,7 @@
 #include <windowsx.h>
 #include <wincodec.h>
 #include <d2d1.h>
+#include <dwrite.h>
 #pragma comment(lib, "d2d1")
 
 #include <wingdi.h>
@@ -32,6 +33,7 @@ template <class T> void SafeRelease(T** ppT)
 
 class Panel;
 class MainWindow;
+class BaseOverlay;
 
 class Parameters {
 public:
@@ -76,8 +78,11 @@ public:
 	static HWND hwnd;
 
 	static ID2D1Factory* pFactory;
+	static IDWriteFactory* pDWriteFactory;
 	static IWICImagingFactory* pWicFactory;
 	static ID2D1HwndRenderTarget* pRenderTarget;
+
+	static IDWriteTextFormat* pTextFormat;
 
 	static appPalette* pPalette;
 	static stdBrushes* pBrushes;
@@ -90,8 +95,14 @@ public:
 	const LONG edgeSpace = 2;
 
 	// program flags
+
+	// paint the entire window
 	static BOOL fullPaint;
+	// MainWindow does not check for window resizing
 	static BOOL passMouse;
+
+	static std::vector<BaseOverlay*> activeOverlays;
+	static std::vector<BaseOverlay*> inActiveOverlays;
 };
 
 #endif

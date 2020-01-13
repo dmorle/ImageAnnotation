@@ -1,7 +1,7 @@
-#ifndef IMAGEBASECOMPONENT_H
-#define IMAGEBASECOMPONENT_H
+#ifndef WCMP_IMAGE_BASE_COMPONENT_H
+#define WCMP_IMAGE_BASE_COMPONENT_H
 
-#ifndef WIDGETCMP_H
+#ifndef WIDGET_CMP_H
 #include "BaseComponent.h"
 #endif
 

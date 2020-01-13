@@ -265,19 +265,6 @@ void MainWindow::DiscardNCButtons()
 
 HRESULT MainWindow::CreateGraphicsResources()
 {
-	if (!pPalette)
-		pPalette = new appPalette();
-
-	if (!pCursors)
-		pCursors = new stdCursors();
-
-	if (!pCursors->arrow)
-		pCursors->arrow = LoadCursor(NULL, IDC_ARROW);
-	if (!pCursors->sizens)
-		pCursors->sizens = LoadCursor(NULL, IDC_SIZENS);
-	if (!pCursors->sizewe)
-		pCursors->sizewe = LoadCursor(NULL, IDC_SIZEWE);
-
 	HRESULT hr = S_OK;
 	if (pRenderTarget == NULL)
 	{
@@ -334,20 +321,56 @@ LRESULT MainWindow::onCreate()
 		return -1;
 	if (FAILED(CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&pWicFactory)))
 		return -1;
-
-	if (FAILED(CreateGraphicsResources()))
+	if (FAILED(DWriteCreateFactory(
+		DWRITE_FACTORY_TYPE_SHARED,
+		__uuidof(pDWriteFactory),
+		reinterpret_cast<IUnknown**>(&pDWriteFactory)
+	)))
 		return -1;
 
 	hwnd = m_hwnd;
+
+	// filling the Parameters class
+
+	// appPalette
+	if (!pPalette)
+		pPalette = new appPalette();
+
+	// stdCursors
+	if (!pCursors)
+		pCursors = new stdCursors();
+
+	if (!pCursors->arrow)
+		pCursors->arrow = LoadCursor(NULL, IDC_ARROW);
+	if (!pCursors->sizens)
+		pCursors->sizens = LoadCursor(NULL, IDC_SIZENS);
+	if (!pCursors->sizewe)
+		pCursors->sizewe = LoadCursor(NULL, IDC_SIZEWE);
+
+	if (FAILED(pDWriteFactory->CreateTextFormat(
+		L"Arial",
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		12,	// font size
+		L"",
+		&pTextFormat
+	)))
+		return -1;
+
+	if (FAILED(CreateGraphicsResources()))
+		return -1;
 
 	// creating the non client components
 	NCFunc::hwnd = m_hwnd;
 	CreateNCButtons();
 
-	// Creating the widget componenetss
+	// Creating the widget componenets
 	WFunc::hwnd = m_hwnd;
 
 	InvalidateRect(m_hwnd, NULL, FALSE);
+
 	return 0;
 }
 
