@@ -340,7 +340,7 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 						pWidgetEdit->pWidget,
 						this,
 						new RECT{
-							pWidgetEdit->pWidget->getTop(),
+							pWidgetEdit->pWidget->getLeft(),
 							nDim,
 							pWidgetEdit->pWidget->getRight(),
 							pWidgetEdit->pWidget->getBottom()
@@ -400,17 +400,16 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 					e->getLeft() + edgeSpace > np.x
 					)
 					rightPanel = e;
-				else if (leftPanel)
-					break;
-				if (
+				else if (
+					!leftPanel &&
 					e->getRight() - edgeSpace < np.x &&
 					e->getRight() + edgeSpace > np.x
 					)
 					leftPanel = e;
-			}
-			if (leftPanel) {
-				assert(rightPanel);
-				SetCursor(pCursors->sizewe);
+				if (leftPanel && rightPanel) {
+					SetCursor(pCursors->sizewe);
+					break;	// both panels have been found
+				}
 			}
 		}
 		else {
@@ -423,17 +422,16 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 					e->getTop() + edgeSpace > np.y
 					)
 					bottomPanel = e;
-				else if (topPanel)
-					break;	// both panels have been found
-				if (
+				else if (
+					!topPanel &&
 					e->getBottom() - edgeSpace < np.y &&
 					e->getBottom() + edgeSpace > np.y
 					)
 					topPanel = e;
-			}
-			if (topPanel) {
-				assert(bottomPanel);
-				SetCursor(pCursors->sizens);
+				else if (topPanel && bottomPanel) {
+					SetCursor(pCursors->sizens);
+					break;	// both panels have been found
+				}
 			}
 		}
 
@@ -471,21 +469,19 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 				e->getLeft() + edgeSpace > np.x
 				)
 				rightPanel = e;
-			else if (leftPanel)
-				break;
-			if (
+			else if (
+				!leftPanel &&
 				e->getRight() - edgeSpace < np.x &&
 				e->getRight() + edgeSpace > np.x
 				)
 				leftPanel = e;
-		}
-		if (leftPanel) {
-			assert(rightPanel);
-			SetCursor(pCursors->sizewe);
-			pResizingInfo = new resizeInfo{ leftPanel, rightPanel };
-			SetCapture(hwnd);
-			passMouse = TRUE;
-			return;
+			if (leftPanel && rightPanel) {
+				SetCursor(pCursors->sizewe);
+				pResizingInfo = new resizeInfo{ leftPanel, rightPanel };
+				SetCapture(hwnd);
+				passMouse = TRUE;
+				return;
+			}
 		}
 	}
 	else {
@@ -498,21 +494,19 @@ void Container::LDown(const WPARAM& wparam, const POINT& p)
 				e->getTop() + edgeSpace > np.y
 				)
 				bottomPanel = e;
-			else if (topPanel)
-				break;	// both panels have been found
-			if (
+			else if (
+				!topPanel &&
 				e->getBottom() - edgeSpace < np.y &&
 				e->getBottom() + edgeSpace > np.y
 				)
 				topPanel = e;
-		}
-		if (topPanel) {
-			assert(bottomPanel);
-			SetCursor(pCursors->sizens);
-			pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
-			SetCapture(hwnd);
-			passMouse = TRUE;
-			return;
+			if (topPanel && bottomPanel) {
+				SetCursor(pCursors->sizens);
+				pResizingInfo = new resizeInfo{ topPanel, bottomPanel };
+				SetCapture(hwnd);
+				passMouse = TRUE;
+				return;
+			}
 		}
 	}
 
@@ -592,16 +586,18 @@ void Container::LUp(const WPARAM& wparam, const POINT& p)
 					pWidgetEdit->pMergeCandidate->getBottom()
 				);
 
+			// deleting the merge candidate from the component list
 			for (USHORT i = 0; i < cmp.size(); i++)
-				if (
-					cmp[i]->getLeft() == pWidgetEdit->pMergeCandidate->getLeft() &&
-					cmp[i]->getTop() == pWidgetEdit->pMergeCandidate->getTop() &&
-					cmp[i]->getRight() == pWidgetEdit->pMergeCandidate->getRight() &&
-					cmp[i]->getBottom() == pWidgetEdit->pMergeCandidate->getBottom()
-					) {
+				if (cmp[i] == pWidgetEdit->pMergeCandidate) {
 					removePanel(i);
 					break;
 				}
+
+			// flattening the panel hierarchy
+			if (cmp.size() == 1 && pParent) {
+				((Container*)pParent)->collapsePanel(this);
+				return;
+			}
 		}
 
 		delete pWidgetEdit;
@@ -662,7 +658,7 @@ void Container::resizeX(LONG left, LONG right)
 				pMalArr[i] = cmp[i]->getPanelMaliability();
 
 			// insertion sort DSU using pMalArr as key (high -> low)
-			for (BYTE i = 1; i < cmp.size(); i++)
+			for (BYTE i = 1; i < cmp.size(); i++)	// only runs if cmp.size() >= 2
 				for (BYTE j = i; j > 0; j--)
 					if (pMalArr[j] > pMalArr[j - 1]) {
 						BYTE tempMal = pMalArr[j];
@@ -751,7 +747,7 @@ void Container::resizeY(LONG top, LONG bottom)
 				pMalArr[i] = cmp[i]->getPanelMaliability();
 
 			// insertion sort DSU using pMalArr as key (high -> low)
-			for (BYTE i = 1; i < cmp.size(); i++)
+			for (BYTE i = 1; i < cmp.size(); i++)	// only runs if cmp.size() >= 2
 				for (BYTE j = i; j > 0; j--)
 					if (pMalArr[j] > pMalArr[j - 1]) {
 						BYTE tempMal = pMalArr[j];
@@ -868,4 +864,31 @@ BYTE Container::getPanelMaliability()
 			pMal = npMal;
 	}
 	return pMal;
+}
+
+void Container::collapsePanel(Container* pCont)
+{
+	assert(pCont->cmp.size() == 1);
+
+	// detaching references
+	Panel* npPanel = pCont->cmp[0];
+
+	PRECT tmp = npPanel->pRc;
+	npPanel->pRc = pCont->pRc;
+	pCont->pRc = tmp;
+
+	pCont->cmp[0] = NULL;
+	npPanel->pParent = pAP = this;
+
+	// finding and deleting pCont from this->cmp
+	for (auto& e : cmp)
+		if (pCont == e) {
+			delete e;
+			e = npPanel;
+			InvalidateRect(NULL, NULL, FALSE);
+			return;
+		}
+
+	// no reference to pCont in this->cmp
+	assert(false);
 }
