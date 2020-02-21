@@ -61,6 +61,7 @@
     <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\TextComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -144,6 +145,7 @@
     <ClInclude Include="Overlays\OverlayComponents.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents\TextComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

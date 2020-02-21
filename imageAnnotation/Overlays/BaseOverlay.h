@@ -1,7 +1,10 @@
-#ifndef OVERLAY_H
-#define OVERLAY_H
+#ifndef BASE_OVERLAY_H
+#define BASE_OVERLAY_H
 
+#ifndef OVERLAYS_H
 #include "../Parameters.h"
+#include "OverlayComponents.h"
+#endif
 
 class BaseOverlay :
 	public Parameters
@@ -20,6 +23,15 @@ public:
 	// displays the overlay to the screen
 	virtual void display() = 0;
 
+	// return pRc->left;
+	LONG getLeft();
+	// return pRc->top;
+	LONG getTop();
+	// return pRc->right;
+	LONG getRight();
+	// return pRc->bottom;
+	LONG getBottom();
+
 protected:
 	// bounding rectangle
 	PRECT pRc;
@@ -29,7 +41,6 @@ protected:
 
 	// min width for the overlay
 	LONG minWidth;
-
 	// min height for the overlay
 	LONG minHeight;
 

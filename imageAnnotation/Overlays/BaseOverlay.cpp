@@ -39,6 +39,26 @@ void BaseOverlay::LUp(const WPARAM& wparam, const POINT& p)
 	update(p);
 }
 
+LONG BaseOverlay::getLeft()
+{
+	return pRc->left;
+}
+
+LONG BaseOverlay::getTop()
+{
+	return pRc->top;
+}
+
+LONG BaseOverlay::getRight()
+{
+	return pRc->right;
+}
+
+LONG BaseOverlay::getBottom()
+{
+	return pRc->bottom;
+}
+
 BOOL BaseOverlay::equals(const BaseOverlay* pB)
 {
 	return this->id == pB->id;

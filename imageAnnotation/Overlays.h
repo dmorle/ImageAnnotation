@@ -3,6 +3,8 @@
 
 #include "Parameters.h"
 
+#include "Overlays/OverlayComponents.h"
+
 #include "Overlays/BaseOverlay.h"
 
 #endif
