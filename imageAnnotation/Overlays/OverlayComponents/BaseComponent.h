@@ -20,18 +20,22 @@ namespace OLCMP {
 		virtual void LDown(const WPARAM& wparam, const POINT& p) = 0;
 		virtual void LUp(const WPARAM& wparam, const POINT& p) = 0;
 
+		// return pRc->left;
+		LONG getLeft();
+		// return pRc->top;
+		LONG getTop();
+		// return pRc->right;
+		LONG getRight();
+		// return pRc->bottom;
+		LONG getBottom();
+
 		virtual void display() = 0;
 
 	protected:
-		BaseComponent(BaseOverlay* pParent, LONG minWidth, LONG minHeight);
+		BaseComponent(BaseOverlay* pParent, const RECT& rc);
 
 		// bounding rectangle
 		PRECT pRc;
-
-		// min width of the component
-		LONG minWidth;
-		// min height of the component
-		LONG minHeight;
 
 	private:
 		BaseOverlay* pParent;

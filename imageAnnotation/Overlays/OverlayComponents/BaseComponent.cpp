@@ -17,8 +17,30 @@ namespace OLCMP {
 		return FALSE;
 	}
 
-	OLCMP::BaseComponent::BaseComponent(BaseOverlay* pParent, LONG minWidth, LONG minHeight)
+	LONG OLCMP::BaseComponent::getLeft()
 	{
+		return pRc->left;
+	}
+
+	LONG OLCMP::BaseComponent::getTop()
+	{
+		return pRc->top;
+	}
+
+	LONG OLCMP::BaseComponent::getRight()
+	{
+		return pRc->right;
+	}
+
+	LONG OLCMP::BaseComponent::getBottom()
+	{
+		return pRc->bottom;
+	}
+
+	OLCMP::BaseComponent::BaseComponent(BaseOverlay* pParent, const RECT& rc)
+	{
+		this->pParent = pParent;
+		this->pRc = new RECT(rc);
 	}
 
 }

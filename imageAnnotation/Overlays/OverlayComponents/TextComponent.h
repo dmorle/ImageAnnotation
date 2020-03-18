@@ -8,7 +8,7 @@ namespace OLCMP {
 	class TextComponent :
 		public BaseComponent
 	{
-		TextComponent(BaseOverlay* pParent, doub)
+		TextComponent(BaseOverlay* pParent, const RECT& rc);
 	};
 
 }

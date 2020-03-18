@@ -4,13 +4,19 @@
 
 USHORT BaseOverlay::currId = 0;
 
-BaseOverlay::BaseOverlay(const RECT& rc, LONG minWidth, LONG minHeight)
+BaseOverlay::BaseOverlay(const RECT& rc)
 {
 	this->id = currId++;
-	this->active = TRUE;
 	this->pRc = new RECT(rc);
-	this->minWidth = minWidth;
-	this->minHeight = minHeight;
+}
+
+BaseOverlay::~BaseOverlay()
+{
+	for (auto& e : cmp)
+		delete e;
+
+	if (pRc)
+		delete pRc;
 }
 
 BOOL BaseOverlay::contains(const POINT& p)
@@ -26,17 +32,18 @@ BOOL BaseOverlay::contains(const POINT& p)
 
 void BaseOverlay::MouseMove(const WPARAM& wparam, const POINT& p)
 {
-	update(p);
 }
 
 void BaseOverlay::LDown(const WPARAM& wparam, const POINT& p)
 {
-	update(p);
+	if (!update(p))
+		return;
 }
 
 void BaseOverlay::LUp(const WPARAM& wparam, const POINT& p)
 {
-	update(p);
+	if (!update(p))
+		return;
 }
 
 LONG BaseOverlay::getLeft()
@@ -59,24 +66,28 @@ LONG BaseOverlay::getBottom()
 	return pRc->bottom;
 }
 
+void BaseOverlay::addComponent(OLCMP::BaseComponent* pCmp)
+{
+	this->cmp.push_back(pCmp);
+}
+
 BOOL BaseOverlay::equals(const BaseOverlay* pB)
 {
 	return this->id == pB->id;
 }
 
-void BaseOverlay::update(const POINT& p)
+BOOL BaseOverlay::update(const POINT& p)
 {
 	if (!contains(p)) {
-		active = FALSE;
 
 		// check if the widget is active, and if so, prep it for deletion
-		for (int i = 0; i < activeOverlays.size(); i++)
-			if (this->equals(activeOverlays[i])) {
+		for (int i = 0; i < inActiveOverlays.size(); i++)
+			if (this->equals(inActiveOverlays[i])) {
 				// prep activeOverlays[i] for deletion
-				activeOverlays.erase(activeOverlays.begin() + i);
-				inActiveOverlays.push_back(this);
-				return;
+				inActiveOverlays.erase(inActiveOverlays.begin() + i);
+				delete this;
+				return FALSE;
 			}
 	}
-	return;
+	return TRUE;
 }

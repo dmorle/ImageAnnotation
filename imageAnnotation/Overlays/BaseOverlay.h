@@ -6,16 +6,26 @@
 #include "OverlayComponents.h"
 #endif
 
+/*
+	Overlays have the following characteristics:
+		- Created on an as needed basis
+		- Override all other client UI actions
+		- 
+*/
+
 class BaseOverlay :
 	public Parameters
 {      
 public:
-	BaseOverlay(const RECT& pRc, LONG minWidth, LONG minHeight);
+	BaseOverlay(const RECT& pRc);
+
+	virtual ~BaseOverlay();
 
 	// checks if p is in pRc
 	BOOL contains(const POINT& p);
 
 	// user actions
+
 	virtual void MouseMove(const WPARAM& wparam, const POINT& p);
 	virtual void LDown(const WPARAM& wparam, const POINT& p);
 	virtual void LUp(const WPARAM& wparam, const POINT& p);
@@ -32,25 +42,29 @@ public:
 	// return pRc->bottom;
 	LONG getBottom();
 
+	// only to be used during overlay construction
+	// adds any overlay component overlay to the overlay instance
+	void addComponent(OLCMP::BaseComponent* pCmp);
+
 protected:
 	// bounding rectangle
 	PRECT pRc;
 
-	// whether or not 'this' is to be deleted
-	BOOL active;
-
-	// min width for the overlay
-	LONG minWidth;
-	// min height for the overlay
-	LONG minHeight;
+	// contains all of the overlays components
+	std::vector<OLCMP::BaseComponent*> cmp;
 
 private:
+	// static variable to uniquely identify the overlay
 	static USHORT currId;
+	// overlay instance's id
 	USHORT id;
 
+	// checks if pB->id is the same as this->id
 	BOOL equals(const BaseOverlay* pB);
 
-	void update(const POINT& p);
+	// checks if the overlay is active
+	// returns TRUE if active, FALSE if not
+	BOOL update(const POINT& p);
 };
 
 #endif

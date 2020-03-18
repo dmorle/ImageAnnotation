@@ -20,7 +20,7 @@ Panel* Parameters::pAP = NULL;
 BOOL Parameters::fullPaint = TRUE;
 BOOL Parameters::passMouse = FALSE;
 
-std::vector<BaseOverlay*> Parameters::activeOverlays = std::vector<BaseOverlay*>();
+BaseOverlay *Parameters::pActiveOverlay = NULL;
 std::vector<BaseOverlay*> Parameters::inActiveOverlays = std::vector<BaseOverlay*>();
 
 Parameters::_appPalette::_appPalette() :
