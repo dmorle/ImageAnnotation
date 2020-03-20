@@ -3,14 +3,14 @@
 
 #include "../Parameters.h"
 
-#include "WidgetComponents/Resizable.h"
-#include "WidgetComponents/Buffer.h"
+#include "WidgetComponents/WResizable.h"
+#include "WidgetComponents/WBuffer.h"
 
-#include "WidgetComponents/BaseComponent.h"
-#include "WidgetComponents/ImageBaseComponent.h"
-#include "WidgetComponents/InteractiveComponent.h"
-#include "WidgetComponents/ParentComponent.h"
-#include "WidgetComponents/EmptyButton.h"
-#include "WidgetComponents/ImageBuffer.h"
+#include "WidgetComponents/WBaseComponent.h"
+#include "WidgetComponents/WImageBaseComponent.h"
+#include "WidgetComponents/WInteractiveComponent.h"
+#include "WidgetComponents/WParentComponent.h"
+#include "WidgetComponents/WEmptyButton.h"
+#include "WidgetComponents/WImageBuffer.h"
 
 #endif

@@ -1,4 +1,4 @@
-#include "ParentComponent.h"
+#include "WParentComponent.h"
 
 
 

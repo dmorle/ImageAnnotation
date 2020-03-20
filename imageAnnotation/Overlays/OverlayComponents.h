@@ -3,6 +3,7 @@
 
 #include "../Parameters.h"
 
-#include "OverlayComponents/BaseComponent.h"
+#include "OverlayComponents/OLBaseComponent.h"
+#include "OverlayComponents/OLTextComponent.h"
 
 #endif

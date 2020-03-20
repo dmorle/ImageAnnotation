@@ -1,1 +1,1 @@
-#include "TextComponent.h"
+#include "OLTextComponent.h"

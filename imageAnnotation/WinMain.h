@@ -5,6 +5,7 @@
 
 #include "basewin.h"
 #include "Widgets.h"
+#include "Overlays.h"
 #include "NCComponents.h"
 
 class MainWindow :

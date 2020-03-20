@@ -2,7 +2,7 @@
 #define WCMP_PARENT_COMPONENT_H
 
 #ifndef WIDGET_CMP_H
-#include "BaseComponent.h"
+#include "WBaseComponent.h"
 #endif
 
 #include <list>

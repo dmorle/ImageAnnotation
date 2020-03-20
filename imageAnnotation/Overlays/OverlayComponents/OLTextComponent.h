@@ -1,7 +1,9 @@
 #ifndef TEXT_COMPONENT_H
 #define TEXT_COMPONENT_H
 
-#include "BaseComponent.h"
+#ifndef OVERLAY_COMPONENTS_H
+#include "OLBaseComponent.h"
+#endif
 
 namespace OLCMP {
 

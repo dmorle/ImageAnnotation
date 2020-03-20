@@ -1,4 +1,4 @@
-#include "ImageBuffer.h"
+#include "WImageBuffer.h"
 
 
 

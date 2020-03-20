@@ -23,7 +23,7 @@ namespace NCFunc{
 	** Start of non-client functions **
 	**								 **
 	**********************************/
-
+	 
 	void onCloseClick()
 	{
 		PostMessage(hwnd, WM_CLOSE, 0, 0);
@@ -391,6 +391,9 @@ void MainWindow::Paint()
 		else
 			pAP->display();
 
+		if (pAO)
+			pAO->display();
+
 		hr = pRenderTarget->EndDraw();
 		if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
 		{
@@ -440,10 +443,15 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 	POINT p { GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) };
 
 	// client region code
+
 	if (!pResizingInfo) {
 		// TODO: figure out a way to handle top resizing
-		if (passMouse)
-			pAP->MouseMove(wparam, p);
+		if (passMouse) {
+			if (pAO)
+				pAO->MouseMove(wparam, p);
+			else
+				pAP->MouseMove(wparam, p);
+		}
 		else {
 			if (
 				p.x <= 2 * edgeSpace ||
@@ -454,8 +462,12 @@ void MainWindow::MouseMove(WPARAM wparam, LPARAM lparam)
 				p.y >= pRenderTarget->GetSize().height - 2 * edgeSpace
 				)
 				SetCursor(pCursors->sizens);
-			else
-				pAP->MouseMove(wparam, p);
+			else {
+				if (pAO)
+					pAO->MouseMove(wparam, p);
+				else
+					pAP->MouseMove(wparam, p);
+			}
 		}
 	}
 	else {
@@ -537,7 +549,11 @@ void MainWindow::LDown(WPARAM wparam, LPARAM lparam)
 	// normal functionality
 	else {
 		SetCursor(pCursors->arrow);
-		pAP->LDown(wparam, p);
+
+		if (pAO)
+			pAO->LDown(wparam, p);
+		else
+			pAP->LDown(wparam, p);
 	}
 }
 
@@ -547,7 +563,11 @@ void MainWindow::LUp(WPARAM wparam, LPARAM lparam)
 	
 	if (!pResizingInfo) {
 		SetCursor(pCursors->arrow);
-		pAP->LUp(wparam, p);
+
+		if (pAO)
+			pAO->LUp(wparam, p);
+		else
+			pAP->LUp(wparam, p);
 	}
 	else {
 		RECT rc;
@@ -693,7 +713,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow)
 {
 	MainWindow win;
 
-	if (!win.Create(L"Circle", WS_OVERLAPPEDWINDOW))
+	if (!win.Create(L"Image Annotator", WS_OVERLAPPEDWINDOW))
 	{
 		return 0;
 	}

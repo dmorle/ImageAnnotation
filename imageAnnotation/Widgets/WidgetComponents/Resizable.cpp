@@ -1,4 +1,4 @@
-#include "Resizable.h"
+#include "WResizable.h"
 
 
 

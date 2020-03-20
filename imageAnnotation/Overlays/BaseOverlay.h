@@ -31,7 +31,7 @@ public:
 	virtual void LUp(const WPARAM& wparam, const POINT& p);
 
 	// displays the overlay to the screen
-	virtual void display() = 0;
+	virtual void display();
 
 	// return pRc->left;
 	LONG getLeft();
@@ -54,13 +54,8 @@ protected:
 	std::vector<OLCMP::BaseComponent*> cmp;
 
 private:
-	// static variable to uniquely identify the overlay
-	static USHORT currId;
-	// overlay instance's id
-	USHORT id;
-
-	// checks if pB->id is the same as this->id
-	BOOL equals(const BaseOverlay* pB);
+	// Overlay's parent overlay, NULL => no parent
+	BaseOverlay* pParent;
 
 	// checks if the overlay is active
 	// returns TRUE if active, FALSE if not

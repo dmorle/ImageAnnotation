@@ -1,4 +1,4 @@
-#include "ImageBaseComponent.h"
+#include "WImageBaseComponent.h"
 
 
 

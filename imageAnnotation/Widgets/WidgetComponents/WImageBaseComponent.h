@@ -2,7 +2,7 @@
 #define WCMP_IMAGE_BASE_COMPONENT_H
 
 #ifndef WIDGET_CMP_H
-#include "BaseComponent.h"
+#include "WBaseComponent.h"
 #endif
 
 namespace WCMP {

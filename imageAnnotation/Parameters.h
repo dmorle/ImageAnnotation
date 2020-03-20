@@ -101,10 +101,8 @@ public:
 	// MainWindow does not check for window resizing
 	static BOOL passMouse;
 
-	// 
-	static BaseOverlay *pActiveOverlay;
-	// contains all overlays which can still potentially be used
-	static std::vector<BaseOverlay*> inActiveOverlays;
+	// contains the active overlay
+	static BaseOverlay *pAO;
 };
 
 #endif

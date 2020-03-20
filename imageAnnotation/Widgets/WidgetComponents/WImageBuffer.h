@@ -2,9 +2,9 @@
 #define WCMP_IMAGE_BUFFER_H
 
 #ifndef WIDGET_CMP_H
-#include "InteractiveComponent.h"
-#include "ImageBaseComponent.h"
-#include "Buffer.h"
+#include "WInteractiveComponent.h"
+#include "WImageBaseComponent.h"
+#include "WBuffer.h"
 #endif
 
 #include <list>

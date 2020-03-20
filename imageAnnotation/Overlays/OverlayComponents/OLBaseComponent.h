@@ -3,7 +3,6 @@
 
 #ifndef OVERLAY_COMPONENTS_H
 #include "../../Parameters.h"
-#include "../BaseOverlay.h"
 #endif
 
 namespace OLCMP {
@@ -42,5 +41,9 @@ namespace OLCMP {
 	};
 
 }
+
+#ifndef OVERLAY_COMPONENTS_H
+#include "../BaseOverlay.h"
+#endif
 
 #endif

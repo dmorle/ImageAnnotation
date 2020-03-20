@@ -3,7 +3,7 @@
 
 #ifndef WIDGET_CMP_H
 #include "../../Parameters.h"
-#include "Resizable.h"
+#include "WResizable.h"
 #endif
 
 namespace WCMP {

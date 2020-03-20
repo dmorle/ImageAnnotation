@@ -3,7 +3,7 @@
 
 #ifndef WIDGET_CMP_H
 #include "../../Parameters.h"
-#include "InteractiveComponent.h"
+#include "WInteractiveComponent.h"
 #endif
 
 namespace WCMP {

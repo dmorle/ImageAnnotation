@@ -90,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,22 +162,22 @@
     <ClInclude Include="Overlays.h" />
     <ClInclude Include="Overlays\BaseOverlay.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />
-    <ClInclude Include="Overlays\OverlayComponents\BaseComponent.h" />
-    <ClInclude Include="Overlays\OverlayComponents\TextComponent.h" />
+    <ClInclude Include="Overlays\OverlayComponents\OLBaseComponent.h" />
+    <ClInclude Include="Overlays\OverlayComponents\OLTextComponent.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="Widgets.h" />
     <ClInclude Include="Widgets\Container.h" />
     <ClInclude Include="Widgets\Panel.h" />
     <ClInclude Include="Widgets\WidgetPanel.h" />
     <ClInclude Include="Widgets\WidgetComponents.h" />
-    <ClInclude Include="Widgets\WidgetComponents\BaseComponent.h" />
-    <ClInclude Include="Widgets\WidgetComponents\Buffer.h" />
-    <ClInclude Include="Widgets\WidgetComponents\EmptyButton.h" />
-    <ClInclude Include="Widgets\WidgetComponents\ImageBaseComponent.h" />
-    <ClInclude Include="Widgets\WidgetComponents\ImageBuffer.h" />
-    <ClInclude Include="Widgets\WidgetComponents\InteractiveComponent.h" />
-    <ClInclude Include="Widgets\WidgetComponents\ParentComponent.h" />
-    <ClInclude Include="Widgets\WidgetComponents\Resizable.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WBaseComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WBuffer.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WEmptyButton.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WImageBaseComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WImageBuffer.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WInteractiveComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WParentComponent.h" />
+    <ClInclude Include="Widgets\WidgetComponents\WResizable.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

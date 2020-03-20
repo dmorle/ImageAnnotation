@@ -2,7 +2,7 @@
 #define WCMP_INTERACTIVE_COMPONENT_H
 
 #ifndef WIDGET_CMP_H
-#include "BaseComponent.h"
+#include "WBaseComponent.h"
 #endif
 
 #ifndef StateUpdateFunc
