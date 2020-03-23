@@ -28,27 +28,6 @@
     <ClCompile Include="Widgets\Panel.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\BaseComponent.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\EmptyButton.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\ImageBaseComponent.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\ImageBuffer.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\InteractiveComponent.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\ParentComponent.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Widgets\WidgetComponents\Resizable.cpp">
-      <Filter>Source Files\Widgets\WidgetComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Widgets\WidgetPanel.cpp">
       <Filter>Source Files\Widgets</Filter>
     </ClCompile>
@@ -63,6 +42,27 @@
     </ClCompile>
     <ClCompile Include="Overlays\OverlayComponents\TextComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WBaseComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WEmptyButton.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WImageBaseComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WImageBuffer.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WParentComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WInteractiveComponent.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Widgets\WidgetComponents\WResizable.cpp">
+      <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -141,13 +141,13 @@
     <ClCompile Include="Widgets\Container.cpp" />
     <ClCompile Include="Widgets\Panel.cpp" />
     <ClCompile Include="Widgets\WidgetPanel.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\BaseComponent.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\EmptyButton.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\ImageBaseComponent.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\ImageBuffer.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\InteractiveComponent.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\ParentComponent.cpp" />
-    <ClCompile Include="Widgets\WidgetComponents\Resizable.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WBaseComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WEmptyButton.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WImageBaseComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WImageBuffer.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WInteractiveComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WParentComponent.cpp" />
+    <ClCompile Include="Widgets\WidgetComponents\WResizable.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
