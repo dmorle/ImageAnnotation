@@ -20,7 +20,7 @@ Panel* Parameters::pAP = NULL;
 BOOL Parameters::fullPaint = TRUE;
 BOOL Parameters::passMouse = FALSE;
 
-BaseOverlay *Parameters::pAO = NULL;
+BaseOverlay* Parameters::pAO = NULL;
 
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),

@@ -28,6 +28,7 @@ namespace OLCMP {
 		// return pRc->bottom;
 		LONG getBottom();
 
+		// displays the component to the screen
 		virtual void display() = 0;
 
 	protected:
@@ -35,6 +36,14 @@ namespace OLCMP {
 
 		// bounding rectangle
 		PRECT pRc;
+
+		void getGlobalRect(RECT& nrc);
+		void getGlobalRect(D2D1_RECT_F& nrc);
+
+		void getGlobalRect(PRECT npRc);
+		void getGlobalRect(D2D1_RECT_F* npRc);
+
+		BOOL IsValidRect();
 
 	private:
 		BaseOverlay* pParent;

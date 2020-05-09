@@ -5,12 +5,21 @@
 #include "OLBaseComponent.h"
 #endif
 
+#include <string>
+
 namespace OLCMP {
 
 	class TextComponent :
 		public BaseComponent
 	{
-		TextComponent(BaseOverlay* pParent, const RECT& rc);
+	public:
+		TextComponent(BaseOverlay* pParent, const RECT& rc, const WCHAR* text);
+
+		// display the text component to the screen
+		void display() override;
+
+	private:
+		std::wstring text;
 	};
 
 }

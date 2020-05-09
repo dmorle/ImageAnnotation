@@ -135,8 +135,9 @@
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
     <ClCompile Include="Overlays\BaseOverlay.cpp" />
-    <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp" />
-    <ClCompile Include="Overlays\OverlayComponents\TextComponent.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\OLCompositeComponent.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\OLTextComponent.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="Widgets\Container.cpp" />
     <ClCompile Include="Widgets\Panel.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Overlays\BaseOverlay.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLBaseComponent.h" />
+    <ClInclude Include="Overlays\OverlayComponents\OLCompositeComponent.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLTextComponent.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="Widgets.h" />

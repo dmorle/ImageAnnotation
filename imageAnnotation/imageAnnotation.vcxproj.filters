@@ -37,12 +37,6 @@
     <ClCompile Include="Overlays\BaseOverlay.cpp">
       <Filter>Source Files\Overlays</Filter>
     </ClCompile>
-    <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp">
-      <Filter>Source Files\Overlays\OverlayComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="Overlays\OverlayComponents\TextComponent.cpp">
-      <Filter>Source Files\Overlays\OverlayComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Widgets\WidgetComponents\WBaseComponent.cpp">
       <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
@@ -63,6 +57,15 @@
     </ClCompile>
     <ClCompile Include="Widgets\WidgetComponents\WResizable.cpp">
       <Filter>Source Files\Widgets\WidgetComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\OLCompositeComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\OLTextComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,9 +132,6 @@
     <ClInclude Include="Widgets\WidgetComponents\WBaseComponent.h">
       <Filter>Header Files\Widgets\WidgetComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Widgets\WidgetComponents\WBuffer.h">
-      <Filter>Header Files\Widgets\WidgetComponents</Filter>
-    </ClInclude>
     <ClInclude Include="Widgets\WidgetComponents\WEmptyButton.h">
       <Filter>Header Files\Widgets\WidgetComponents</Filter>
     </ClInclude>
@@ -149,6 +149,12 @@
     </ClInclude>
     <ClInclude Include="Widgets\WidgetComponents\WResizable.h">
       <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Widgets\WidgetComponents\WBuffer.h">
+      <Filter>Header Files\Widgets\WidgetComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents\OLCompositeComponent.h">
+      <Filter>Header Files\Overlays\OverlayComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
