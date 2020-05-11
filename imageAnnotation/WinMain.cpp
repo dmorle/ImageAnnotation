@@ -296,6 +296,9 @@ HRESULT MainWindow::CreateGraphicsResources()
 		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetBack, &pBrushes->widgetBack);
 
 	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayBack, &pBrushes->overlayBack);
+
+	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(pPalette->passive, &pBrushes->passive);
 
 	if (SUCCEEDED(hr))

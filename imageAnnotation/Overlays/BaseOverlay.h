@@ -17,7 +17,7 @@ class BaseOverlay :
 	public Parameters
 {      
 public:
-	BaseOverlay(const RECT& pRc);
+	BaseOverlay(const RECT& rc);
 
 	virtual ~BaseOverlay();
 
@@ -26,9 +26,9 @@ public:
 
 	// user actions
 
-	virtual void MouseMove(const WPARAM& wparam, const POINT& p);
-	virtual void LDown(const WPARAM& wparam, const POINT& p);
-	virtual void LUp(const WPARAM& wparam, const POINT& p);
+	virtual void MouseMove(const WPARAM& wparam, const POINT& p) = 0;
+	virtual void LDown(const WPARAM& wparam, const POINT& p) = 0;
+	virtual void LUp(const WPARAM& wparam, const POINT& p) = 0;
 
 	// displays the overlay to the screen
 	virtual void display();
@@ -42,24 +42,17 @@ public:
 	// return pRc->bottom;
 	LONG getBottom();
 
-	// only to be used during overlay construction
-	// adds any overlay component overlay to the overlay instance
-	void addComponent(OLCMP::BaseComponent* pCmp);
-
 protected:
 	// bounding rectangle
 	PRECT pRc;
 
-	// contains all of the overlays components
-	std::vector<OLCMP::BaseComponent*> cmp;
+	// checks if the overlay is active
+	// returns TRUE if active, FALSE if not
+	BOOL update(const POINT& p);
 
 private:
 	// Overlay's parent overlay, NULL => no parent
 	BaseOverlay* pParent;
-
-	// checks if the overlay is active
-	// returns TRUE if active, FALSE if not
-	BOOL update(const POINT& p);
 };
 
 #endif

@@ -5,11 +5,15 @@
 #include "../../Parameters.h"
 #endif
 
+class CmpOverlay;
+
 namespace OLCMP {
 
 	class BaseComponent :
 		public Parameters
 	{
+		friend CmpOverlay;
+
 	public:
 		// determines if p is in pRc
 		BOOL contains(const POINT& p);
@@ -32,7 +36,7 @@ namespace OLCMP {
 		virtual void display() = 0;
 
 	protected:
-		BaseComponent(BaseOverlay* pParent, const RECT& rc);
+		BaseComponent(const RECT& rc);
 
 		// bounding rectangle
 		PRECT pRc;
@@ -45,7 +49,10 @@ namespace OLCMP {
 
 		BOOL IsValidRect();
 
+		const BaseOverlay* getParent() const;
+
 	private:
+		// this parameter is set when passing the component to the overlay through addComponent
 		BaseOverlay* pParent;
 	};
 

@@ -37,9 +37,8 @@ namespace OLCMP {
 		return pRc->bottom;
 	}
 
-	OLCMP::BaseComponent::BaseComponent(BaseOverlay* pParent, const RECT& rc)
+	OLCMP::BaseComponent::BaseComponent(const RECT& rc)
 	{
-		this->pParent = pParent;
 		this->pRc = new RECT(rc);
 	}
 
@@ -86,6 +85,11 @@ namespace OLCMP {
 			)
 			return TRUE;
 		return FALSE;
+	}
+
+	const BaseOverlay* BaseComponent::getParent() const
+	{
+		return pParent;
 	}
 
 }

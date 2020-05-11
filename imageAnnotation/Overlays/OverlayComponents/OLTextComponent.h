@@ -13,7 +13,12 @@ namespace OLCMP {
 		public BaseComponent
 	{
 	public:
-		TextComponent(BaseOverlay* pParent, const RECT& rc, const WCHAR* text);
+		TextComponent(const RECT& rc, const WCHAR* text);
+
+		// user inputs
+		void MouseMove(const WPARAM& wparam, const POINT& p) override;
+		void LDown(const WPARAM& wparam, const POINT& p) override;
+		void LUp(const WPARAM& wparam, const POINT& p) override;
 
 		// display the text component to the screen
 		void display() override;

@@ -58,14 +58,26 @@
     <ClCompile Include="Widgets\WidgetComponents\WResizable.cpp">
       <Filter>Source Files\Widgets\WidgetComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Overlays\OverlayComponents\OLCompositeComponent.cpp">
-      <Filter>Source Files\Overlays\OverlayComponents</Filter>
-    </ClCompile>
     <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
     </ClCompile>
     <ClCompile Include="Overlays\OverlayComponents\OLTextComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\CmpOverlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\SolidOverlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\OLButtonComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Overlays\SolidCmpOverlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="GRAPHICSTRUCT.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,8 +165,20 @@
     <ClInclude Include="Widgets\WidgetComponents\WBuffer.h">
       <Filter>Header Files\Widgets\WidgetComponents</Filter>
     </ClInclude>
-    <ClInclude Include="Overlays\OverlayComponents\OLCompositeComponent.h">
+    <ClInclude Include="Overlays\CmpOverlay.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\SolidOverlay.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents\OLButtonComponent.h">
       <Filter>Header Files\Overlays\OverlayComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\SolidCmpOverlay.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="GRAPHICSTRUCT.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

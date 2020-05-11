@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GRAPHICSTRUCT.cpp" />
     <ClCompile Include="NCComponents\CloseButton.cpp" />
     <ClCompile Include="NCComponents\MaxButton.cpp" />
     <ClCompile Include="NCComponents\MinButton.cpp" />
@@ -135,9 +136,12 @@
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
     <ClCompile Include="Overlays\BaseOverlay.cpp" />
+    <ClCompile Include="Overlays\CmpOverlay.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\OLButtonComponent.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp" />
-    <ClCompile Include="Overlays\OverlayComponents\OLCompositeComponent.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLTextComponent.cpp" />
+    <ClCompile Include="Overlays\SolidCmpOverlay.cpp" />
+    <ClCompile Include="Overlays\SolidOverlay.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="Widgets\Container.cpp" />
     <ClCompile Include="Widgets\Panel.cpp" />
@@ -153,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
+    <ClInclude Include="GRAPHICSTRUCT.h" />
     <ClInclude Include="NCComponents.h" />
     <ClInclude Include="NCComponents\CloseButton.h" />
     <ClInclude Include="NCComponents\MaxButton.h" />
@@ -162,10 +167,13 @@
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
     <ClInclude Include="Overlays.h" />
     <ClInclude Include="Overlays\BaseOverlay.h" />
+    <ClInclude Include="Overlays\CmpOverlay.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />
+    <ClInclude Include="Overlays\OverlayComponents\OLButtonComponent.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLBaseComponent.h" />
-    <ClInclude Include="Overlays\OverlayComponents\OLCompositeComponent.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLTextComponent.h" />
+    <ClInclude Include="Overlays\SolidCmpOverlay.h" />
+    <ClInclude Include="Overlays\SolidOverlay.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="Widgets.h" />
     <ClInclude Include="Widgets\Container.h" />

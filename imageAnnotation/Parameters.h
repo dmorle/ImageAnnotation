@@ -45,6 +45,7 @@ public:
 
 		D2D1::ColorF background;
 		D2D1::ColorF widgetBack;
+		D2D1::ColorF overlayBack;
 		D2D1::ColorF passive;
 		D2D1::ColorF active;
 		D2D1::ColorF text;
@@ -57,6 +58,7 @@ public:
 		ID2D1SolidColorBrush* background;
 		ID2D1SolidColorBrush* preDeletion;
 		ID2D1SolidColorBrush* widgetBack;
+		ID2D1SolidColorBrush* overlayBack;
 		ID2D1SolidColorBrush* passive;
 		ID2D1SolidColorBrush* active;
 		ID2D1SolidColorBrush* text;
@@ -92,7 +94,7 @@ public:
 	static Panel* pAP;
 
 	// basic panel dimensions
-	const LONG edgeSpace = 2;
+	static const LONG edgeSpace = 2;
 
 	// program flags
 

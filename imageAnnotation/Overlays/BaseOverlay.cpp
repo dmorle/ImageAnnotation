@@ -10,9 +10,6 @@ BaseOverlay::BaseOverlay(const RECT& rc)
 
 BaseOverlay::~BaseOverlay()
 {
-	for (auto& e : cmp)
-		delete e;
-
 	if (pRc)
 		delete pRc;
 }
@@ -28,29 +25,10 @@ BOOL BaseOverlay::contains(const POINT& p)
 	return FALSE;
 }
 
-void BaseOverlay::MouseMove(const WPARAM& wparam, const POINT& p)
-{
-}
-
-void BaseOverlay::LDown(const WPARAM& wparam, const POINT& p)
-{
-	if (!update(p))
-		return;
-}
-
-void BaseOverlay::LUp(const WPARAM& wparam, const POINT& p)
-{
-	if (!update(p))
-		return;
-}
-
 void BaseOverlay::display()
 {
 	if (pParent)
 		pParent->display();
-
-	for (auto& e : cmp)
-		e->display();
 }
 
 LONG BaseOverlay::getLeft()
@@ -73,16 +51,13 @@ LONG BaseOverlay::getBottom()
 	return pRc->bottom;
 }
 
-void BaseOverlay::addComponent(OLCMP::BaseComponent* pCmp)
-{
-	this->cmp.push_back(pCmp);
-}
-
 BOOL BaseOverlay::update(const POINT& p)
 {
 	if (!contains(p)) {
 		pAO = this->pParent;
 		delete this;
+		fullPaint = TRUE;
+		InvalidateRect(hwnd, NULL, FALSE);
 		return FALSE;
 	}
 	return TRUE;

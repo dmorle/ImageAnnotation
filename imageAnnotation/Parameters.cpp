@@ -25,6 +25,7 @@ BaseOverlay* Parameters::pAO = NULL;
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),
 	widgetBack(0.15f, 0.15f, 0.15f),
+	overlayBack(0.1f, 0.1f, 0.1f),
 	passive(0.3f, 0.3f, 0.3f),
 	active(0.4f, 0.4f, 0.4f),
 	text(1.0f, 1.0f, 1.0f)
@@ -34,6 +35,7 @@ Parameters::_stdBrushes::_stdBrushes() :
 	background(NULL),
 	preDeletion(NULL),
 	widgetBack(NULL),
+	overlayBack(NULL),
 	passive(NULL),
 	active(NULL),
 	text(NULL)
@@ -42,6 +44,7 @@ Parameters::_stdBrushes::_stdBrushes() :
 void Parameters::_stdBrushes::release() {
 	SafeRelease(&background);
 	SafeRelease(&widgetBack);
+	SafeRelease(&overlayBack);
 	SafeRelease(&passive);
 	SafeRelease(&active);
 	SafeRelease(&text);

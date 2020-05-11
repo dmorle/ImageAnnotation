@@ -4,7 +4,7 @@
 #include "../Parameters.h"
 
 #include "OverlayComponents/OLBaseComponent.h"
-#include "OverlayComponents/OLCompositeComponent.h"
 #include "OverlayComponents/OLTextComponent.h"
+#include "OverlayComponents/OLButtonComponent.h"
 
 #endif
