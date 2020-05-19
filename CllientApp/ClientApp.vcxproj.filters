@@ -79,6 +79,9 @@
     <ClCompile Include="GRAPHICSTRUCT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Overlays\OverlayComponents\OLInteractiveComponent.cpp">
+      <Filter>Source Files\Overlays\OverlayComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -179,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="GRAPHICSTRUCT.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\OverlayComponents\OLInteractiveComponent.h">
+      <Filter>Header Files\Overlays\OverlayComponents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -23,6 +23,7 @@
     <ProjectGuid>{769B32EA-2A2A-45BC-A821-05CEE0A568AD}</ProjectGuid>
     <RootNamespace>imageAnnotation</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ClientApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -91,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <ShowIncludes>false</ShowIncludes>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,6 +141,7 @@
     <ClCompile Include="Overlays\CmpOverlay.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLButtonComponent.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp" />
+    <ClCompile Include="Overlays\OverlayComponents\OLInteractiveComponent.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLTextComponent.cpp" />
     <ClCompile Include="Overlays\SolidCmpOverlay.cpp" />
     <ClCompile Include="Overlays\SolidOverlay.cpp" />
@@ -171,6 +174,7 @@
     <ClInclude Include="Overlays\OverlayComponents.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLButtonComponent.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLBaseComponent.h" />
+    <ClInclude Include="Overlays\OverlayComponents\OLInteractiveComponent.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLTextComponent.h" />
     <ClInclude Include="Overlays\SolidCmpOverlay.h" />
     <ClInclude Include="Overlays\SolidOverlay.h" />

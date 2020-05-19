@@ -17,19 +17,4 @@ namespace OLCMP {
 		pRenderTarget->DrawText(text.c_str(), text.length(), pTextFormat, rc, pBrushes->text);
 	}
 
-	void TextComponent::MouseMove(const WPARAM& wparam, const POINT& p)
-	{
-
-	}
-
-	void TextComponent::LDown(const WPARAM& wparam, const POINT& p)
-	{
-
-	}
-
-	void TextComponent::LUp(const WPARAM& wparam, const POINT& p)
-	{
-
-	}
-
 }

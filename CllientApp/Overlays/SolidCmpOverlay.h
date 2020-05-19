@@ -16,9 +16,9 @@ class SolidCmpOverlay :
 
 	// user actions
 
-	virtual void MouseMove(const WPARAM& wparam, const POINT& p) override = 0;
-	virtual void LDown(const WPARAM& wparam, const POINT& p) override = 0;
-	virtual void LUp(const WPARAM& wparam, const POINT& p) override = 0;
+	virtual void MouseMove(const WPARAM& wparam, const POINT& p) override;
+	virtual void LDown(const WPARAM& wparam, const POINT& p) override;
+	virtual void LUp(const WPARAM& wparam, const POINT& p) override;
 
 	// displays the overlay to the screen
 	virtual void display() override;

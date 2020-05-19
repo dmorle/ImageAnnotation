@@ -5,6 +5,7 @@
 
 #include "OverlayComponents/OLBaseComponent.h"
 #include "OverlayComponents/OLTextComponent.h"
+#include "OverlayComponents/OLInteractiveComponent.h"
 #include "OverlayComponents/OLButtonComponent.h"
 
 #endif

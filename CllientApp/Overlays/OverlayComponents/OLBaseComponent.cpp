@@ -92,4 +92,9 @@ namespace OLCMP {
 		return pParent;
 	}
 
+	const BOOL BaseComponent::isInteractive() const
+	{
+		return interactive;
+	}
+
 }
