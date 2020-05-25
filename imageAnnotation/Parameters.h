@@ -7,6 +7,7 @@
 #include <wincodec.h>
 #include <d2d1.h>
 #include <dwrite.h>
+
 #pragma comment(lib, "d2d1")
 
 #include <wingdi.h>
@@ -34,9 +35,13 @@ template <class T> void SafeRelease(T** ppT)
 class Panel;
 class MainWindow;
 class BaseOverlay;
+class ServerInterface;
 
 class Parameters {
 public:
+
+	// object for interfacing with server side operations
+	ServerInterface sInt;
 
 	// contains all the colors which will be used by the program
 	typedef struct _appPalette

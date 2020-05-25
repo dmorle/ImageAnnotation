@@ -61,6 +61,12 @@
     <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
     </ClCompile>
+    <ClCompile Include="Network\ServerInterface.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\sspiUtil.c">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -144,6 +150,18 @@
     <ClInclude Include="Overlays\OverlayComponents.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
+    <ClInclude Include="Network\ServerInterface.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkComponents.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\sspiUtil.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -184,6 +202,12 @@
     </Filter>
     <Filter Include="Source Files\Overlays\OverlayComponents">
       <UniqueIdentifier>{348bc588-1fb7-4282-be82-422a18709288}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{07f8ae1c-973c-42f5-a9b1-7797ea9e8874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{ba9986f7-a391-4f92-8f0a-d9d522134e01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

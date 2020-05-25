@@ -6,6 +6,7 @@
 #include "basewin.h"
 #include "Widgets.h"
 #include "NCComponents.h"
+#include "Network.h"
 
 class MainWindow :
 	public BaseWindow<MainWindow>

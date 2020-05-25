@@ -93,7 +93,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>MSVCRTD.lib;Windowscodecs.lib;Dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MSVCRTD.lib;Windowscodecs.lib;Dwrite.lib;Ws2_32.lib;Secur32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -133,6 +133,8 @@
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
+    <ClCompile Include="Network\ServerInterface.cpp" />
+    <ClCompile Include="Network\sspiUtil.c" />
     <ClCompile Include="Overlays\BaseOverlay.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp" />
     <ClCompile Include="Parameters.cpp" />
@@ -157,6 +159,10 @@
     <ClInclude Include="NCComponents\NCButton.h" />
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
+    <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkComponents.h" />
+    <ClInclude Include="Network\ServerInterface.h" />
+    <ClInclude Include="Network\sspiUtil.h" />
     <ClInclude Include="Overlays.h" />
     <ClInclude Include="Overlays\BaseOverlay.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />
