@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BufferUnitTest", "BufferUni
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{7A83FA6F-E250-4A60-8BC9-D242B88F0495}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClientApp", "ClientApp\ClientApp.vcxproj", "{769B32EA-2A2A-45BC-A821-05CEE0A568AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -55,6 +57,18 @@ Global
 		{7A83FA6F-E250-4A60-8BC9-D242B88F0495}.Release|x86.ActiveCfg = Release|x86
 		{7A83FA6F-E250-4A60-8BC9-D242B88F0495}.Release|x86.Build.0 = Release|x86
 		{7A83FA6F-E250-4A60-8BC9-D242B88F0495}.Release|x86.Deploy.0 = Release|x86
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|ARM.ActiveCfg = Debug|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|x64.ActiveCfg = Debug|x64
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|x64.Build.0 = Debug|x64
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|x86.ActiveCfg = Debug|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Debug|x86.Build.0 = Debug|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|ARM.ActiveCfg = Release|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|ARM64.ActiveCfg = Release|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|x64.ActiveCfg = Release|x64
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|x64.Build.0 = Release|x64
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|x86.ActiveCfg = Release|Win32
+		{769B32EA-2A2A-45BC-A821-05CEE0A568AD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
