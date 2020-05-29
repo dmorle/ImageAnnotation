@@ -160,7 +160,7 @@
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkComponents.h" />
+    <ClInclude Include="Network\NetworkComponents.h" />
     <ClInclude Include="Network\ServerInterface.h" />
     <ClInclude Include="Network\sspiUtil.h" />
     <ClInclude Include="Overlays.h" />

@@ -27,11 +27,26 @@ BOOL GenClientContext(
     struct _SecHandle* hcText
 );
 
+BOOL EncryptThis(
+    PBYTE pMessage,
+    ULONG cbMessage,
+    BYTE** ppOutput,
+    LPDWORD pcbOutput,
+    ULONG securityTrailer
+);
+
 PBYTE DecryptThis(
     PBYTE achData,
     LPDWORD pcbMessage,
     struct _SecHandle* hCtxt,
     ULONG   cbSecurityTrailer
+);
+
+BOOL SignThis(
+    PBYTE pMessage,
+    ULONG cbMessage,
+    BYTE** ppOutput,
+    LPDWORD pcbOutput
 );
 
 PBYTE VerifyThis(

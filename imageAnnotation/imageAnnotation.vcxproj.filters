@@ -156,10 +156,10 @@
     <ClInclude Include="Network.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkComponents.h">
+    <ClInclude Include="Network\sspiUtil.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Network\sspiUtil.h">
+    <ClInclude Include="Network\NetworkComponents.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
