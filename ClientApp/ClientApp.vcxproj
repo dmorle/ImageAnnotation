@@ -23,6 +23,7 @@
     <ProjectGuid>{769B32EA-2A2A-45BC-A821-05CEE0A568AD}</ProjectGuid>
     <RootNamespace>imageAnnotation</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ClientApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
