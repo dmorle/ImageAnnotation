@@ -1,0 +1,6 @@
+[submodule "ClientApp/vendor/OpenSSL"]
+	path = ClientApp/vendor/OpenSSL
+	url = https://github.com/openssl/openssl.git
+[submodule "Server/vendor/OpenSSL"]
+	path = Server/vendor/OpenSSL
+	url = https://github.com/openssl/openssl.git

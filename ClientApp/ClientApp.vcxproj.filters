@@ -64,9 +64,6 @@
     <ClCompile Include="Network\ServerInterface.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Network\sspiUtil.c">
-      <Filter>Source Files\Network</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -155,12 +152,6 @@
     </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\sspiUtil.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="Network\NetworkComponents.h">
-      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

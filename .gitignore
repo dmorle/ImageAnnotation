@@ -341,3 +341,8 @@ healthchecksdb
 
 # VS linux intro
 Server/readme/
+
+out/
+
+Server/cmake-build-debug/
+
