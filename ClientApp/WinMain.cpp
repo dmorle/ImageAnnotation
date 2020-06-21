@@ -44,7 +44,7 @@ namespace NCFunc{
 
 	void onFileClick()
 	{
-
+		Parameters::pAO = new FileMenu();
 	}
 
 	void onEditClick()

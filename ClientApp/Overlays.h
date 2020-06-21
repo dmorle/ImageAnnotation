@@ -10,4 +10,6 @@
 #include "Overlays/CmpOverlay.h"
 #include "Overlays/SolidCmpOverlay.h"
 
+#include "Overlays/FileMenu.h"
+
 #endif

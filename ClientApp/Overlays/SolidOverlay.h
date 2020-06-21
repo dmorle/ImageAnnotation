@@ -4,11 +4,10 @@
 #include "BaseOverlay.h"
 
 class SolidOverlay :
-	public BaseOverlay
+	virtual public BaseOverlay
 {
 public:
 	SolidOverlay(const RECT& rc);
-
 	virtual ~SolidOverlay();
 
 	// user actions

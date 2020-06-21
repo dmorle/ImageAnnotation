@@ -2,7 +2,7 @@
 
 
 
-CmpOverlay::CmpOverlay(const RECT& rc) :
+CmpOverlay::CmpOverlay(const RECT& rc) : 
 	BaseOverlay(rc)
 {}
 

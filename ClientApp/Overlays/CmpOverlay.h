@@ -4,11 +4,10 @@
 #include "BaseOverlay.h"
 
 class CmpOverlay :
-	public BaseOverlay
+	virtual public BaseOverlay
 {
 public:
 	CmpOverlay(const RECT& rc);
-
 	virtual ~CmpOverlay();
 
 	// user actions

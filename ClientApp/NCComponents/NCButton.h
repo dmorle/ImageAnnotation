@@ -18,7 +18,6 @@ namespace NCCMP {
 		PRESSED
 	};
 
-	typedef struct GRAPHICSTRUCT GRAPHICSTRUCT;
 	struct GRAPHICSTRUCT {
 	public:
 		GRAPHICSTRUCT(

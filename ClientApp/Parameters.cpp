@@ -22,6 +22,27 @@ BOOL Parameters::passMouse = FALSE;
 
 BaseOverlay* Parameters::pAO = NULL;
 
+const RECT Parameters::fileRc = RECT{
+	50,
+	0,
+	150,
+	200
+};
+
+const RECT Parameters::editRc = RECT{
+	50,
+	0,
+	150,
+	200
+};
+
+const RECT Parameters::prefRc = RECT{
+	50,
+	0,
+	150,
+	200
+};
+
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),
 	widgetBack(0.15f, 0.15f, 0.15f),

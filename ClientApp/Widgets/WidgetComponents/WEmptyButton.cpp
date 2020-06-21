@@ -17,7 +17,7 @@ namespace WCMP {
 		InteractiveComponent(pRc, parentpRc, pRB, onClick, paintSelf)
 	{
 		this->pRB = new Resizable(pRB);
-		this->pGs = new GRAPHICSTRUCT(pRenderTarget, palette);
+		this->pGs = new GRAPHICSTRUCT(palette);
 	}
 
 	EmptyButton::EmptyButton(EmptyButton* pThis, PRECT npRc)

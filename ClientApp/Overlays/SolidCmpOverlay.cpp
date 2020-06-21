@@ -3,6 +3,7 @@
 
 
 SolidCmpOverlay::SolidCmpOverlay(const RECT& rc) :
+	BaseOverlay(rc),
 	SolidOverlay(rc),
 	CmpOverlay(rc)
 {}

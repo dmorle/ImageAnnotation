@@ -105,6 +105,12 @@ public:
 
 	// contains the active overlay
 	static BaseOverlay *pAO;
+
+	// rectangles for standard drop-downs
+
+	static const RECT fileRc;
+	static const RECT editRc;
+	static const RECT prefRc;
 };
 
 #endif

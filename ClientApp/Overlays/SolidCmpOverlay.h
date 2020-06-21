@@ -10,8 +10,8 @@ class SolidCmpOverlay :
 	public SolidOverlay,
 	public CmpOverlay
 {
+public:
 	SolidCmpOverlay(const RECT& rc);
-
 	virtual ~SolidCmpOverlay();
 
 	// user actions
