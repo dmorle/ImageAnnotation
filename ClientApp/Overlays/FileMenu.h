@@ -1,10 +1,10 @@
 #ifndef FILE_MENU_H
 #define FILE_MENU_H
 
-#include "SolidCmpOverlay.h"
+#include "DropDownOverlay.h"
 
 class FileMenu :
-    public SolidCmpOverlay
+    public DropDownOverlay
 {
 public:
     FileMenu();

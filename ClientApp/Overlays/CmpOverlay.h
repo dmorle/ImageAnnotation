@@ -7,7 +7,6 @@ class CmpOverlay :
 	virtual public BaseOverlay
 {
 public:
-	CmpOverlay(const RECT& rc);
 	virtual ~CmpOverlay();
 
 	// user actions
@@ -24,6 +23,11 @@ public:
 	void addComponent(OLCMP::BaseComponent* pCmp);
 
 protected:
+	CmpOverlay();
+	CmpOverlay(const RECT& rc);
+	CmpOverlay(BaseOverlay* pParent);
+	CmpOverlay(const RECT& rc, BaseOverlay* pParent);
+
 	// contains all of the overlays components
 	std::vector<OLCMP::BaseComponent*> cmp;
 };

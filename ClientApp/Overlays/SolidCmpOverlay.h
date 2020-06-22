@@ -11,7 +11,6 @@ class SolidCmpOverlay :
 	public CmpOverlay
 {
 public:
-	SolidCmpOverlay(const RECT& rc);
 	virtual ~SolidCmpOverlay();
 
 	// user actions
@@ -22,6 +21,12 @@ public:
 
 	// displays the overlay to the screen
 	virtual void display() override;
+
+protected:
+	SolidCmpOverlay();
+	SolidCmpOverlay(const RECT& rc);
+	SolidCmpOverlay(BaseOverlay* pParent);
+	SolidCmpOverlay(const RECT& rc, BaseOverlay* pParent);
 };
 
 #endif

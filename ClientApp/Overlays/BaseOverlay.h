@@ -17,8 +17,6 @@ class BaseOverlay :
 	public Parameters
 {      
 public:
-	BaseOverlay(const RECT& rc);
-
 	virtual ~BaseOverlay();
 
 	// checks if p is in pRc
@@ -43,6 +41,11 @@ public:
 	LONG getBottom();
 
 protected:
+	BaseOverlay();
+	BaseOverlay(const RECT& rc);
+	BaseOverlay(BaseOverlay* pParent);
+	BaseOverlay(const RECT& rc, BaseOverlay* pParent);
+
 	// bounding rectangle
 	PRECT pRc;
 

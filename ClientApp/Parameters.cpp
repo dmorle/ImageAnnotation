@@ -15,33 +15,14 @@ Parameters::appPalette* Parameters::pPalette = NULL;
 Parameters::stdBrushes* Parameters::pBrushes = NULL;
 Parameters::stdCursors* Parameters::pCursors = NULL;
 
+GRAPHICSTRUCT* Parameters::pStdGs = NULL;
+
 Panel* Parameters::pAP = NULL;
 
 BOOL Parameters::fullPaint = TRUE;
 BOOL Parameters::passMouse = FALSE;
 
 BaseOverlay* Parameters::pAO = NULL;
-
-const RECT Parameters::fileRc = RECT{
-	50,
-	0,
-	150,
-	200
-};
-
-const RECT Parameters::editRc = RECT{
-	50,
-	0,
-	150,
-	200
-};
-
-const RECT Parameters::prefRc = RECT{
-	50,
-	0,
-	150,
-	200
-};
 
 Parameters::_appPalette::_appPalette() :
 	background(0.0f, 0.0f, 0.6f),

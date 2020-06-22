@@ -2,8 +2,20 @@
 
 
 
+CmpOverlay::CmpOverlay() :
+	BaseOverlay()
+{}
+
 CmpOverlay::CmpOverlay(const RECT& rc) : 
 	BaseOverlay(rc)
+{}
+
+CmpOverlay::CmpOverlay(BaseOverlay* pParent) :
+	BaseOverlay(pParent)
+{}
+
+CmpOverlay::CmpOverlay(const RECT& rc, BaseOverlay* pParent) :
+	BaseOverlay(rc, pParent)
 {}
 
 CmpOverlay::~CmpOverlay()

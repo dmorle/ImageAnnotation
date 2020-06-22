@@ -6,9 +6,9 @@ GRAPHICSTRUCT::GRAPHICSTRUCT()
 {
 	back = NULL;
 	back_passive = NULL;
-	back_active = NULL;
-	back_pressed = NULL;
-	comp = NULL;
+	pRenderTarget->CreateSolidColorBrush(pPalette->passive, &back_active);
+	pRenderTarget->CreateSolidColorBrush(pPalette->active, &back_pressed);
+	pRenderTarget->CreateSolidColorBrush(pPalette->text, &comp);
 	comp_passive = NULL;
 	comp_active = NULL;
 	comp_pressed = NULL;
@@ -40,18 +40,6 @@ GRAPHICSTRUCT::GRAPHICSTRUCT(const PGRAPHICSTRUCT pGs)
 		comp_active->AddRef();
 	if (comp_pressed)
 		comp_pressed->AddRef();
-}
-
-GRAPHICSTRUCT::GRAPHICSTRUCT(appPalette palette)
-{
-	back = NULL;
-	back_passive = NULL;
-	pRenderTarget->CreateSolidColorBrush(pPalette->passive, &back_active);
-	pRenderTarget->CreateSolidColorBrush(pPalette->active, &back_pressed);
-	pRenderTarget->CreateSolidColorBrush(pPalette->text, &comp);
-	comp_passive = NULL;
-	comp_active = NULL;
-	comp_pressed = NULL;
 }
 
 GRAPHICSTRUCT::GRAPHICSTRUCT(

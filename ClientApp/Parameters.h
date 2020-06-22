@@ -34,6 +34,7 @@ template <class T> void SafeRelease(T** ppT)
 class Panel;
 class MainWindow;
 class BaseOverlay;
+struct GRAPHICSTRUCT;
 
 class Parameters {
 public:
@@ -106,11 +107,14 @@ public:
 	// contains the active overlay
 	static BaseOverlay *pAO;
 
-	// rectangles for standard drop-downs
+	static GRAPHICSTRUCT* pStdGs;
+};
 
-	static const RECT fileRc;
-	static const RECT editRc;
-	static const RECT prefRc;
+static enum BUTTONSTATE
+{
+	PASSIVE,
+	ACTIVE,
+	PRESSED
 };
 
 #endif

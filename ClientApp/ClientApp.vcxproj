@@ -139,6 +139,7 @@
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
     <ClCompile Include="Overlays\BaseOverlay.cpp" />
     <ClCompile Include="Overlays\CmpOverlay.cpp" />
+    <ClCompile Include="Overlays\DropDownOverlay.cpp" />
     <ClCompile Include="Overlays\FileMenu.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLButtonComponent.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\OLBaseComponent.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="Overlays.h" />
     <ClInclude Include="Overlays\BaseOverlay.h" />
     <ClInclude Include="Overlays\CmpOverlay.h" />
+    <ClInclude Include="Overlays\DropDownOverlay.h" />
     <ClInclude Include="Overlays\FileMenu.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />
     <ClInclude Include="Overlays\OverlayComponents\OLButtonComponent.h" />

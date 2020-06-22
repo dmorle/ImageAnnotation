@@ -20,8 +20,7 @@ namespace WCMP {
 			PRECT parentpRc,
 			Resizable* pRB,
 			void (*onClick)(),
-			void (*paintSelf)(PRECT),
-			appPalette palette
+			void (*paintSelf)(PRECT)
 		);
 
 		virtual ~EmptyButton();

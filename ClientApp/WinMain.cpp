@@ -306,6 +306,9 @@ HRESULT MainWindow::CreateGraphicsResources()
 
 	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(pPalette->text, &pBrushes->text);
+
+	pStdGs = new GRAPHICSTRUCT();
+
 	return hr;
 }
 

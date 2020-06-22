@@ -11,13 +11,6 @@ class MainWindow;
 
 namespace NCCMP {
 
-	enum BUTTONSTATE
-	{
-		PASSIVE,
-		ACTIVE,
-		PRESSED
-	};
-
 	struct GRAPHICSTRUCT {
 	public:
 		GRAPHICSTRUCT(

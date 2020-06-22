@@ -7,7 +7,6 @@ class SolidOverlay :
 	virtual public BaseOverlay
 {
 public:
-	SolidOverlay(const RECT& rc);
 	virtual ~SolidOverlay();
 
 	// user actions
@@ -18,6 +17,12 @@ public:
 
 	// displays the overlay to the screen
 	virtual void display() override;
+
+protected:
+	SolidOverlay();
+	SolidOverlay(const RECT& rc);
+	SolidOverlay(BaseOverlay* pParent);
+	SolidOverlay(const RECT& rc, BaseOverlay* pParent);
 };
 
 #endif

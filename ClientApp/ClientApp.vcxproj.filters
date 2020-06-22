@@ -85,6 +85,9 @@
     <ClCompile Include="Overlays\FileMenu.cpp">
       <Filter>Source Files\Overlays</Filter>
     </ClCompile>
+    <ClCompile Include="Overlays\DropDownOverlay.cpp">
+      <Filter>Source Files\Overlays</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -190,6 +193,9 @@
       <Filter>Header Files\Overlays\OverlayComponents</Filter>
     </ClInclude>
     <ClInclude Include="Overlays\FileMenu.h">
+      <Filter>Header Files\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlays\DropDownOverlay.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
   </ItemGroup>

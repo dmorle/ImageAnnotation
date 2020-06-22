@@ -2,10 +2,28 @@
 
 
 
+BaseOverlay::BaseOverlay()
+{
+	this->pRc = NULL;
+	this->pParent = NULL;
+}
+
 BaseOverlay::BaseOverlay(const RECT& rc)
 {
 	this->pRc = new RECT(rc);
 	this->pParent = NULL;
+}
+
+BaseOverlay::BaseOverlay(BaseOverlay* pParent)
+{
+	this->pRc = NULL;
+	this->pParent = pParent;
+}
+
+BaseOverlay::BaseOverlay(const RECT& rc, BaseOverlay* pParent)
+{
+	this->pRc = new RECT(rc);
+	this->pParent = pParent;
 }
 
 BaseOverlay::~BaseOverlay()
