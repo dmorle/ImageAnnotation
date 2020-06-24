@@ -53,6 +53,11 @@ protected:
 	// returns TRUE if active, FALSE if not
 	BOOL update(const POINT& p);
 
+	// adjusts pRc such that it is contained within the client region of the window.
+	// If the overlay is unable to fit,
+	// the top left of the overlay is fixed to the top left of the client region
+	BOOL fitToClient();
+
 private:
 	// Overlay's parent overlay, NULL => no parent
 	BaseOverlay* pParent;

@@ -2,34 +2,34 @@
 
 
 
-void Label1Down(BaseOverlay* pThis)
-{
-	printf("Label 1 LDown\n");
-}
-
-void Label2Down(BaseOverlay* pThis)
-{
-	printf("Label 2 LDown\n");
-}
-
-void Label3Down(BaseOverlay* pThis)
-{
-	printf("Label 3 LDown\n");
-}
-
 void Label1Up(BaseOverlay* pThis)
 {
-	printf("Label 1 LUp\n");
+	// MessageBox(pThis->hwnd, "Label 1 LDown", "File Menu Action", MB_OK);
+}
+
+void Label1Down(BaseOverlay* pThis)
+{
+	MessageBox(pThis->hwnd, "Label 1 LUp", "File Menu Action", MB_OK);
 }
 
 void Label2Up(BaseOverlay* pThis)
 {
-	printf("Label 2 LUp\n");
+	// MessageBox(pThis->hwnd, "Label 2 LDown", "File Menu Action", MB_OK);
+}
+
+void Label2Down(BaseOverlay* pThis)
+{
+	MessageBox(pThis->hwnd, "Label 2 LUp", "File Menu Action", MB_OK);
+}
+
+void Label3Down(BaseOverlay* pThis)
+{
+	//MessageBox(pThis->hwnd, "Label 3 LDown", "File Menu Action", MB_OK);
 }
 
 void Label3Up(BaseOverlay* pThis)
 {
-	printf("Label 3 LUp\n");
+	MessageBox(pThis->hwnd, "Label 3 LUp", "File Menu Action", MB_OK);
 }
 
 FileMenu::FileMenu() :

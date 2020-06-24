@@ -112,9 +112,9 @@ public:
 
 static enum BUTTONSTATE
 {
-	PASSIVE,
-	ACTIVE,
-	PRESSED
+	PASSIVE, // The mouse is not over the button
+	ACTIVE,  // The mouse is over the button, but the button is not pressed
+	PRESSED  // The button has been pressed
 };
 
 #endif

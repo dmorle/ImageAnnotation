@@ -80,3 +80,46 @@ BOOL BaseOverlay::update(const POINT& p)
 	}
 	return TRUE;
 }
+
+BOOL BaseOverlay::fitToClient()
+{
+	RECT rc;
+	if (!GetClientRect(hwnd, &rc))
+		return FALSE;
+
+	// handling horizontal orientation
+	if (pRc->right - pRc->left > rc.right)
+	{
+		pRc->right -= pRc->left;
+		pRc->left = 0;
+	}
+	else if (pRc->right > rc.right)
+	{
+		pRc->left -= pRc->right - rc.right;
+		pRc->right = rc.right;
+	}
+	else if (pRc->left < 0)
+	{
+		pRc->right -= pRc->left;
+		pRc->left = 0;
+	}
+
+	// handling vertical orientation
+	if (pRc->bottom - pRc->top > rc.bottom)
+	{
+		pRc->bottom -= pRc->top;
+		pRc->top = 0;
+	}
+	else if (pRc->bottom > rc.bottom)
+	{
+		pRc->top -= pRc->bottom - rc.bottom;
+		pRc->bottom = rc.bottom;
+	}
+	else if (pRc->top < 0)
+	{
+		pRc->bottom -= pRc->top;
+		pRc->top = 0;
+	}
+
+	return TRUE;
+}
