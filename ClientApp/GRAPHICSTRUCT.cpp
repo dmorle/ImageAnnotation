@@ -6,9 +6,9 @@ GRAPHICSTRUCT::GRAPHICSTRUCT()
 {
 	back = NULL;
 	back_passive = NULL;
-	pRenderTarget->CreateSolidColorBrush(pPalette->passive, &back_active);
-	pRenderTarget->CreateSolidColorBrush(pPalette->active, &back_pressed);
-	pRenderTarget->CreateSolidColorBrush(pPalette->text, &comp);
+	pRenderTarget->CreateSolidColorBrush(pPalette->mainCmp1, &back_active);
+	pRenderTarget->CreateSolidColorBrush(pPalette->mainActive1, &back_pressed);
+	pRenderTarget->CreateSolidColorBrush(pPalette->mainText1, &comp);
 	comp_passive = NULL;
 	comp_active = NULL;
 	comp_pressed = NULL;
@@ -79,7 +79,7 @@ GRAPHICSTRUCT::GRAPHICSTRUCT(
 {
 	back = NULL;
 	pRenderTarget->CreateSolidColorBrush(back_passive, &this->back_passive);
-	pRenderTarget->CreateSolidColorBrush(back_active, &this->back_active);
+	pRenderTarget->CreateSolidColorBrush(back_active , &this->back_active);
 	pRenderTarget->CreateSolidColorBrush(back_pressed, &this->back_pressed);
 	comp = NULL;
 	comp_passive = NULL;

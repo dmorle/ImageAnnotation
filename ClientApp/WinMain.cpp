@@ -104,10 +104,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 				(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -131,10 +131,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -158,10 +158,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::NCTextButton(
 			(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -186,10 +186,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::CloseButton(
 				(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -213,10 +213,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::MaxButton(
 				(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -240,10 +240,10 @@ void MainWindow::CreateNCButtons()
 		ncCmp.push_back(new
 			NCCMP::MinButton(
 				(COLORREF)NULL,
-				TOCOLORREF(pPalette->widgetBack),
-				TOCOLORREF(pPalette->passive),
-				TOCOLORREF(pPalette->active),
-				TOCOLORREF(pPalette->text),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainCmp1),
+				TOCOLORREF(pPalette->mainActive1),
+				TOCOLORREF(pPalette->mainPressed),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -283,29 +283,143 @@ HRESULT MainWindow::CreateGraphicsResources()
 	if (!pBrushes)
 		pBrushes = new stdBrushes();
 
+	// main brushes
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(pPalette->background, &pBrushes->background);
-
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainBack, &pBrushes->mainBack);
 	if (SUCCEEDED(hr)) {
-		D2D1_COLOR_F delColor = pPalette->background;
+		D2D1_COLOR_F delColor = pPalette->mainBack;
 		delColor.a = 0.3f;
-		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->preDeletion);
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->mainPredel);
 	}
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainBorder, &pBrushes->mainBorder);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainText1, &pBrushes->mainText1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainText2, &pBrushes->mainText2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainText3, &pBrushes->mainText3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainCmp1, &pBrushes->mainCmp1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainCmp2, &pBrushes->mainCmp2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainCmp3, &pBrushes->mainCmp3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainActive1, &pBrushes->mainActive1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainActive2, &pBrushes->mainActive2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainActive3, &pBrushes->mainActive3);
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->mainActive1;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->mainPresel1);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->mainActive2;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->mainPresel2);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->mainActive3;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->mainPresel3);
+	}
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->mainPressed, &pBrushes->mainPressed);
 
+	// widget brushes
 	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetBack, &pBrushes->widgetBack);
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->widgetBack;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->widgetPredel);
+	}
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetBorder, &pBrushes->widgetBorder);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetText1, &pBrushes->widgetText1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetText2, &pBrushes->widgetText2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetText3, &pBrushes->widgetText3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetCmp1, &pBrushes->widgetCmp1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetCmp2, &pBrushes->widgetCmp2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetCmp3, &pBrushes->widgetCmp3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetActive1, &pBrushes->widgetActive1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetActive2, &pBrushes->widgetActive2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetActive3, &pBrushes->widgetActive3);
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->widgetActive1;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->widgetPresel1);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->widgetActive2;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->widgetPresel2);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->widgetActive3;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->widgetPresel3);
+	}
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->widgetPressed, &pBrushes->widgetPressed);
 
+	// overlay brushes
 	if (SUCCEEDED(hr))
 		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayBack, &pBrushes->overlayBack);
-
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->overlayBack;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->overlayPredel);
+	}
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(pPalette->passive, &pBrushes->passive);
-
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayBorder, &pBrushes->overlayBorder);
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(pPalette->active, &pBrushes->active);
-
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayText1, &pBrushes->overlayText1);
 	if (SUCCEEDED(hr))
-		hr = pRenderTarget->CreateSolidColorBrush(pPalette->text, &pBrushes->text);
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayText2, &pBrushes->overlayText2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayText3, &pBrushes->overlayText3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayCmp1, &pBrushes->overlayCmp1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayCmp2, &pBrushes->overlayCmp2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayCmp3, &pBrushes->overlayCmp3);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayActive1, &pBrushes->overlayActive1);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayActive2, &pBrushes->overlayActive2);
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayActive3, &pBrushes->overlayActive3);
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->overlayActive1;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->overlayPresel1);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->overlayActive2;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->overlayPresel2);
+	}
+	if (SUCCEEDED(hr)) {
+		D2D1_COLOR_F delColor = pPalette->overlayActive3;
+		delColor.a = 0.3f;
+		hr = pRenderTarget->CreateSolidColorBrush(delColor, &pBrushes->overlayPresel3);
+	}
+	if (SUCCEEDED(hr))
+		hr = pRenderTarget->CreateSolidColorBrush(pPalette->overlayPressed, &pBrushes->overlayPressed);
 
 	pStdGs = new GRAPHICSTRUCT();
 
@@ -390,7 +504,7 @@ void MainWindow::Paint()
 		pRenderTarget->BeginDraw();
 
 		if (fullPaint) {
-			pRenderTarget->Clear(pPalette->background);
+			pRenderTarget->Clear(pPalette->mainBack);
 			pMainPanel->display();
 			fullPaint = FALSE;
 		}
@@ -652,7 +766,7 @@ void MainWindow::ncPaint(WPARAM wparam, LPARAM lparam)
 		HBITMAP hbmp = CreateCompatibleBitmap(hdc, rc.right, rc.bottom);
 		HBITMAP holdbmp = (HBITMAP)SelectObject(hbuffer, hbmp);
 
-		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(pPalette->background));
+		HBRUSH hbr = CreateSolidBrush(TOCOLORREF(pPalette->mainBack));
 		FillRect(hbuffer, &rc, hbr);
 		DeleteObject(hbr);
 

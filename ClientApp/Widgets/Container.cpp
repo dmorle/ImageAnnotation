@@ -850,7 +850,7 @@ void Container::display()
 			pWidgetEdit->pMergeCandidate->getBottom()
 		};
 		getGlobalRect(&rc);
-		pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->preDeletion);
+		pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->widgetPredel);
 	}
 }
 

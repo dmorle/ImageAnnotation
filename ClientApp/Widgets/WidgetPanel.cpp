@@ -119,7 +119,7 @@ void WidgetPanel::display()
 	if (!fullPaint) {
 		RECT r(*pRc);
 		pParent->getGlobalRect(&r);
-		pRenderTarget->FillRectangle(TOD2DRECTF(r), pBrushes->background);
+		pRenderTarget->FillRectangle(TOD2DRECTF(r), pBrushes->widgetCmp1);
 	}
 
 	RECT rc
@@ -131,14 +131,14 @@ void WidgetPanel::display()
 	};
 	pParent->getGlobalRect(&rc);
 
-	pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->widgetBack);
+	pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->widgetCmp1);
 
 	// widget edit region extends 10 * edgeSpace into the widget
 	for (int i = 0; i < 3; i++)
 		pRenderTarget->DrawLine(
 			{ (FLOAT)(rc.right - 2 * edgeSpace * (i + 2)), (FLOAT)(rc.bottom - 2 * edgeSpace) },
 			{ (FLOAT)(rc.right - 2 * edgeSpace), (FLOAT)(rc.bottom - 2 * edgeSpace * (i + 2)) },
-			pBrushes->active
+			pBrushes->widgetActive1
 		);
 
 	/*
