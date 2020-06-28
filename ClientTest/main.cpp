@@ -1,77 +1,78 @@
-#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+
+#include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
-
-#pragma comment(lib, "Ws2_32.lib")
-#else
-#ifdef __linux__
-typedef int SOCKET
-typedef const char * PCSTR
-#error This OS is not supported
-#else
-#error This OS is not supported
-#endif
-#endif
-
+#include <stdlib.h>
 #include <stdio.h>
 
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 
-#define HOST_NAME "ec2-3-128-7-131.us-east-2.compute.amazonaws.com"
-#define MSG_BUFFER_SIZE (size_t)1024
+// Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
+#pragma comment (lib, "Ws2_32.lib")
+#pragma comment (lib, "Mswsock.lib")
+#pragma comment (lib, "AdvApi32.lib")
 
-SOCKET OpenConnection(PCSTR hostname, int port)
+#define HOSTNAME "localhost"
+#define DEFAULT_PORT "8080"
+#define DEFAULT_BUFLEN 512
+
+int __cdecl main()
 {
-#ifdef _WIN32
+    WSADATA wsaData;
+    SOCKET ConnectSocket = INVALID_SOCKET;
     struct addrinfo* result = NULL,
         * ptr = NULL,
         hints;
+    const char* sendbuf = "this is a test";
+    char recvbuf[DEFAULT_BUFLEN];
+    int iResult;
+    int recvbuflen = DEFAULT_BUFLEN;
+
+    // Initialize Winsock
+    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != 0) {
+        printf("WSAStartup failed with error: %d\n", iResult);
+        return 1;
+    }
 
     ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_INET;          // ipv4
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    int iResult = getaddrinfo(HOST_NAME, "443", &hints, &result);
-    if (iResult != 0)
-    {
-        printf("getaddrinfo failed: %d\n", iResult);
+    iResult = getaddrinfo(HOSTNAME, DEFAULT_PORT, &hints, &result);
+    if (iResult != 0) {
+        printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
         return 1;
     }
 
-    SOCKET ConnectSocket = INVALID_SOCKET;
+    // Attempt to connect to an address until one succeeds
+    for (ptr = result; ptr != NULL; ptr = ptr->ai_next) {
 
-    // Attempt to connect to the first address returned by
-    // the call to getaddrinfo
-    ptr = result;
+        // Create a SOCKET for connecting to server
+        ConnectSocket = socket(
+            ptr->ai_family,
+            ptr->ai_socktype,
+            ptr->ai_protocol
+        );
+        if (ConnectSocket == INVALID_SOCKET) {
+            printf("socket failed with error: %ld\n", WSAGetLastError());
+            WSACleanup();
+            return 1;
+        }
 
-    // Create a SOCKET for connecting to server
-    ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
-        ptr->ai_protocol);
-
-    if (ConnectSocket == INVALID_SOCKET)
-    {
-        fprintf(stderr, "Error at socket(): %ld\n", WSAGetLastError());
-        freeaddrinfo(result);
-        WSACleanup();
-        return 1;
+        // Connect to server.
+        iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        if (iResult == SOCKET_ERROR) {
+            iResult = WSAGetLastError();
+            closesocket(ConnectSocket);
+            ConnectSocket = INVALID_SOCKET;
+            continue;
+        }
+        break;
     }
-
-    // Connect to server.
-    iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-    if (iResult == SOCKET_ERROR)
-    {
-        closesocket(ConnectSocket);
-        ConnectSocket = INVALID_SOCKET;
-    }
-
-    // Should really try the next address returned by getaddrinfo
-    // if the connect call failed
-    // But for this simple example we just free the resources
-    // returned by getaddrinfo and print an error message
 
     freeaddrinfo(result);
 
@@ -80,89 +81,43 @@ SOCKET OpenConnection(PCSTR hostname, int port)
         WSACleanup();
         return 1;
     }
-#endif
-}
 
-SSL_CTX* InitCTX(void)
-{
-    const SSL_METHOD* method;
-    SSL_CTX* ctx;
-    OpenSSL_add_all_algorithms();  /* Load cryptos, et.al. */
-    SSL_load_error_strings();   /* Bring in and register error messages */
-    method = SSLv23_client_method();  /* Create new client-method instance */
-    ctx = SSL_CTX_new(method);   /* Create new context */
-    if (ctx == NULL)
-    {
-        ERR_print_errors_fp(stderr);
-        abort();
-    }
-    return ctx;
-}
-
-void ShowCerts(SSL* ssl)
-{
-    X509* cert;
-    char* line;
-    cert = SSL_get_peer_certificate(ssl); /* get the server's certificate */
-    if (cert != NULL)
-    {
-        printf("Server certificates:\n");
-        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
-        printf("Subject: %s\n", line);
-        free(line);       /* free the malloc'ed string */
-        line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
-        printf("Issuer: %s\n", line);
-        free(line);       /* free the malloc'ed string */
-        X509_free(cert);     /* free the malloc'ed certificate copy */
-    }
-    else
-        printf("Info: No client certificates configured.\n");
-}
-
-int main(int count, char* strings[])
-{
-    WSADATA wsaData;
-    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0)
-    {
-        fprintf(stderr, "WSAStartup failed: %d\n", iResult);
-        exit(1);
+    // Send an initial buffer
+    iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        return 1;
     }
 
-    SSL_library_init();
+    printf("Bytes Sent: %ld\n", iResult);
 
-#ifdef _DEBUG
-    SSL_load_error_strings();
-#endif
-
-    SSL_CTX* pCtx = InitCTX();
-    SOCKET server = OpenConnection(HOST_NAME, 443);
-    SSL* pSsl = SSL_new(pCtx);
-    SSL_set_fd(pSsl, server);
-    if (SSL_connect(pSsl) == -1)
-        ERR_print_errors_fp(stderr);
-    else
-    {
-        ShowCerts(pSsl);
-
-        char clientMsg[] = "hello from client";
-        SSL_write(pSsl, clientMsg, sizeof(clientMsg));
-        BYTE buf[MSG_BUFFER_SIZE];
-        UINT16 nBytes = SSL_read(pSsl, buf, MSG_BUFFER_SIZE);
-        buf[nBytes] = 0;
-        printf("Recieved %s\n", buf);
-        SSL_free(pSsl);
+    // shutdown the connection since no more data will be sent
+    iResult = shutdown(ConnectSocket, SD_SEND);
+    if (iResult == SOCKET_ERROR) {
+        printf("shutdown failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        return 1;
     }
 
-#ifdef _WIN32
-    iResult = closesocket(server);
-    if (iResult != 0)
-    {
-        fprintf(stderr, "error closing socket, error: %d\n", iResult);
-        exit(1);
-    }
-#endif
+    // Receive until the peer closes the connection
+    do {
 
-    SSL_CTX_free(pCtx);
+        iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+        if (iResult > 0)
+            printf("Bytes received: %d\n", iResult);
+        else if (iResult == 0)
+            printf("Connection closed\n");
+        else
+            printf("recv failed with error: %d\n", WSAGetLastError());
+
+    } while (iResult > 0);
+
+    // cleanup
+    closesocket(ConnectSocket);
+    WSACleanup();
+
     return 0;
 }
