@@ -8,47 +8,87 @@ extern "C"
 
 #include <windows.h>
 
-BOOL das_connect(PCSTR hostname, PCSTR port);
-BOOL das_connect();
+#define DAS_RESULT          BYTE
 
-BOOL das_disconnect();
+#define DAS_RSUCCEEDED(RES) ((DAP_RESULT)((~RES) & 0x80))
+#define DAS_RFAILED(RES)    ((DAP_RESULT)(  RES  & 0x80))
 
-BOOL das_login(PCSTR uname, PCSTR passw);
+DAS_RESULT das_connect();
+DAS_RESULT das_disconnect();
 
-#ifdef _DAS_API_SOURCE
-// internal functions for the data annotation system api
+DAS_RESULT das_login(PCSTR uname, PCSTR passw);
 
-int sendRaw(BYTE* pBuf, SIZE_T n);
-int getRaw(BYTE* pBuf, SIZE_T n);
+#ifndef WDAS_API_NOERRORS
 
-#ifdef _DAS_API_SOURCE_IREQUEST
+#define DAS_ELEVEL(RES)     ((DAP_RESULT)(RES & 0xC0))
+
+#define DAS_RINFO           0x00     // no issues occurred
+#define DAS_RWARNING        0x40     // potential issue, in most cases there is no issue
+#define DAS_RERROR          0x80     // an error has occurred, the error was non-critical
+#define DAS_RCRITICAL       0xC0     // a critical error has occurred, do not continue
+
+#define DAS_RCODE(RES)      ((DAP_RESULT)(RES & 0x3F))
+
+#define DAS_RNOERR          0x00     // no errors have occurred
+#define DAS_RUNKWN          0x01     // unknown error
+#define DAS_RSYS            0x02     // system error, use errno to diagnose
+#define DAS_RMEM            0x03     // out of memory error
+#define DAS_RNIMP           0x04     // not implemented error
+#define DAS_RDIO            0x05     // disk IO error
+#define DAS_RDREAD          0x06     // disk read error
+#define DAS_RDWRITE         0x07     // disk write error
+#define DAS_RSIO            0x08     // socket IO error
+#define DAS_RSREAD          0x09     // socket read error
+#define DAS_RSWRITE         0x0A     // socket write error
+#define DAS_RFINV           0x0B     // invalid file type
+#define DAS_RBUF            0x0C     // buffer overflow
+#define DAS_RUSUP           0x0D     // unsupported data type or operation
+#define DAS_RUINIT          0x0E     // attempted to access uninitialized memory
+
+#define DAS_ROK	            DAS_RINFO | DAS_RNOERR     // everything went well
+
+#endif // WDAS_API_NOERRORS
+
+#ifdef _WDAS_API_SOURCE
+
+#ifdef _WDAS_API_SOURCE_IREQUEST
 // internal request interface
 
-#define WDASAPI_ACTION      0xE0  // [6, 8]
-#define WDASAPI_ACTION_LIN  0x00  // 0 >> 5 -- login
-#define WDASAPI_ACTION_PUT  0x20  // 1 >> 5 -- put
-#define WDASAPI_ACTION_GET  0x40  // 2 >> 5 -- get
-#define WDASAPI_ACTION_CRT  0x60  // 3 >> 5 -- create
-#define WDASAPI_ACTION_DEL  0x80  // 4 >> 5 -- delete
-#define WDASAPI_ACTION_LST  0xA0  // 5 >> 5 -- list
+enum DAS_Action
+{
+	DAS_LOGIN,
+	DAS_PUT,
+	DAS_GET,
+	DAS_CREATE,
+	DAS_DELETE,
+	DAS_LIST
+};
 
-#define WDASAPI_ELEMENT     0x1F  // [1, 5]
-#define WDASAPI_ELEMENT_USR 0x00  // 0 -- user
-#define WDASAPI_ELEMENT_STR 0x01  // 1 -- stream
-#define WDASPAI_ELEMENT_JOB 0x02  // 2 -- job
-#define WDASAPI_ELEMENT_DTA 0x03  // 3 -- data
-#define WDASAPI_ELEMENT_PLN 0x04  // 4 -- pipeline
-#define WDASAPI_ELEMENT_MDL 0x05  // 5 -- model
-#define WDASAPI_ELEMENT_SAL 0x06  // 6 -- salience detection
+enum DAS_Element
+{
+	DAS_USER,
+	DAS_STREAM,
+	DAS_JOB,
+	DAS_DATA,
+	DAS_PIPELINE,
+	DAS_MODEL,
+	DAS_SALIENCE
+};
 
-#endif // _DAS_API_SOURCE_IREQUEST
+int sendRaw(const BYTE* pBuf, int n);
 
-#ifdef _DAS_API_SOURCE_IRESPONSE
+int sendHeader(enum DAS_Action, enum DAS_Element);
+
+#endif // _WDAS_API_IREQUEST_SOURCE
+
+#ifdef _WDAS_API_SOURCE_IRESPONSE
 // internal response interface
 
-#endif // _DAS_API_SOURCE_IRESPONSE
+int getRaw(BYTE* pBuf, int n);
 
-#endif // _DAS_API_SOURCE
+#endif // _WDAS_API_IRESPONSE_SOURCE
+
+#endif // _WDAS_API_SOURCE
 
 #ifdef __cplusplus
 }

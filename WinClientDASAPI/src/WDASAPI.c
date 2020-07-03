@@ -1,6 +1,8 @@
-#define _DAS_API_SOURCE
+#define _WDAS_API_SOURCE
+#define _WDAS_API_SOURCE_IREQUEST
+#define _WDAS_API_SOURCE_IRESPONSE
 
-#include <WDASAPI/pch.h>
+#include <WDASAPI/stdafx.h>
 #include <WDASAPI/WDASAPI.h>
 
 #define DEFAULT_HOSTNAME ((PCSTR)"localhost")
@@ -9,9 +11,10 @@
 static SOCKET server;
 static WSADATA wsaData;
 
+static BOOL wsaInit = FALSE;
 static BOOL apiInit = FALSE;
 
-BOOL connect(PCSTR hostname, PCSTR port)
+DAS_RESULT das_connect_explicit(PCSTR hostname, PCSTR port)
 {
     server = INVALID_SOCKET;
     struct addrinfo
@@ -21,10 +24,15 @@ BOOL connect(PCSTR hostname, PCSTR port)
     int iResult;
 
     // Initialize Winsock
-    iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0) {
-        fprintf(stderr, "WSAStartup failed with error: %d\n", iResult);
-        return FALSE;
+    if (!wsaInit)
+    {
+        iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+        if (iResult != 0) {
+            fprintf(stderr, "WSAStartup failed with error: %d\n", iResult);
+            return DAS_RSYS | DAS_RCRITICAL;
+        }
+
+        wsaInit = TRUE;
     }
 
     ZeroMemory(&hints, sizeof(hints));
@@ -37,7 +45,7 @@ BOOL connect(PCSTR hostname, PCSTR port)
     if (iResult != 0) {
         fprintf(stderr, "getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
-        return FALSE;
+        return DAS_RSIO | DAS_RERROR;
     }
 
     // Attempt to connect to an address until one succeeds
@@ -52,7 +60,7 @@ BOOL connect(PCSTR hostname, PCSTR port)
         if (server == INVALID_SOCKET) {
             fprintf(stderr, "socket failed with error: %ld\n", WSAGetLastError());
             WSACleanup();
-            return FALSE;
+            return DAS_RSIO | DAS_RERROR;
         }
 
         // Connect to server.
@@ -71,18 +79,18 @@ BOOL connect(PCSTR hostname, PCSTR port)
     if (server == INVALID_SOCKET) {
         fprintf(stderr, "Unable to connect to server!\n");
         WSACleanup();
-        return FALSE;
+        return DAS_RSIO | DAS_RERROR;
     }
 
-    return TRUE;
+    return DAS_ROK;
 }
 
-BOOL connect()
+DAS_RESULT das_connect_default()
 {
-    return connect(DEFAULT_HOSTNAME, DEFAULT_PORT);
+    return das_connect_explicit(DEFAULT_HOSTNAME, DEFAULT_PORT);
 }
 
-BOOL disconnect()
+DAS_RESULT das_disconnect()
 {
     // shutdown the connection since no more data will be sent
     int iResult = shutdown(server, SD_SEND);
@@ -90,40 +98,43 @@ BOOL disconnect()
         fprintf(stderr, "shutdown failed with error: %d\n", WSAGetLastError());
         closesocket(server);
         WSACleanup();
-        return FALSE;
+        return DAS_RSIO | DAS_RWARNING;
     }
 
     // cleanup
     closesocket(server);
     WSACleanup();
-    return TRUE;
+    return DAS_ROK;
 }
 
-BOOL login(PCSTR uname, PCSTR passw)
+int sendRaw(const BYTE* pBuf, int n)
 {
-    return FALSE;
-}
+    if (!apiInit)
+        return DAS_RUINIT | DAS_RERROR;
 
-int sendRaw(const char* pBuf, SIZE_T n)
-{
     // Send an initial buffer
     int iResult = send(server, pBuf, n, 0);
     if (iResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
         closesocket(server);
         WSACleanup();
+        return DAS_RSWRITE | DAS_RERROR;
     }
-    return iResult;
+    return DAS_ROK;
 }
 
-int getRaw(char* pBuf, SIZE_T n)
+int getRaw(BYTE* pBuf, int n)
 {
+    if (!apiInit)
+        return DAS_RUINIT | DAS_RERROR;
+
     // Retrieve the data
     int iResult = recv(server, pBuf, n, 0);
     if (iResult == SOCKET_ERROR) {
         printf("recv failed with error: %d\n", WSAGetLastError());
         closesocket(server);
         WSACleanup();
+        return DAS_RSREAD | DAS_RERROR;
     }
-    return iResult;
+    return DAS_ROK;
 }

@@ -123,7 +123,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>WDASAPI/stdafx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>C:\Users\dmorl\source\repos\imageAnnotation\WinClientDASAPI\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -153,10 +153,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\WDASAPI\WDASAPI.h" />
-    <ClInclude Include="include\WDASAPI\pch.h" />
+    <ClInclude Include="include\WDASAPI\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\pch.c" />
+    <ClCompile Include="src\Requests\Requests.c" />
+    <ClCompile Include="src\stdafx.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\WDASAPI.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
