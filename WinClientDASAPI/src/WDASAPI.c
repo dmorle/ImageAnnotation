@@ -1,14 +1,18 @@
-#include "pch.h"
-#include "DASAPI.h"
+#define _DAS_API_SOURCE
 
-#define HOSTNAME "localhost"
-#define DEFAULT_PORT "8080"
+#include <WDASAPI/pch.h>
+#include <WDASAPI/WDASAPI.h>
+
+#define DEFAULT_HOSTNAME ((PCSTR)"localhost")
+#define DEFAULT_PORT ((PCSTR)"8080")
 
 static SOCKET server;
+static WSADATA wsaData;
 
-BOOL connect()
+static BOOL apiInit = FALSE;
+
+BOOL connect(PCSTR hostname, PCSTR port)
 {
-    WSADATA wsaData;
     server = INVALID_SOCKET;
     struct addrinfo
         * result = NULL,
@@ -29,7 +33,7 @@ BOOL connect()
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo(HOSTNAME, DEFAULT_PORT, &hints, &result);
+    iResult = getaddrinfo(hostname, port, &hints, &result);
     if (iResult != 0) {
         fprintf(stderr, "getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -73,29 +77,9 @@ BOOL connect()
     return TRUE;
 }
 
-BOOL sendRaw(const char* pBuf, SIZE_T n)
+BOOL connect()
 {
-    // Send an initial buffer
-    int iResult = send(server, pBuf, n, 0);
-    if (iResult == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(server);
-        WSACleanup();
-        return FALSE;
-    }
-    return TRUE;
-}
-
-int getRaw(char* pBuf, SIZE_T n)
-{
-    // Retrieve the data
-    int iResult = recv(server, pBuf, n, 0);
-    if (iResult == SOCKET_ERROR) {
-        printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(server);
-        WSACleanup();
-    }
-    return iResult;
+    return connect(DEFAULT_HOSTNAME, DEFAULT_PORT);
 }
 
 BOOL disconnect()
@@ -118,4 +102,28 @@ BOOL disconnect()
 BOOL login(PCSTR uname, PCSTR passw)
 {
     return FALSE;
+}
+
+int sendRaw(const char* pBuf, SIZE_T n)
+{
+    // Send an initial buffer
+    int iResult = send(server, pBuf, n, 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(server);
+        WSACleanup();
+    }
+    return iResult;
+}
+
+int getRaw(char* pBuf, SIZE_T n)
+{
+    // Retrieve the data
+    int iResult = recv(server, pBuf, n, 0);
+    if (iResult == SOCKET_ERROR) {
+        printf("recv failed with error: %d\n", WSAGetLastError());
+        closesocket(server);
+        WSACleanup();
+    }
+    return iResult;
 }
