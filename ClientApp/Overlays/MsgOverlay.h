@@ -9,6 +9,8 @@ class MsgOverlay :
 public:
     MsgOverlay(PCWSTR msg, const POINT& p);
     MsgOverlay(BaseOverlay* pParent, PCWSTR msg, const POINT& p);
+    MsgOverlay(PCWSTR msg, const POINT& p, LONG width, LONG height);
+    MsgOverlay(BaseOverlay* pParent, PCWSTR msg, const POINT& p, LONG width, LONG height);
 
     virtual ~MsgOverlay();
 
@@ -21,12 +23,21 @@ public:
     // displays the overlay to the screen
     virtual void display() override;
 
+    const LONG getWidth() const;
+    const LONG getHeight() const;
+
+    const static LONG getStdWidth();
+    const static LONG getStdHeight();
+
 protected:
-    const static LONG width = 200L;
-    const static LONG height = 100L;
+    LONG width;
+    LONG height;
 
 private:
     std::wstring msg;
+
+    const static LONG stdWidth = 200L;
+    const static LONG stdHeight = 100L;
 };
 
 #endif

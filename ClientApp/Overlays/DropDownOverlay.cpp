@@ -139,7 +139,7 @@ void DropDownOverlay::display()
 			pRc->right - 4 * edgeSpace,
 			pRc->top + i * lSize + lSize - 4 * edgeSpace
 		};
-		pRenderTarget->DrawText(pLabels[i].label, wcslen(pLabels[i].label), pTextFormat, rc, pBrushes->overlayText1);
+		pRenderTarget->DrawText(pLabels[i].label, wcslen(pLabels[i].label), pTextFormats->pText1, rc, pBrushes->overlayText1);
 	}
 }
 

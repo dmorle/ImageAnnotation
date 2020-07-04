@@ -9,11 +9,10 @@ IDWriteFactory* Parameters::pDWriteFactory = NULL;
 IWICImagingFactory* Parameters::pWicFactory = NULL;
 ID2D1HwndRenderTarget* Parameters::pRenderTarget = NULL;
 
-IDWriteTextFormat* Parameters::pTextFormat = NULL;
-
 Parameters::appPalette* Parameters::pPalette = NULL;
 Parameters::stdBrushes* Parameters::pBrushes = NULL;
 Parameters::stdCursors* Parameters::pCursors = NULL;
+Parameters::TextFormat* Parameters::pTextFormats = NULL;
 
 GRAPHICSTRUCT* Parameters::pStdGs = NULL;
 
@@ -24,7 +23,7 @@ BOOL Parameters::passMouse = FALSE;
 
 BaseOverlay* Parameters::pAO = NULL;
 
-Parameters::_appPalette::_appPalette() :
+Parameters::appPalette::appPalette() :
 	mainBack       (0.00f, 0.00f, 0.60f),
 	mainBorder     (0.15f, 0.15f, 0.15f),
 	mainText1      (1.00f, 1.00f, 1.00f),
@@ -65,7 +64,7 @@ Parameters::_appPalette::_appPalette() :
 	overlayPressed (0.40f, 0.40f, 0.40f)
 {}
 
-Parameters::_stdBrushes::_stdBrushes() :
+Parameters::stdBrushes::stdBrushes() :
 	mainBack       (NULL),
 	mainPredel     (NULL),
 	mainBorder     (NULL),
@@ -118,7 +117,7 @@ Parameters::_stdBrushes::_stdBrushes() :
 	overlayPressed (NULL)
 {}
 
-void Parameters::_stdBrushes::release() {
+void Parameters::stdBrushes::release() {
 	SafeRelease(&mainBack      );
 	SafeRelease(&mainPredel    );
 	SafeRelease(&mainBorder    );
@@ -169,4 +168,95 @@ void Parameters::_stdBrushes::release() {
 	SafeRelease(&overlayPresel2);
 	SafeRelease(&overlayPresel3);
 	SafeRelease(&overlayPressed);
+}
+
+HRESULT Parameters::TextFormat::init()
+{
+	HRESULT hr = S_OK;
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pText1
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pText2
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pText3
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pTitle1
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pTitle2
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pTitle3
+		);
+
+	if (SUCCEEDED(hr))
+		hr = pDWriteFactory->CreateTextFormat(
+			L"Arial",
+			NULL,
+			DWRITE_FONT_WEIGHT_NORMAL,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			12,	// font size
+			L"",
+			&pCaption
+		);
+
+	return hr;
 }

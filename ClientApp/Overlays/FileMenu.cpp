@@ -9,8 +9,17 @@ void Label1Down(BaseOverlay* pThis)
 
 void Label1Up(BaseOverlay* pThis)
 {
-	Parameters::pAO = new MsgOverlay(pThis, L"Label 1 LUp", POINT{ 600, 300 });
-	// MessageBox(pThis->hwnd, "Label 1 LDown", "File Menu Action", MB_OK);
+	RECT rc;
+	GetClientRect(Parameters::hwnd, &rc);
+	POINT p{
+		(rc.right - MsgOverlay::getStdWidth()) / 2,
+		(rc.bottom - MsgOverlay::getStdHeight()) / 2
+	};
+
+	if (p.x < 0 || p.y < 0)
+		return;
+
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 1 LUp", p);
 }
 
 void Label2Down(BaseOverlay* pThis)
@@ -19,8 +28,17 @@ void Label2Down(BaseOverlay* pThis)
 
 void Label2Up(BaseOverlay* pThis)
 {
-	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", POINT{ 600, 300 });
-	// MessageBox(pThis->hwnd, "Label 2 LUp", "File Menu Action", MB_OK);
+	RECT rc;
+	GetClientRect(Parameters::hwnd, &rc);
+	POINT p{
+		(rc.right - MsgOverlay::getStdWidth()) / 2,
+		(rc.bottom - MsgOverlay::getStdHeight()) / 2
+	};
+
+	if (p.x < 0 || p.y < 0)
+		return;
+
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", p);
 }
 
 void Label3Down(BaseOverlay* pThis)
@@ -29,8 +47,17 @@ void Label3Down(BaseOverlay* pThis)
 
 void Label3Up(BaseOverlay* pThis)
 {
-	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", POINT{ 600, 300 });
-	// MessageBox(pThis->hwnd, "Label 3 LUp", "File Menu Action", MB_OK);
+	RECT rc;
+	GetClientRect(Parameters::hwnd, &rc);
+	POINT p{
+		(rc.right - MsgOverlay::getStdWidth()) / 2,
+		(rc.bottom - MsgOverlay::getStdHeight()) / 2
+	};
+
+	if (p.x < 0 || p.y < 0)
+		return;
+
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", p);
 }
 
 FileMenu::FileMenu() :

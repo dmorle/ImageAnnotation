@@ -40,9 +40,9 @@ class Parameters {
 public:
 
 	// contains all the colors which will be used by the program
-	typedef struct _appPalette
+	struct appPalette
 	{
-		_appPalette();
+		appPalette();
 
 		D2D1::ColorF mainBack;
 		D2D1::ColorF mainBorder;
@@ -82,11 +82,10 @@ public:
 		D2D1::ColorF overlayActive2;
 		D2D1::ColorF overlayActive3;
 		D2D1::ColorF overlayPressed;
-	}
-	appPalette;
+	};
 
 	// Contains all the brushes which will be used by the program
-	typedef struct _stdBrushes
+	struct stdBrushes
 	{
 		ID2D1SolidColorBrush* mainBack;
 		ID2D1SolidColorBrush* mainPredel;
@@ -139,19 +138,30 @@ public:
 		ID2D1SolidColorBrush* overlayPresel3;
 		ID2D1SolidColorBrush* overlayPressed;
 
-		_stdBrushes();
+		stdBrushes();
 		void release();
-	}
-	stdBrushes;
+	};
+
+	struct TextFormat
+	{
+		HRESULT init();
+
+		IDWriteTextFormat* pText1;
+		IDWriteTextFormat* pText2;
+		IDWriteTextFormat* pText3;
+		IDWriteTextFormat* pTitle1;
+		IDWriteTextFormat* pTitle2;
+		IDWriteTextFormat* pTitle3;
+		IDWriteTextFormat* pCaption;
+	};
 
 	// contains all cursors which will be used by the program
-	typedef struct _stdCursors
+	struct stdCursors
 	{
 		HCURSOR arrow;
 		HCURSOR sizens;
 		HCURSOR sizewe;
-	}
-	stdCursors;
+	};
 
 	static HWND hwnd;
 
@@ -160,11 +170,10 @@ public:
 	static IWICImagingFactory* pWicFactory;
 	static ID2D1HwndRenderTarget* pRenderTarget;
 
-	static IDWriteTextFormat* pTextFormat;
-
 	static appPalette* pPalette;
 	static stdBrushes* pBrushes;
 	static stdCursors* pCursors;
+	static TextFormat* pTextFormats;
 
 	// pointer to the active panel
 	static Panel* pAP;
