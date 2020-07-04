@@ -156,7 +156,11 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 			np.x < pWidgetEdit->pWidget->getRight() &&
 			np.y < pWidgetEdit->pWidget->getBottom()
 			) {
-			pWidgetEdit->merge = FALSE;
+			if (pWidgetEdit->merge) {
+				pWidgetEdit->merge = FALSE;
+				fullPaint = TRUE;
+				InvalidateRect(hwnd, NULL, FALSE);
+			}
 
 			if (
 				np.x < pWidgetEdit->pWidget->getRight() - pWidgetEdit->pWidget->getMinWidth() &&
