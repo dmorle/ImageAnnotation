@@ -378,7 +378,7 @@ void Container::MouseMove(const WPARAM& wparam, const POINT& p)
 		else
 			pWidgetEdit->merge = FALSE;
 
-		InvalidateRect(NULL, pRc, FALSE);
+		InvalidateRect(hwnd, pRc, FALSE);
 	}
 	else {
 		if (!contains(p) || onBorder(p))

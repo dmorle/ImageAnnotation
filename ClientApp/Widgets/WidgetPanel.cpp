@@ -119,9 +119,10 @@ void WidgetPanel::display()
 	if (!fullPaint) {
 		RECT r(*pRc);
 		pParent->getGlobalRect(&r);
-		pRenderTarget->FillRectangle(TOD2DRECTF(r), pBrushes->widgetCmp1);
+		pRenderTarget->FillRectangle(TOD2DRECTF(r), pBrushes->widgetBack);
 	}
 
+	// creating rc in local coordinates
 	RECT rc
 	{
 		pRc->left + edgeSpace,
@@ -129,6 +130,7 @@ void WidgetPanel::display()
 		pRc->right - edgeSpace,
 		pRc->bottom - edgeSpace
 	};
+	// getting rc in global coordinates
 	pParent->getGlobalRect(&rc);
 
 	pRenderTarget->FillRectangle(TOD2DRECTF(rc), pBrushes->widgetCmp1);
