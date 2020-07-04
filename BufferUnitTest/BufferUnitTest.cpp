@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "fstream"
-#include "../imageAnnotation/Widgets/WidgetComponents/Buffer.h"
+#include "../ClientApp/Widgets/WidgetComponents/WBuffer.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
