@@ -8,5 +8,6 @@
     <ClCompile Include="src\WDASAPI.c" />
     <ClCompile Include="src\stdafx.c" />
     <ClCompile Include="src\Requests\Requests.c" />
+    <ClCompile Include="src\Requests\Login.c" />
   </ItemGroup>
 </Project>

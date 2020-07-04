@@ -85,7 +85,7 @@ DAS_RESULT das_connect_explicit(PCSTR hostname, PCSTR port)
     return DAS_ROK;
 }
 
-DAS_RESULT das_connect_default()
+DAS_RESULT das_connect()
 {
     return das_connect_explicit(DEFAULT_HOSTNAME, DEFAULT_PORT);
 }
@@ -107,7 +107,7 @@ DAS_RESULT das_disconnect()
     return DAS_ROK;
 }
 
-int sendRaw(const BYTE* pBuf, int n)
+DAS_RESULT sendRaw(const BYTE* pBuf, int n)
 {
     if (!apiInit)
         return DAS_RUINIT | DAS_RERROR;
@@ -123,7 +123,7 @@ int sendRaw(const BYTE* pBuf, int n)
     return DAS_ROK;
 }
 
-int getRaw(BYTE* pBuf, int n)
+DAS_RESULT getRaw(BYTE* pBuf, int n)
 {
     if (!apiInit)
         return DAS_RUINIT | DAS_RERROR;

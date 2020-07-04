@@ -156,6 +156,7 @@
     <ClInclude Include="include\WDASAPI\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Requests\Login.c" />
     <ClCompile Include="src\Requests\Requests.c" />
     <ClCompile Include="src\stdafx.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
