@@ -30,5 +30,10 @@ void SolidOverlay::display()
 		pRc->right,
 		pRc->bottom
 	};
+	pRenderTarget->FillRectangle(rc, pBrushes->overlayBorder);
+	rc.left   += 1;
+	rc.top    += 1;
+	rc.right  -= 1;
+	rc.bottom -= 1;
 	pRenderTarget->FillRectangle(rc, pBrushes->overlayBack);
 }

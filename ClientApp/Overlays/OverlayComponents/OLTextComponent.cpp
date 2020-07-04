@@ -14,7 +14,7 @@ namespace OLCMP {
 	{
 		D2D1_RECT_F rc;
 		getGlobalRect(rc);
-		pRenderTarget->DrawText(text.c_str(), text.length(), pTextFormat, rc, pBrushes->overlayText1);
+		pRenderTarget->DrawText(text.c_str(), text.length(), pTextFormats->pText1, rc, pBrushes->overlayText1);
 	}
 
 }

@@ -105,9 +105,9 @@ void MainWindow::CreateNCButtons()
 			NCCMP::NCTextButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
-				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -130,11 +130,11 @@ void MainWindow::CreateNCButtons()
 
 		ncCmp.push_back(new
 			NCCMP::NCTextButton(
-			(COLORREF)NULL,
-				TOCOLORREF(pPalette->mainCmp1),
+				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -157,11 +157,11 @@ void MainWindow::CreateNCButtons()
 
 		ncCmp.push_back(new
 			NCCMP::NCTextButton(
-			(COLORREF)NULL,
-				TOCOLORREF(pPalette->mainCmp1),
+				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -187,9 +187,9 @@ void MainWindow::CreateNCButtons()
 			NCCMP::CloseButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
-				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -214,9 +214,9 @@ void MainWindow::CreateNCButtons()
 			NCCMP::MaxButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
-				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -241,9 +241,9 @@ void MainWindow::CreateNCButtons()
 			NCCMP::MinButton(
 				(COLORREF)NULL,
 				TOCOLORREF(pPalette->mainCmp1),
-				TOCOLORREF(pPalette->mainCmp1),
 				TOCOLORREF(pPalette->mainActive1),
 				TOCOLORREF(pPalette->mainPressed),
+				TOCOLORREF(pPalette->mainText1),
 				(COLORREF)NULL,
 				(COLORREF)NULL,
 				(COLORREF)NULL,
@@ -467,16 +467,10 @@ LRESULT MainWindow::onCreate()
 	if (!pCursors->sizewe)
 		pCursors->sizewe = LoadCursor(NULL, IDC_SIZEWE);
 
-	if (FAILED(pDWriteFactory->CreateTextFormat(
-		L"Arial",
-		NULL,
-		DWRITE_FONT_WEIGHT_NORMAL,
-		DWRITE_FONT_STYLE_NORMAL,
-		DWRITE_FONT_STRETCH_NORMAL,
-		12,	// font size
-		L"",
-		&pTextFormat
-	)))
+	if (!pTextFormats)
+		pTextFormats = new TextFormat();
+
+	if (FAILED(pTextFormats->init()))
 		return -1;
 
 	if (FAILED(CreateGraphicsResources()))
