@@ -51,8 +51,8 @@ Parameters::_appPalette::_appPalette() :
 	widgetActive3  (0.00f, 0.00f, 0.00f),
 	widgetPressed  (0.40f, 0.40f, 0.40f),
 
-	overlayBack    (0.00f, 0.00f, 0.60f),
-	overlayBorder  (0.15f, 0.15f, 0.15f),
+	overlayBack    (0.10f, 0.10f, 0.10f),
+	overlayBorder  (0.00f, 0.00f, 0.60f),
 	overlayText1   (1.00f, 1.00f, 1.00f),
 	overlayText2   (0.00f, 0.00f, 0.00f),
 	overlayText3   (0.00f, 0.00f, 0.00f),

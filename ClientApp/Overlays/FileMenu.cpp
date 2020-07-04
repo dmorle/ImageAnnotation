@@ -1,35 +1,36 @@
 #include "FileMenu.h"
+#include "MsgOverlay.h"
 
 
-
-void Label1Up(BaseOverlay* pThis)
-{
-	// MessageBox(pThis->hwnd, "Label 1 LDown", "File Menu Action", MB_OK);
-}
 
 void Label1Down(BaseOverlay* pThis)
 {
-	MessageBox(pThis->hwnd, "Label 1 LUp", "File Menu Action", MB_OK);
 }
 
-void Label2Up(BaseOverlay* pThis)
+void Label1Up(BaseOverlay* pThis)
 {
-	// MessageBox(pThis->hwnd, "Label 2 LDown", "File Menu Action", MB_OK);
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 1 LUp", POINT{ 600, 300 });
+	// MessageBox(pThis->hwnd, "Label 1 LDown", "File Menu Action", MB_OK);
 }
 
 void Label2Down(BaseOverlay* pThis)
 {
-	MessageBox(pThis->hwnd, "Label 2 LUp", "File Menu Action", MB_OK);
+}
+
+void Label2Up(BaseOverlay* pThis)
+{
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", POINT{ 600, 300 });
+	// MessageBox(pThis->hwnd, "Label 2 LUp", "File Menu Action", MB_OK);
 }
 
 void Label3Down(BaseOverlay* pThis)
 {
-	//MessageBox(pThis->hwnd, "Label 3 LDown", "File Menu Action", MB_OK);
 }
 
 void Label3Up(BaseOverlay* pThis)
 {
-	MessageBox(pThis->hwnd, "Label 3 LUp", "File Menu Action", MB_OK);
+	Parameters::pAO = new MsgOverlay(pThis, L"Label 2 LUp", POINT{ 600, 300 });
+	// MessageBox(pThis->hwnd, "Label 3 LUp", "File Menu Action", MB_OK);
 }
 
 FileMenu::FileMenu() :
