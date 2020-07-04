@@ -57,9 +57,16 @@ private:
 	// contains all child components of the panel
 	std::vector<Panel*> cmp;
 
+
 	// flags for how to handle user inputs
+
+	// a panel is being resized; struct contains resize info
 	PResizeInfo pResizingInfo;
+	// a widget is int edit mode; struct contains edit info
 	PWidgetEditInfo pWidgetEdit;
+
+	// replaces pCont with pCont->cmp[0]
+	void collapsePanel(Container* pCont);
 };
 
 #endif

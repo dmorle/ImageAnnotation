@@ -92,6 +92,8 @@ public:
 	// give npP in global coordinates
 	// initializes npP with the panel coordinate of the point
 	void getLocalPoint(PPOINT npP);
+
+	friend class Container;
 };
 
 #ifndef WIDGETS_H
