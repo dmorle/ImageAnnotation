@@ -16,6 +16,14 @@
 #include <string>
 #include <string.h>
 
+#include <core/Managers/DataManager.h>
+#include <core/Managers/JobManager.h>
+#include <core/Managers/ModelManager.h>
+#include <core/Managers/PipelineManager.h>
+#include <core/Managers/SalienceManager.h>
+#include <core/Managers/StreamManager.h>
+#include <core/Managers/UserManager.h>
+
 #ifndef SAFERELEASE
 #define SAFERELEASE
 
@@ -35,13 +43,9 @@ template <class T> void SafeRelease(T** ppT)
 class Panel;
 class MainWindow;
 class BaseOverlay;
-class ServerInterface;
 
 class Parameters {
 public:
-
-	// object for interfacing with server side operations
-	ServerInterface sInt;
 
 	// contains all the colors which will be used by the program
 	typedef struct _appPalette
@@ -108,6 +112,14 @@ public:
 
 	static std::vector<BaseOverlay*> activeOverlays;
 	static std::vector<BaseOverlay*> inActiveOverlays;
+
+	static DataManager	   * pDataManager;
+	static JobManager	   * pJobManager;
+	static ModelManager    * pModelManager;
+	static PipelineManager * pPipelineManager;
+	static SalienceManager * pSalienceManager;
+	static StreamManager   * pStreamManager;
+	static UserManager	   * pUserManager;
 };
 
 #endif

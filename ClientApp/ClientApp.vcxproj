@@ -91,7 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\dmorl\Coding\C-C++\dependencies\builds\openssl-1.1.1c-win64-mingw\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\dmorl\source\repos\imageAnnotation\ClientApp;C:\Users\dmorl\source\repos\imageAnnotation\WinClientDASAPI\include;C:\Users\dmorl\Coding\C-C++\dependencies\builds\openssl-1.1.1c-win64-mingw\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,13 +129,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="core\Managers\DataManager.cpp" />
+    <ClCompile Include="core\Managers\JobManager.cpp" />
+    <ClCompile Include="core\Managers\ModelManager.cpp" />
+    <ClCompile Include="core\Managers\PipelineManager.cpp" />
+    <ClCompile Include="core\Managers\SalienceManager.cpp" />
+    <ClCompile Include="core\Managers\StreamManager.cpp" />
+    <ClCompile Include="core\Managers\UserManager.cpp" />
     <ClCompile Include="NCComponents\CloseButton.cpp" />
     <ClCompile Include="NCComponents\MaxButton.cpp" />
     <ClCompile Include="NCComponents\MinButton.cpp" />
     <ClCompile Include="NCComponents\NCButton.cpp" />
     <ClCompile Include="NCComponents\NCTextButton.cpp" />
     <ClCompile Include="NCComponents\RestoreDownButton.cpp" />
-    <ClCompile Include="Network\ServerInterface.cpp" />
     <ClCompile Include="Overlays\BaseOverlay.cpp" />
     <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp" />
     <ClCompile Include="Parameters.cpp" />
@@ -153,6 +159,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
+    <ClInclude Include="core\IManager.h" />
+    <ClInclude Include="core\IRequest.h" />
+    <ClInclude Include="core\IResponse.h" />
+    <ClInclude Include="core\Managers\DataManager.h" />
+    <ClInclude Include="core\Managers\JobManager.h" />
+    <ClInclude Include="core\Managers\ModelManager.h" />
+    <ClInclude Include="core\Managers\PipelineManager.h" />
+    <ClInclude Include="core\Managers\SalienceManager.h" />
+    <ClInclude Include="core\Managers\StreamManager.h" />
+    <ClInclude Include="core\Managers\UserManager.h" />
     <ClInclude Include="NCComponents.h" />
     <ClInclude Include="NCComponents\CloseButton.h" />
     <ClInclude Include="NCComponents\MaxButton.h" />
@@ -161,7 +177,6 @@
     <ClInclude Include="NCComponents\NCTextButton.h" />
     <ClInclude Include="NCComponents\RestoreDownButton.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="Network\ServerInterface.h" />
     <ClInclude Include="Overlays.h" />
     <ClInclude Include="Overlays\BaseOverlay.h" />
     <ClInclude Include="Overlays\OverlayComponents.h" />

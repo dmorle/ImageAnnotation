@@ -152,10 +152,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\ClientApp\core\Managers\JobManager.h" />
+    <ClInclude Include="..\ClientApp\core\Managers\ModelManager.h" />
+    <ClInclude Include="..\ClientApp\core\Managers\PipelineManager.h" />
     <ClInclude Include="include\WDASAPI\WDASAPI.h" />
     <ClInclude Include="include\WDASAPI\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\ClientApp\core\Managers\JobManager.cpp" />
+    <ClCompile Include="..\ClientApp\core\Managers\ModelManager.cpp" />
+    <ClCompile Include="..\ClientApp\core\Managers\PipelineManager.cpp" />
     <ClCompile Include="src\Requests\Login.c" />
     <ClCompile Include="src\Requests\Requests.c" />
     <ClCompile Include="src\stdafx.c">

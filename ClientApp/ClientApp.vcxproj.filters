@@ -61,8 +61,26 @@
     <ClCompile Include="Overlays\OverlayComponents\BaseComponent.cpp">
       <Filter>Source Files\Overlays\OverlayComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Network\ServerInterface.cpp">
-      <Filter>Source Files\Network</Filter>
+    <ClCompile Include="core\Managers\StreamManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\DataManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\UserManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\JobManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\PipelineManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\ModelManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Managers\SalienceManager.cpp">
+      <Filter>Source Files\core\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,11 +165,38 @@
     <ClInclude Include="Overlays\OverlayComponents.h">
       <Filter>Header Files\Overlays</Filter>
     </ClInclude>
-    <ClInclude Include="Network\ServerInterface.h">
-      <Filter>Header Files\Network</Filter>
-    </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\IManager.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\IRequest.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\IResponse.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\DataManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\UserManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\StreamManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\JobManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\PipelineManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\ModelManager.h">
+      <Filter>Header Files\core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\Managers\SalienceManager.h">
+      <Filter>Header Files\core\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +239,29 @@
     <Filter Include="Source Files\Overlays\OverlayComponents">
       <UniqueIdentifier>{348bc588-1fb7-4282-be82-422a18709288}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Network">
-      <UniqueIdentifier>{07f8ae1c-973c-42f5-a9b1-7797ea9e8874}</UniqueIdentifier>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{69bde06f-829d-4376-b3b7-8196e2ff6dd3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Network">
-      <UniqueIdentifier>{ba9986f7-a391-4f92-8f0a-d9d522134e01}</UniqueIdentifier>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{8ff200b4-a9ef-4aff-ab3e-7ab246b0e276}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Managers">
+      <UniqueIdentifier>{a89c5705-7cbd-435a-973d-442cfbc1247d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Requests">
+      <UniqueIdentifier>{dc5a9aa3-0185-4e17-b74c-1f79a588e7e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Responses">
+      <UniqueIdentifier>{94670ee5-2e1a-42ec-b4c0-ec106ac97c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Managers">
+      <UniqueIdentifier>{0f145d76-8540-415f-a407-99e65c4def07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Responses">
+      <UniqueIdentifier>{b762f0cc-6c8b-4cd8-a44d-005cc2d712d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Requests">
+      <UniqueIdentifier>{68df7319-0c87-4baf-bc4a-4f0ce97de3fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
