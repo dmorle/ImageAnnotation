@@ -198,6 +198,9 @@
     <ClInclude Include="core\Managers\SalienceManager.h">
       <Filter>Header Files\core\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="core\Data\DataElement.h">
+      <Filter>Header Files\core\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -262,6 +265,48 @@
     </Filter>
     <Filter Include="Source Files\core\Requests">
       <UniqueIdentifier>{68df7319-0c87-4baf-bc4a-4f0ce97de3fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Data">
+      <UniqueIdentifier>{521a81cb-cab3-43c4-a465-749c3ebf176b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Data">
+      <UniqueIdentifier>{a51f353d-c8de-45f5-a0b1-cf593925f9a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Jobs">
+      <UniqueIdentifier>{a19ae695-222e-4e31-8fd7-1c65db560ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Models">
+      <UniqueIdentifier>{e7c10051-945f-4c25-883d-7ecaeeceb140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Pipelines">
+      <UniqueIdentifier>{13f7612c-c02f-4521-8f96-7d77b4577a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Salience">
+      <UniqueIdentifier>{ab4e5b7b-f2ce-463c-a292-de5286981c60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Streams">
+      <UniqueIdentifier>{620a5416-5511-4236-8c37-0221c9e42af0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core\Users">
+      <UniqueIdentifier>{c1b39805-c63e-466d-ba19-a5e0d091d0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Jobs">
+      <UniqueIdentifier>{396a1d31-ebb1-4e07-a11e-3729df5961bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Models">
+      <UniqueIdentifier>{757d2ef8-9bdf-4143-9aa0-f514d88d66e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Users">
+      <UniqueIdentifier>{13206da2-34b7-4b43-a131-fb30594e8950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Streams">
+      <UniqueIdentifier>{da42d9ce-cc8c-4856-97a0-25a1e491333b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Salience">
+      <UniqueIdentifier>{fd60b9d8-b469-4e1a-a92f-855d90e358a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core\Pipelines">
+      <UniqueIdentifier>{6c82f408-54c1-49a3-b2ea-153dc188453c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

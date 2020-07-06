@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basewin.h" />
+    <ClInclude Include="core\Data\DataElement.h" />
     <ClInclude Include="core\IManager.h" />
     <ClInclude Include="core\IRequest.h" />
     <ClInclude Include="core\IResponse.h" />

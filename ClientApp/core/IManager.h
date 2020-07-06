@@ -3,8 +3,8 @@
 
 #include <WDASAPI/WDASAPI.h>
 
-#include "IRequest.h"
-#include "IResponse.h"
+#include <core/IRequest.h>
+#include <core/IResponse.h>
 
 class IManager
 {
